@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CompiledDefinitionSourceGenerator\CompiledDefinitionSourceGenerator.csproj" >
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <!--<ReferenceOutputAssembly>false</ReferenceOutputAssembly>-->
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>
   </ItemGroup>

@@ -37,20 +37,21 @@ namespace CompiledDefinitionSourceGenerator
             this.TypeName = type.Name;
 
             this.CompiledProps = type
-                .GetMembers()
+                .GetMembersRecursive()
                 .OfType<IPropertySymbol>()
                 .Where(IsAutoProperty)
+                .Where(x => x.HasAttribute("CompiledAttribute"))
                 .Select(field => new PropertyInfo(field))
                 .ToArray();
 
             this.AllProperties = type
-                .GetMembers()
+                .GetMembersRecursive()
                 .OfType<IPropertySymbol>()
                 .Select(x => x.Name)
                 .ToArray();
 
             this.AdditionalParametersForMethods = type
-                .GetMembers()
+                .GetMembersRecursive()
                 .OfType<IMethodSymbol>()
                 .Where(x => x.Name.StartsWith(AdditionalParamtersMethodPrefix))
                 .Select(x => x.Name)

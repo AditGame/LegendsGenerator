@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions
     /// The definition for a site.
     /// </summary>
     [NeedsCompiling]
-    public class SiteDefinition : BaseThingDefinition
+    public partiaclass SiteDefinition : BaseThingDefinition
     {
         /// <summary>
         /// Gets or sets if this site supports sites inside of itself.

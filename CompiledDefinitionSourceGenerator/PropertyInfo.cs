@@ -22,17 +22,15 @@ namespace CompiledDefinitionSourceGenerator
         {
             this.Name = property.Name;
             var attributeConstructorArguments = property
-                .GetAttributes(typeof(CompiledAttribute).FullName!)
+                .GetAttributes("CompiledAttribute")
                 .SelectMany(a => a.ConstructorArguments);
 
             this.ReturnType = attributeConstructorArguments
-                .Select(x => x.Value)
-                .OfType<Type>()
-                .First();
+                .First(x => x.Type.Name == "Type").Value.ToString();
 
             this.Variables = attributeConstructorArguments
-                .Select(x => x.Value)
-                .OfType<string>()
+                .First(x => x.Type.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase)).Values
+                .Select(x => x.Value.ToString())
                 .ToList();
         }
 
@@ -44,7 +42,7 @@ namespace CompiledDefinitionSourceGenerator
         /// <summary>
         /// Gets or sets the return type of the compiled attribute.
         /// </summary>
-        public Type ReturnType { get; set; }
+        public string ReturnType { get; set; }
 
         /// <summary>
         /// Gets or sets the variable names.

@@ -24,7 +24,7 @@ namespace CompiledDefinitionSourceGenerator
         {
             return type
                 .GetAttributes()
-                .Where(a => a.AttributeClass?.GetFullName() == typeName);
+                .Where(a => a.AttributeClass?.Name == typeName);
         }
 
         /// <summary>
@@ -81,6 +81,24 @@ namespace CompiledDefinitionSourceGenerator
             }
 
             return string.Join(".", namespaces.Select(n => n.Name).Reverse());
+        }
+
+        /// <summary>
+        /// Gets the members of a symbol recurively going through base types.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>All symbols.</returns>
+        public static IEnumerable<ISymbol> GetMembersRecursive(this INamedTypeSymbol symbol)
+        {
+            List<ISymbol> symbols = new List<ISymbol>();
+            INamedTypeSymbol? recursiveSymbol = symbol;
+            while (recursiveSymbol != null)
+            {
+                symbols.AddRange(recursiveSymbol.GetMembers());
+                recursiveSymbol = recursiveSymbol.BaseType;
+            }
+
+            return symbols;
         }
     }
 }
