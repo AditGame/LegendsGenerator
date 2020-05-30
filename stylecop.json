@@ -1,0 +1,40 @@
+{
+    "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+    "settings": {
+        "documentationRules": {
+            "documentInterfaces": true,
+            "documentExposedElements": true,
+            "documentInternalElements": true,
+            "documentPrivateElements": true,
+            "documentPrivateFields": true,
+            "companyName": "Tom Luppi",
+            "copyrightText": "    Copyright (c) {companyName}.  All rights reserved.",
+            "headerDecoration": "-------------------------------------------------------------------------------------------------"
+        },
+        "namingRules": {
+            "allowedHungarianPrefixes": [
+                "ad",
+                "as",
+                "dc",
+                "do",
+                "id",
+                "if",
+                "in",
+                "ip",
+                "is",
+                "mx",
+                "my",
+                "no",
+                "on",
+                "os",
+                "to",
+                "ui",
+                "vm",
+                "vs",
+                "x",
+                "y",
+                "z"
+            ]
+        }
+    }
+}
