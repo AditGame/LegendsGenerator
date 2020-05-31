@@ -8,7 +8,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
     using System.Text;
 
-    public class SpawnDefinition
+    using LegendsGenerator.Contracts.Compiler;
+
+    [UsesAdditionalParametersForHoldingClass]
+    public partial class SpawnDefinition : BaseDefinition
     {
         public ThingType Type { get; set; }
 
@@ -16,6 +19,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 
         public Dictionary<string, string> AttributeOverrides { get; } = new Dictionary<string, string>();
 
+        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
         public string Description { get; set; }
     }
 }

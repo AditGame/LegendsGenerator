@@ -8,7 +8,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
     using System.Text;
 
-    public class SubjectDefinition : ThingScopable
+    public partial class SubjectDefinition : ThingScopable
     {
     }
 }

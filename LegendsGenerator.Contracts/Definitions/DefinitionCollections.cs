@@ -7,6 +7,8 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Collections.Generic;
     using System.Linq;
 
+    using LegendsGenerator.Contracts.Compiler;
+
     /// <summary>
     /// A collection of all definitions.
     /// </summary>
@@ -25,5 +27,19 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets the list of all site definitions.
         /// </summary>
         public IReadOnlyList<SiteDefinition> SiteDefinitions { get; }
+
+
+
+        /// <summary>
+        /// Attaches the compiler to all definitions.
+        /// </summary>
+        /// <param name="compiler">The csmpiler.</param>
+        public void Attach(IConditionCompiler compiler)
+        {
+            foreach (var def in this.SiteDefinitions)
+            {
+                def.Attach(compiler);
+            }
+        }
     }
 }

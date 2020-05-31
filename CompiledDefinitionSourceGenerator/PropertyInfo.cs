@@ -22,7 +22,7 @@ namespace CompiledDefinitionSourceGenerator
         {
             this.Name = property.Name;
             var attributeConstructorArguments = property
-                .GetAttributes("CompiledAttribute")
+                .GetAttributes("CompiledAttribute", "CompiledDictionaryAttribute")
                 .SelectMany(a => a.ConstructorArguments);
 
             this.ReturnType = attributeConstructorArguments
@@ -32,6 +32,12 @@ namespace CompiledDefinitionSourceGenerator
                 .First(x => x.Type.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase)).Values
                 .Select(x => x.Value.ToString())
                 .ToList();
+
+            this.AsFormattedText = property
+                .GetAttributes("CompiledAttribute")
+                .SelectMany(a => a.NamedArguments)
+                .FirstOrDefault(a => a.Key.Equals("AsFormattedText"))
+                .Value.Value?.ToString().Equals(bool.TrueString) ?? false;
         }
 
         /// <summary>
@@ -43,6 +49,11 @@ namespace CompiledDefinitionSourceGenerator
         /// Gets or sets the return type of the compiled attribute.
         /// </summary>
         public string ReturnType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this should be compiled as formatted text.
+        /// </summary>
+        public bool AsFormattedText { get; set; }
 
         /// <summary>
         /// Gets or sets the variable names.

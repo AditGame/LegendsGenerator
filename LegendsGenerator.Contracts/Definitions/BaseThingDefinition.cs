@@ -25,7 +25,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the string which returns the maximum number of events.
         /// </summary>
-        [Compiled(typeof(bool), "Subject")]
+        [Compiled(typeof(int), "Subject")]
         public string MaxEvents { get; set; } = "1";
 
         /// <summary>
@@ -36,11 +36,13 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the default attributes on a Thing.
         /// </summary>
+        [CompiledDictionary(typeof(int), "Subject")]
         public Dictionary<string, string> DefaultAttributes { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the default aspects on a Thing.
         /// </summary>
+        [CompiledDictionary(typeof(string), "Subject")]
         public Dictionary<string, string> DefaultAspects { get; set; } = new Dictionary<string, string>();
     }
 }

@@ -6,6 +6,7 @@ namespace CompiledDefinitionSourceGenerator
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Text;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Text;
@@ -38,35 +39,14 @@ namespace CompiledDefinitionSourceGenerator
 
                 INamedTypeSymbol? symbol = type as INamedTypeSymbol;
 
-                if (symbol != null && DerivesBaseDefinition(symbol))
+                if (symbol != null && symbol.Derives("BaseDefinition"))
                 {
                     ClassInfo classInfo = new ClassInfo(symbol);
                     string code = CompiledClassFactory.Generate(classInfo);
                     context.AddSource($"{type.Name}.Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
+                    File.WriteAllText($@"C:\Users\tt\Temp\{type.Name}.Compiled.Generated.cs", code);
                 }
             }
-        }
-
-        /// <summary>
-        /// Evals if the symbol derives BaseDefinition.
-        /// </summary>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns>True if this class derives base definition.</returns>
-        private static bool DerivesBaseDefinition(INamedTypeSymbol symbol)
-        {
-            INamedTypeSymbol? baseSymbol = symbol.BaseType;
-
-            while (baseSymbol != null)
-            {
-                if (baseSymbol.Name == "BaseDefinition")
-                {
-                    return true;
-                }
-
-                baseSymbol = baseSymbol.BaseType;
-            }
-
-            return false;
         }
     }
 }

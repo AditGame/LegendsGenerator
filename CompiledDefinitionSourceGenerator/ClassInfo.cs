@@ -42,9 +42,29 @@ namespace CompiledDefinitionSourceGenerator
                 .Select(field => new PropertyInfo(field))
                 .ToArray();
 
-            this.AllProperties = type
+            this.CompiledDictionaryProps = type
                 .GetMembers()
                 .OfType<IPropertySymbol>()
+                .Where(IsAutoProperty)
+                .Where(x => x.HasAttribute("CompiledDictionaryAttribute"))
+                .Select(field => new PropertyInfo(field))
+                .ToArray();
+
+            this.DefinitionProps = type
+                .GetMembers()
+                .OfType<IPropertySymbol>()
+                .Where(x => x.Type.Derives("BaseDefinition"))
+                .Select(x => x.Name)
+                .ToArray();
+
+            this.DefinitionArrayProps = type
+                .GetMembers()
+                .OfType<IPropertySymbol>()
+                .Where(x =>
+                {
+                    var args = x.Type.GetTypeArguments();
+                    return args.Count() == 1 && args.First().Derives("BaseDefinition");
+                })
                 .Select(x => x.Name)
                 .ToArray();
 
@@ -77,9 +97,19 @@ namespace CompiledDefinitionSourceGenerator
         public IReadOnlyCollection<PropertyInfo> CompiledProps { get; }
 
         /// <summary>
-        /// Gets all properties on this object.
+        /// Gets the fields on this object to compile as dictionaries.
         /// </summary>
-        public IReadOnlyCollection<string> AllProperties { get; }
+        public IReadOnlyCollection<PropertyInfo> CompiledDictionaryProps { get; }
+
+        /// <summary>
+        /// Gets properties which are also definitions.
+        /// </summary>
+        public IReadOnlyCollection<string> DefinitionProps { get; }
+
+        /// <summary>
+        /// Gets properties which are also definitions arrays.
+        /// </summary>
+        public IReadOnlyCollection<string> DefinitionArrayProps { get; }
 
         /// <summary>
         /// Gets the methods which modify the property list before compiling.

@@ -20,6 +20,7 @@ namespace CompiledDefinitionSourceGenerator
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
@@ -38,17 +39,28 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine($"namespace {classInfo.Namespace}");
             sb.AppendLine("{");
             sb.AppendLine(Usings);
-            sb.AppendLine($"{classInfo.Accesibility} partial class {classInfo.TypeName}");
-            sb.AppendLine("{");
+            sb.AppendLine($"    {classInfo.Accesibility} partial class {classInfo.TypeName}");
+            sb.AppendLine("    {");
             sb.AppendLine(FieldDefinitions(classInfo));
             sb.AppendLine(CompileMethod(classInfo));
+            sb.AppendLine(AttachMethod(classInfo));
 
             foreach (var prop in classInfo.CompiledProps)
             {
                 sb.AppendLine(EvalConditionMethod(prop, classInfo.AdditionalParametersForMethods));
             }
 
+            foreach (var prop in classInfo.CompiledDictionaryProps)
+            {
+                sb.AppendLine(EvalDictionaryConditionMethod(prop, classInfo.AdditionalParametersForMethods));
+            }
+
             foreach (var prop in classInfo.CompiledProps)
+            {
+                sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods));
+            }
+
+            foreach (var prop in classInfo.CompiledDictionaryProps)
             {
                 sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods));
             }
@@ -70,9 +82,55 @@ namespace CompiledDefinitionSourceGenerator
 
             foreach (var prop in classInfo.CompiledProps)
             {
-                sb.AppendLine($"private Lazy<ICompiledCondition<{prop.ReturnType}>> compiledCondition{prop.Name} = ");
-                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.AsSimple<{prop.ReturnType}>(this.{prop.Name}, this.GetParameters{prop.Name}()));");
+                sb.AppendLine($"private Lazy<ICompiledCondition<{prop.ReturnType}>> compiledCondition{prop.Name};");
             }
+
+            foreach (var prop in classInfo.CompiledDictionaryProps)
+            {
+                sb.AppendLine($"private IDictionary<string, Lazy<ICompiledCondition<{prop.ReturnType}>>> compiledCondition{prop.Name} =");
+                sb.AppendLine($"    new Dictionary<string, Lazy<ICompiledCondition<{prop.ReturnType}>>>();");
+            }
+
+            return sb.ToString();
+        }
+
+        private static string AttachMethod(ClassInfo classInfo)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("public override void Attach(IConditionCompiler compiler) {");
+            sb.AppendLine("base.Attach(compiler);");
+
+            foreach (var prop in classInfo.CompiledProps)
+            {
+                sb.AppendLine($"this.compiledCondition{prop.Name} = ");
+                string type = prop.AsFormattedText ? "AsFormattedText" : $"AsSimple<{prop.ReturnType}>";
+                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.{type}(this.{prop.Name}, this.GetParameters{prop.Name}()));");
+            }
+
+            foreach (var prop in classInfo.CompiledDictionaryProps)
+            {
+                string type = prop.AsFormattedText ? "AsFormattedText" : $"AsSimple<{prop.ReturnType}>";
+                sb.AppendLine($"foreach (var entry in this.compiledCondition{prop.Name})");
+                sb.AppendLine("{");
+                sb.AppendLine($"this.compiledCondition{prop.Name}[entry.Key] = ");
+                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.{type}(this.{prop.Name}[entry.Key], this.GetParameters{prop.Name}()));");
+                sb.AppendLine("}");
+            }
+
+            foreach (var prop in classInfo.DefinitionProps)
+            {
+                sb.AppendLine($"this.{prop}?.Attach(compiler);");
+            }
+
+            foreach (var prop in classInfo.DefinitionArrayProps)
+            {
+                sb.AppendLine($"foreach (var value in this.{prop})");
+                sb.AppendLine("{");
+                sb.AppendLine($"   value.Attach(compiler);");
+                sb.AppendLine("}");
+            }
+
+            sb.AppendLine("}");
 
             return sb.ToString();
         }
@@ -92,6 +150,24 @@ namespace CompiledDefinitionSourceGenerator
             foreach (PropertyInfo prop in classInfo.CompiledProps)
             {
                 sb.AppendLine($"_ = this.compiledCondition{prop.Name}.Value;");
+            }
+
+            foreach (PropertyInfo prop in classInfo.CompiledDictionaryProps)
+            {
+                sb.AppendLine($"this.compiledCondition{prop.Name}.ToList().ForEach(x => _ = x.Value.Value);");
+            }
+
+            foreach (var prop in classInfo.DefinitionProps)
+            {
+                sb.AppendLine($"this.{prop}?.Compile();");
+            }
+
+            foreach (var prop in classInfo.DefinitionArrayProps)
+            {
+                sb.AppendLine($"foreach (var value in this.{prop})");
+                sb.AppendLine("{");
+                sb.AppendLine($"   value.Compile();");
+                sb.AppendLine("}");
             }
 
             sb.AppendLine("}");
@@ -139,6 +215,51 @@ namespace CompiledDefinitionSourceGenerator
             }
 
             sb.AppendLine($"return this.compiledCondition{info.Name}.Value.Evaluate(rdm, param);");
+            sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Creates the method which runs the condition evalulate method.
+        /// </summary>
+        /// <param name="info">The property info.</param>
+        /// <param name="additionParameterMethods">The list of additional parameter methods.</param>
+        /// <returns>The method, in string form.</returns>
+        private static string EvalDictionaryConditionMethod(PropertyInfo info, IReadOnlyCollection<string> additionParameterMethods)
+        {
+            string? matchingAdditionalParamtersMethod =
+                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
+
+            string parametersList = "string key, " + string.Join(", ", info.Variables.Select(v => $"BaseThing {v}"));
+
+            if (matchingAdditionalParamtersMethod != null)
+            {
+                parametersList += ", IDictionary<string, BaseThing> additionalParameters";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"public {info.ReturnType} Eval{info.Name}(Random rdm, {parametersList})");
+            sb.AppendLine("{");
+            sb.AppendLine(@"IDictionary<string, BaseThing> param = new Dictionary<string, BaseThing>() {");
+
+            foreach (var parameter in info.Variables)
+            {
+                sb.AppendLine($"{{ {SurroundInQuotes(parameter)}, {parameter} }}");
+            }
+
+            sb.AppendLine("};");
+
+            if (matchingAdditionalParamtersMethod != null)
+            {
+                sb.AppendLine(@"
+                    foreach(var additionalParameter in additionalParameters)
+                    {
+                        param[additionalParameter.Key] = additionalParameter.Value;
+                    }");
+            }
+
+            sb.AppendLine($"return this.compiledCondition{info.Name}[key].Value.Evaluate(rdm, param);");
             sb.AppendLine("}");
 
             return sb.ToString();

@@ -8,6 +8,8 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+
+    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     public class EventCollection
@@ -25,5 +27,17 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets all definitions.
         /// </summary>
         public IReadOnlyList<EventDefinition> Events { get; }
+
+        /// <summary>
+        /// Attaches the compiler to all events.
+        /// </summary>
+        /// <param name="compiler">The csmpiler.</param>
+        public void Attach(IConditionCompiler compiler)
+        {
+            foreach (var eve in this.Events)
+            {
+                eve.Attach(compiler);
+            }
+        }
     }
 }

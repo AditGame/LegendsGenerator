@@ -6,10 +6,12 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System;
 
+    using LegendsGenerator.Contracts.Compiler;
+
     /// <summary>
     /// Defines a scope for a set of things.
     /// </summary>
-    public class ThingScopable
+    public partial class ThingScopable : BaseDefinition
     {
         /// <summary>
         /// Gets or sets the type of thing this scope relates to.
@@ -25,6 +27,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the condition on the thing to scope on.
         /// </summary>
+        [Compiled(typeof(bool), "Subject")]
         public string Condition { get; set; } = "UNSET";
     }
 }

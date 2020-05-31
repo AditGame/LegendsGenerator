@@ -11,13 +11,12 @@ namespace LegendsGenerator
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            SiteDefinitionCompiled compiled = new SiteDefinitionCompiled();
             Log.Ts.Listeners.Add(new ConsoleTraceListener());
-            /*
+            
             var popCenter = new SiteDefinition()
             {
                 Name = "Population Center",
@@ -85,14 +84,16 @@ namespace LegendsGenerator
             var eventDefinitions = new EventCollection(events);
 
             DefinitionSerializer.SerializeToFile(definitions, eventDefinitions, "test.json");
-            */
-            var (definitions, eventDefinitions) = DefinitionSerializer.DeserializeFromDirectory(".");
+            
+            //var (definitions, eventDefinitions) = DefinitionSerializer.DeserializeFromDirectory(".");
             DefinitionSerializer.SerializeToFile(definitions, eventDefinitions, "test.json");
 
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
 
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
+            definitions.Attach(processor);
+            eventDefinitions.Attach(processor);
 
             ThingFactory factory = new ThingFactory(processor, definitions);
 

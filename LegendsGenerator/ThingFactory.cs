@@ -94,7 +94,7 @@ namespace LegendsGenerator
             {
                 foreach (var(attributeName, attributeCondition) in inheritedDefinition.DefaultAttributes)
                 {
-                    int value = this.processor.EvalSimple<int>(rdm, attributeCondition);
+                    int value = inheritedDefinition.Eval this.processor.EvalSimple<int>(rdm, attributeCondition);
 
                     thing.BaseAttributes[attributeName] = value;
                 }

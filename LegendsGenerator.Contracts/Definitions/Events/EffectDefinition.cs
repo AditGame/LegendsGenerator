@@ -8,16 +8,23 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
     using System.Text;
 
-    public class EffectDefinition
+    using LegendsGenerator.Contracts.Compiler;
+
+    [UsesAdditionalParametersForHoldingClass]
+    public partial class EffectDefinition : BaseDefinition
     {
         public string AffectedAttribute { get; set; }
 
+        [Compiled(typeof(int), "Subject")]
         public string Magnitude { get; set; }
 
+        [Compiled(typeof(int), "Subject")]
         public string Duration { get; set; } = "-1";
 
-        public string Title { get; set; }
+        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        public string Title { get; set; } = "UNDEFINED_TITLE";
 
-        public string Description { get; set; }
+        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        public string Description { get; set; } = "UNDEFINED_DESCRIPTION";
     }
 }

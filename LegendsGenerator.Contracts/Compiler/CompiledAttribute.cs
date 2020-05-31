@@ -7,7 +7,7 @@ namespace LegendsGenerator.Contracts.Compiler
     using System;
 
     /// <summary>
-    /// Indicates the proeprty should be compiled.
+    /// Indicates the proeperty should be compiled.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class CompiledAttribute : Attribute
@@ -32,5 +32,10 @@ namespace LegendsGenerator.Contracts.Compiler
         /// Gets the names of the parameters in this compiled statement.
         /// </summary>
         public string[] ParameterNames { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this should be compiled as formatted text.
+        /// </summary>
+        public bool AsFormattedText { get; set; }
     }
 }

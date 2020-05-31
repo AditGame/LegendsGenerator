@@ -4,12 +4,9 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
-    using LegendsGenerator.Contracts.Compiler;
-
     /// <summary>
     /// The definition for a site.
     /// </summary>
-    [NeedsCompiling]
     public partial class SiteDefinition : BaseThingDefinition
     {
         /// <summary>

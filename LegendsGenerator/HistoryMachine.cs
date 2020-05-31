@@ -81,33 +81,13 @@ namespace LegendsGenerator
 
             foreach (EffectDefinition effectDefinition in result.Effects)
             {
-                IDictionary<string, BaseThing> variables = new Dictionary<string, BaseThing>()
-                {
-                    { "Subject", thing },
-                };
-
-                string Format(string? format)
-                {
-                    if (format == null)
-                    {
-                        return "UNDEFINED";
-                    }
-
-                    return this.compiler.EvalFormattedText(rdm, format, variables);
-                }
-
-                int EvalInt(string condition)
-                {
-                    return this.compiler.EvalSimple<int>(rdm, condition, variables);
-                }
-
                 Effect effect = new Effect()
                 {
-                    Title = Format(effectDefinition.Title),
-                    Description = Format(effectDefinition.Description),
+                    Title = effectDefinition.EvalTitle(rdm, thing),
+                    Description = effectDefinition.EvalDescription(rdm, thing),
                     Attribute = effectDefinition.AffectedAttribute,
-                    AttributeEffect = EvalInt(effectDefinition.Magnitude),
-                    Duration = EvalInt(effectDefinition.Duration),
+                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing),
+                    Duration = effectDefinition.EvalDuration(rdm, thing),
                     TookEffect = world.StepCount,
                 };
 
@@ -127,12 +107,7 @@ namespace LegendsGenerator
             IEnumerable<EventDefinition> applicableEvents,
             BaseThing thing)
         {
-            IDictionary<string, BaseThing> variables = new Dictionary<string, BaseThing>()
-                {
-                    { "Subject", thing },
-                };
-
-            int maxEvents = this.compiler.EvalSimple<int>(rdm, thing.BaseDefinition.MaxEvents, variables);
+            int maxEvents = thing.BaseDefinition.EvalMaxEvents(rdm, thing);
 
             int minChance = rdm.Next(1, 100);
             return applicableEvents

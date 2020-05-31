@@ -18,13 +18,13 @@ namespace CompiledDefinitionSourceGenerator
         /// Gets attributes matching the type name.
         /// </summary>
         /// <param name="type">The type to get attributes from.</param>
-        /// <param name="typeName">The type name.</param>
+        /// <param name="typeNames">The type names.</param>
         /// <returns>The matching attributes.</returns>
-        public static IEnumerable<AttributeData> GetAttributes(this ISymbol type, string typeName)
+        public static IEnumerable<AttributeData> GetAttributes(this ISymbol type, params string[] typeNames)
         {
             return type
                 .GetAttributes()
-                .Where(a => a.AttributeClass?.Name == typeName);
+                .Where(a => typeNames.Contains(a.AttributeClass?.Name));
         }
 
         /// <summary>
@@ -99,6 +99,48 @@ namespace CompiledDefinitionSourceGenerator
             }
 
             return symbols;
+        }
+
+        /// <summary>
+        /// Evals if the symbol derives another type.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <param name="type">The type to check</param>
+        /// <returns>True if this class derives base definition.</returns>
+        public static bool Derives(this ITypeSymbol symbol, string type)
+        {
+            INamedTypeSymbol? baseSymbol = symbol.BaseType;
+
+            while (baseSymbol != null)
+            {
+                if (baseSymbol.Name == type)
+                {
+                    return true;
+                }
+
+                baseSymbol = baseSymbol.BaseType;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the type arguments of the specified symbol, if applicable.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>The list of type arguments.</returns>
+        public static IEnumerable<ITypeSymbol> GetTypeArguments(this ISymbol symbol)
+        {
+            if (symbol is INamedTypeSymbol namedType && namedType.IsGenericType)
+            {
+                return namedType.TypeArguments;
+            }
+            else if (symbol is IArrayTypeSymbol arrayType)
+            {
+                return new[] { arrayType.ElementType };
+            }
+
+            return Array.Empty<ITypeSymbol>();
         }
     }
 }

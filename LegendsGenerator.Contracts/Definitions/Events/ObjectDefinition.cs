@@ -8,7 +8,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
     using System.Text;
 
-    public class ObjectDefinition : ThingScopable
+    public partial class ObjectDefinition : ThingScopable
     {
         public string VariableName { get; set; }
 
