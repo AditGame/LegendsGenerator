@@ -30,14 +30,12 @@ namespace CompiledDefinitionSourceGenerator
         /// <param name="type">The type of the class.</param>
         public ClassInfo(INamedTypeSymbol type)
         {
-            var attributeData = type.GetAttribute(typeof(NeedsCompilingAttribute).FullName!);
-
             this.Accesibility = type.DeclaredAccessibility.ToString().ToLower();
             this.Namespace = type.GetNamespace();
             this.TypeName = type.Name;
 
             this.CompiledProps = type
-                .GetMembersRecursive()
+                .GetMembers()
                 .OfType<IPropertySymbol>()
                 .Where(IsAutoProperty)
                 .Where(x => x.HasAttribute("CompiledAttribute"))
@@ -45,7 +43,7 @@ namespace CompiledDefinitionSourceGenerator
                 .ToArray();
 
             this.AllProperties = type
-                .GetMembersRecursive()
+                .GetMembers()
                 .OfType<IPropertySymbol>()
                 .Select(x => x.Name)
                 .ToArray();

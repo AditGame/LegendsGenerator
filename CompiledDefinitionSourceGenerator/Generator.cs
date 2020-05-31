@@ -19,7 +19,7 @@ namespace CompiledDefinitionSourceGenerator
         /// <inheritdoc/>
         public void Initialize(InitializationContext context)
         {
-            //Debugger.Launch();
+            // Debugger.Launch();
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
@@ -40,14 +40,36 @@ namespace CompiledDefinitionSourceGenerator
                 {
                     INamedTypeSymbol? symbol = type as INamedTypeSymbol;
 
-                    if (symbol != null)
+                    if (symbol != null && DerivesBaseDefinition(symbol))
                     {
                         ClassInfo classInfo = new ClassInfo(symbol);
                         string code = CompiledClassFactory.Generate(classInfo);
-                        context.AddSource($"{type.Name}Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
+                        context.AddSource($"{type.Name}.Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Evals if the symbol derives BaseDefinition.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>True if this class derives base definition.</returns>
+        private static bool DerivesBaseDefinition(INamedTypeSymbol symbol)
+        {
+            INamedTypeSymbol? baseSymbol = symbol;
+
+            while (baseSymbol != null)
+            {
+                if (baseSymbol.Name == "BaseDefinition")
+                {
+                    return true;
+                }
+
+                baseSymbol = baseSymbol.BaseType;
+            }
+
+            return false;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace LegendsGenerator
     {
         static void Main(string[] args)
         {
-            SiteDefinitionCompiled compiled = new SiteDefinitionCompiled()
+            SiteDefinitionCompiled compiled = new SiteDefinitionCompiled();
             Log.Ts.Listeners.Add(new ConsoleTraceListener());
             /*
             var popCenter = new SiteDefinition()

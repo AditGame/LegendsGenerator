@@ -4,15 +4,13 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
-    using CompiledDefinitionSourceGenerator;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
     /// THe base definition of a thing.
     /// </summary>
-    [XmlInclude(typeof(SiteDefinition))]
-    public class BaseThingDefinition
+    public class BaseThingDefinition : BaseDefinition
     {
         /// <summary>
         /// Gets or sets the name of the thing, such as Scholar.

@@ -23,7 +23,7 @@ namespace CompiledDefinitionSourceGenerator
         /// <inheritdoc/>
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
-            if (syntaxNode is ClassDeclarationSyntax classSyntax && classSyntax.AttributeLists.Count > 0)
+            if (syntaxNode is ClassDeclarationSyntax classSyntax)
             {
                 this.Classes.Add(classSyntax);
             }

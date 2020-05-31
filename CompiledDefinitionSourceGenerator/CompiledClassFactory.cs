@@ -38,10 +38,9 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine($"namespace {classInfo.Namespace}");
             sb.AppendLine("{");
             sb.AppendLine(Usings);
-            sb.AppendLine($"{classInfo.Accesibility} partial class {classInfo.TypeName}Compiled : {classInfo.TypeName}");
+            sb.AppendLine($"{classInfo.Accesibility} partial class {classInfo.TypeName}");
             sb.AppendLine("{");
             sb.AppendLine(FieldDefinitions(classInfo));
-            sb.AppendLine(Constructor(classInfo));
             sb.AppendLine(CompileMethod(classInfo));
 
             foreach (var prop in classInfo.CompiledProps)
@@ -71,35 +70,9 @@ namespace CompiledDefinitionSourceGenerator
 
             foreach (var prop in classInfo.CompiledProps)
             {
-                sb.AppendLine($"private Lazy<ICompiledCondition<{prop.ReturnType}>> compiledCondition{prop.Name};");
+                sb.AppendLine($"private Lazy<ICompiledCondition<{prop.ReturnType}>> compiledCondition{prop.Name} = ");
+                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.AsSimple<{prop.ReturnType}>(this.{prop.Name}, this.GetParameters{prop.Name}()));");
             }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Generates the constructor.
-        /// </summary>
-        /// <param name="classInfo">The class info structure.</param>
-        /// <returns>The constructor method.</returns>
-        private static string Constructor(ClassInfo classInfo)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"public {classInfo.TypeName}Compiled(IConditionCompiler processor, {classInfo.TypeName}? toClone = null)");
-            sb.AppendLine("{");
-
-            foreach (var prop in classInfo.CompiledProps)
-            {
-                sb.AppendLine($"this.compiledCondition{prop.Name} =");
-                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => processor.AsSimple<{prop.ReturnType}>(this.{prop.Name}, this.GetParameters{prop.Name}()));");
-            }
-
-            foreach (var prop in classInfo.AllProperties)
-            {
-                sb.AppendLine($"this.{prop} = toClone.{prop};");
-            }
-
-            sb.AppendLine("}");
 
             return sb.ToString();
         }
@@ -112,8 +85,9 @@ namespace CompiledDefinitionSourceGenerator
         private static string CompileMethod(ClassInfo classInfo)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"public void Compile()");
+            sb.AppendLine($"public override void Compile()");
             sb.AppendLine("{");
+            sb.AppendLine("base.Compile();");
 
             foreach (PropertyInfo prop in classInfo.CompiledProps)
             {

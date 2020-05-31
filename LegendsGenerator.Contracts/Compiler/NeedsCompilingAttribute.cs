@@ -2,7 +2,7 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace CompiledDefinitionSourceGenerator
+namespace LegendsGenerator.Contracts.Compiler
 {
     using System;
     using System.Collections.Generic;

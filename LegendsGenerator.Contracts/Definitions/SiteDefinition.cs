@@ -4,13 +4,13 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
-    using CompiledDefinitionSourceGenerator;
+    using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
     /// The definition for a site.
     /// </summary>
     [NeedsCompiling]
-    public partiaclass SiteDefinition : BaseThingDefinition
+    public partial class SiteDefinition : BaseThingDefinition
     {
         /// <summary>
         /// Gets or sets if this site supports sites inside of itself.
