@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LegendsGenerator.Contracts\LegendsGenerator.Contracts.csproj" />
+    <ProjectReference Include="..\Contracts\LegendsGenerator.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
