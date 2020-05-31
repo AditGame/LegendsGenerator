@@ -110,7 +110,7 @@ namespace CompiledDefinitionSourceGenerator
             foreach (var prop in classInfo.CompiledDictionaryProps)
             {
                 string type = prop.AsFormattedText ? "AsFormattedText" : $"AsSimple<{prop.ReturnType}>";
-                sb.AppendLine($"foreach (var entry in this.compiledCondition{prop.Name})");
+                sb.AppendLine($"foreach (var entry in this.{prop.Name})");
                 sb.AppendLine("{");
                 sb.AppendLine($"this.compiledCondition{prop.Name}[entry.Key] = ");
                 sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.{type}(this.{prop.Name}[entry.Key], this.GetParameters{prop.Name}()));");
@@ -186,15 +186,18 @@ namespace CompiledDefinitionSourceGenerator
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
 
-            string parametersList = string.Join(", ", info.Variables.Select(v => $"BaseThing {v}"));
+            List<string> allParameters = new List<string>() { "Random rdm" };
+            allParameters.AddRange(info.Variables.Select(v => $"BaseThing {v}").ToList());
 
             if (matchingAdditionalParamtersMethod != null)
             {
-                parametersList += ", IDictionary<string, BaseThing> additionalParameters";
+                allParameters.Add("IDictionary<string, BaseThing> additionalParameters");
             }
 
+            string parametersList = string.Join(", ", allParameters);
+
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"public {info.ReturnType} Eval{info.Name}(Random rdm, {parametersList})");
+            sb.AppendLine($"public {info.ReturnType} Eval{info.Name}({parametersList})");
             sb.AppendLine("{");
             sb.AppendLine(@"IDictionary<string, BaseThing> param = new Dictionary<string, BaseThing>() {");
 
@@ -230,16 +233,18 @@ namespace CompiledDefinitionSourceGenerator
         {
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
-
-            string parametersList = "string key, " + string.Join(", ", info.Variables.Select(v => $"BaseThing {v}"));
+            List<string> allParameters = new List<string>() { "string key", "Random rdm" };
+            allParameters.AddRange(info.Variables.Select(v => $"BaseThing {v}").ToList());
 
             if (matchingAdditionalParamtersMethod != null)
             {
-                parametersList += ", IDictionary<string, BaseThing> additionalParameters";
+                allParameters.Add("IDictionary<string, BaseThing> additionalParameters");
             }
 
+            string parametersList = string.Join(", ", allParameters);
+
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"public {info.ReturnType} Eval{info.Name}(Random rdm, {parametersList})");
+            sb.AppendLine($"public {info.ReturnType} Eval{info.Name}({parametersList})");
             sb.AppendLine("{");
             sb.AppendLine(@"IDictionary<string, BaseThing> param = new Dictionary<string, BaseThing>() {");
 

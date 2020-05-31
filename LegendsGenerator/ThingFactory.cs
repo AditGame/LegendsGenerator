@@ -92,9 +92,9 @@ namespace LegendsGenerator
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {
-                foreach (var(attributeName, attributeCondition) in inheritedDefinition.DefaultAttributes)
+                foreach (var(attributeName, _) in inheritedDefinition.DefaultAttributes)
                 {
-                    int value = inheritedDefinition.Eval this.processor.EvalSimple<int>(rdm, attributeCondition);
+                    int value = inheritedDefinition.EvalDefaultAttributes(attributeName, rdm);
 
                     thing.BaseAttributes[attributeName] = value;
                 }
@@ -102,9 +102,9 @@ namespace LegendsGenerator
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {
-                foreach (var(aspectName, aspectCondition) in inheritedDefinition.DefaultAspects)
+                foreach (var(aspectName, _) in inheritedDefinition.DefaultAspects)
                 {
-                    string value = this.processor.EvalSimple<string>(rdm, aspectCondition);
+                    string value = inheritedDefinition.EvalDefaultAspects(aspectName, rdm);
 
                     // TODO: Wire in aspects.
                 }

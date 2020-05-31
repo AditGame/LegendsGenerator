@@ -19,7 +19,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the event Condition, from one to one hundred.
         /// </summary>
-        [Compiled(typeof(bool), "Subject")]
+        [Compiled(typeof(int), "Subject")]
         public string Chance { get; set; } = "0";
 
         /// <summary>
@@ -48,15 +48,6 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// </summary>
         /// <returns>The list of additional parameters.</returns>
         public IList<string> AdditionalParametersForDescription()
-        {
-            return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
-        }
-
-        /// <summary>
-        /// Gets additional variable names for the Chance method.
-        /// </summary>
-        /// <returns>The list of additional parameters.</returns>
-        public IList<string> AdditionalParametersForChance()
         {
             return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
         }

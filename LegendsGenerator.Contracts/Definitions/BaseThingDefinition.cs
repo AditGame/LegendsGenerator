@@ -36,13 +36,13 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the default attributes on a Thing.
         /// </summary>
-        [CompiledDictionary(typeof(int), "Subject")]
+        [CompiledDictionary(typeof(int))]
         public Dictionary<string, string> DefaultAttributes { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the default aspects on a Thing.
         /// </summary>
-        [CompiledDictionary(typeof(string), "Subject")]
+        [CompiledDictionary(typeof(string))]
         public Dictionary<string, string> DefaultAspects { get; set; } = new Dictionary<string, string>();
     }
 }

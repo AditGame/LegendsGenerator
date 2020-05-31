@@ -68,7 +68,7 @@ namespace LegendsGenerator
             int minChance = rdm.Next(1, 100);
             EventResultDefinition? result = ev.Results
                 .Shuffle(rdm)
-                .FirstOrDefault(e => this.Matches(minChance, e.Chance, e.Condition, thing, rdm));
+                .FirstOrDefault(e => this.Matches(minChance, () => e.EvalChance(rdm, thing), () => e.EvalCondition(rdm, thing)));
 
             result ??= ev.Results.FirstOrDefault(r => r.Default);
 
@@ -112,7 +112,7 @@ namespace LegendsGenerator
             int minChance = rdm.Next(1, 100);
             return applicableEvents
                 .Shuffle(rdm)
-                .Where(e => this.Matches(minChance, e.Chance, e.Subject.Condition, thing, rdm))
+                .Where(e => this.Matches(minChance, () => e.EvalChance(rdm, thing), () => e.Subject.EvalCondition(rdm, thing)))
                 .Take(maxEvents);
         }
 
@@ -120,36 +120,17 @@ namespace LegendsGenerator
         /// Gets if a particular event matches the specified thing.
         /// </summary>
         /// <param name="minChance">The minimum chance for this thing this step.</param>
-        /// <param name="chance">The chance string.</param>
-        /// <param name="condition">The condition string.</param>
-        /// <param name="thing">The thing to check.</param>
-        /// <param name="rdm">The random number generator.</param>
+        /// <param name="chance">The chance function.</param>
+        /// <param name="condition">The condition function.</param>
         /// <returns>True if this event applies to the subject, false otherwise.</returns>
-        private bool Matches(int minChance, string? chance, string? condition, BaseThing thing, Random rdm)
+        private bool Matches(int minChance, Func<int> chance, Func<bool> condition)
         {
-            IDictionary<string, BaseThing> variables = new Dictionary<string, BaseThing>()
-            {
-                { "Subject", thing },
-            };
-
-            if (string.IsNullOrWhiteSpace(chance))
+            if (chance() < minChance)
             {
                 return false;
             }
 
-            int evalChance = this.compiler.EvalSimple<int>(rdm, chance, variables);
-
-            if (evalChance < minChance)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(condition))
-            {
-                return true;
-            }
-
-            return this.compiler.EvalSimple<bool>(rdm, condition, variables);
+            return condition();
         }
     }
 }
