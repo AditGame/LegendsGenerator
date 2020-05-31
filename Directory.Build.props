@@ -5,7 +5,7 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   
-    <!-- Stylecop and FxCop -->
+    <!-- Stylecop and FxCop
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
             <Version>2.6.0</Version>
@@ -21,6 +21,6 @@
             <Link>stylecop.json</Link>
             <Visible>false</Visible>
         </AdditionalFiles>
-    </ItemGroup>
+    </ItemGroup>-->
 
 </Project>

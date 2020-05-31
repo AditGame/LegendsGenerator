@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions
     /// <summary>
     /// THe base definition of a thing.
     /// </summary>
-    public class BaseThingDefinition : BaseDefinition
+    public partial class BaseThingDefinition : BaseDefinition
     {
         /// <summary>
         /// Gets or sets the name of the thing, such as Scholar.

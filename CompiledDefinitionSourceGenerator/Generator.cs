@@ -36,16 +36,13 @@ namespace CompiledDefinitionSourceGenerator
                 SemanticModel? semanticModel = compilation.GetSemanticModel(classSyntax.SyntaxTree);
                 ISymbol? type = semanticModel.GetDeclaredSymbol(classSyntax);
 
-                if (type.HasAttribute("NeedsCompilingAttribute"))
-                {
-                    INamedTypeSymbol? symbol = type as INamedTypeSymbol;
+                INamedTypeSymbol? symbol = type as INamedTypeSymbol;
 
-                    if (symbol != null && DerivesBaseDefinition(symbol))
-                    {
-                        ClassInfo classInfo = new ClassInfo(symbol);
-                        string code = CompiledClassFactory.Generate(classInfo);
-                        context.AddSource($"{type.Name}.Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
-                    }
+                if (symbol != null && DerivesBaseDefinition(symbol))
+                {
+                    ClassInfo classInfo = new ClassInfo(symbol);
+                    string code = CompiledClassFactory.Generate(classInfo);
+                    context.AddSource($"{type.Name}.Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
                 }
             }
         }
@@ -57,7 +54,7 @@ namespace CompiledDefinitionSourceGenerator
         /// <returns>True if this class derives base definition.</returns>
         private static bool DerivesBaseDefinition(INamedTypeSymbol symbol)
         {
-            INamedTypeSymbol? baseSymbol = symbol;
+            INamedTypeSymbol? baseSymbol = symbol.BaseType;
 
             while (baseSymbol != null)
             {
