@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompiledDefinitionSourceGenerator\CompiledDefinitionSourceGenerator.csproj" >
+    <ProjectReference Include="..\CompiledDefinitionSourceGenerator\LegendsGenerator.ContractsGenerator.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Analyzer</OutputItemType>
     </ProjectReference>

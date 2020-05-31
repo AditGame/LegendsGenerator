@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Contracts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Tests", "LegendsGenerator.Tests\LegendsGenerator.Tests.csproj", "{12B7DA24-0B97-4F24-9EF1-7490371B2E2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompiledDefinitionSourceGenerator", "CompiledDefinitionSourceGenerator\CompiledDefinitionSourceGenerator.csproj", "{52A72D83-E7F3-4263-8A99-20676B797FB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.ContractsGenerator", "CompiledDefinitionSourceGenerator\LegendsGenerator.ContractsGenerator.csproj", "{52A72D83-E7F3-4263-8A99-20676B797FB3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76CD15AA-7157-448F-9E15-1323ECF6486E}"
 	ProjectSection(SolutionItems) = preProject
