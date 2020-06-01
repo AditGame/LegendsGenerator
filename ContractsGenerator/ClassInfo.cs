@@ -10,6 +10,8 @@ namespace CompiledDefinitionSourceGenerator
     using System.Text;
     using System.Threading.Tasks;
 
+    using LegendsGenerator.ContractsGenerator;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -39,6 +41,10 @@ namespace CompiledDefinitionSourceGenerator
             this.Namespace = type.GetNamespace();
             this.TypeName = type.Name;
 
+            this.UsesAdditionalParametersForHoldingClass = type
+                .GetAttributes("UsesAdditionalParametersForHoldingClassAttribute")
+                .Any();
+
             this.CompiledProps = type
                 .GetMembers()
                 .OfType<IPropertySymbol>()
@@ -59,7 +65,7 @@ namespace CompiledDefinitionSourceGenerator
                 .GetMembers()
                 .OfType<IPropertySymbol>()
                 .Where(x => x.Type.Derives("BaseDefinition"))
-                .Select(x => x.Name)
+                .Select(x => new DefinitionPropertyInfo(x))
                 .ToArray();
 
             this.DefinitionArrayProps = type
@@ -70,7 +76,7 @@ namespace CompiledDefinitionSourceGenerator
                     var args = x.Type.GetTypeArguments();
                     return args.Count() == 1 && args.First().Derives("BaseDefinition");
                 })
-                .Select(x => x.Name)
+                .Select(x => new DefinitionPropertyInfo(x))
                 .ToArray();
 
             this.AdditionalParametersForMethods = type
@@ -97,6 +103,12 @@ namespace CompiledDefinitionSourceGenerator
         public string TypeName { get; }
 
         /// <summary>
+        /// Gets or sets a value indiating whether the compiled members of this class should use additional
+        /// parameters from the holding class.
+        /// </summary>
+        public bool UsesAdditionalParametersForHoldingClass { get; }
+
+        /// <summary>
         /// Gets the fields on this object to compile.
         /// </summary>
         public IReadOnlyCollection<PropertyInfo> CompiledProps { get; }
@@ -109,12 +121,12 @@ namespace CompiledDefinitionSourceGenerator
         /// <summary>
         /// Gets properties which are also definitions.
         /// </summary>
-        public IReadOnlyCollection<string> DefinitionProps { get; }
+        public IReadOnlyCollection<DefinitionPropertyInfo> DefinitionProps { get; }
 
         /// <summary>
         /// Gets properties which are also definitions arrays.
         /// </summary>
-        public IReadOnlyCollection<string> DefinitionArrayProps { get; }
+        public IReadOnlyCollection<DefinitionPropertyInfo> DefinitionArrayProps { get; }
 
         /// <summary>
         /// Gets the methods which modify the property list before compiling.

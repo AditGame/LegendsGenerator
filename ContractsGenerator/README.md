@@ -1,4 +1,4 @@
-# Legends Generator COntracts Source Generator
+# Legends Generator Contracts Source Generator
 
 Auto-magically generates boilerplate for the COntracts assembly. In particular, handles Conditioned inputs from the JSON files to allow easy and safe execution.
 
@@ -49,7 +49,7 @@ All compiled properties in a class can have additional parameters added via the 
 public IList<string> AdditionalParametersForClass()
 ```
 
-**FUTURE WORK** If a class is decorated with the `UsesAdditionalParametersForHoldingClassAttribute` attribute, than the outter class will pass in their `AdditionalParametersForClass` method (if it exists), and additional parameters from that method will be added to the compiled conditions of this class.
+If a class is decorated with the `UsesAdditionalParametersForHoldingClassAttribute` attribute, than the outter class will pass in their `AdditionalParametersForClass` method (if it exists), and additional parameters from that method will be added to the compiled conditions of this class.
 
 ## Auto-generated boilerplate
 
