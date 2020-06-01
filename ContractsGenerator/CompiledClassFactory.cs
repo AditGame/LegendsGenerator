@@ -46,22 +46,6 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine(Usings);
             sb.AppendLine($"    {classInfo.Accesibility} partial class {classInfo.TypeName}");
             sb.AppendLine("    {");
-            sb.AppendLine(@"
-private ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<string> parameters)
-{
-    if (complex)
-    {
-        return this.Compiler.AsComplex<T>(condition, parameters);
-    }
-    else if (formattedText)
-    {
-        return this.Compiler.AsFormattedText(condition, parameters) as ICompiledCondition<T>;
-    }
-    else
-    {
-        return this.Compiler.AsSimple<T>(condition, parameters);
-    }
-}");
             sb.AppendLine(FieldDefinitions(classInfo));
             sb.AppendLine(CompileMethod(classInfo));
             sb.AppendLine(AttachMethod(classInfo));
@@ -226,6 +210,19 @@ private ICompiledCondition<T> CreateCondition<T>(string condition, bool formatte
                 sb.AppendLine("}");
             }
 
+            foreach (var prop in classInfo.DefinitionDictionaryProps)
+            {
+                sb.AppendLine($"foreach (var value in this.{prop.Name})");
+                sb.AppendLine("{");
+                sb.AppendLine($"    value.Value.Attach(compiler);");
+
+                if (prop.UsesAdditionalParametersForHoldingClass)
+                {
+                    sb.AppendLine($"    value.Value.AttachUpStreamParams(this.Combined{ClassInfo.AdditionalParamtersForClassMethod});");
+                }
+                sb.AppendLine("}");
+            }
+
             sb.AppendLine("}");
 
             return sb.ToString();
@@ -263,6 +260,14 @@ private ICompiledCondition<T> CreateCondition<T>(string condition, bool formatte
                 sb.AppendLine($"foreach (var value in this.{prop.Name})");
                 sb.AppendLine("{");
                 sb.AppendLine($"   value.Compile();");
+                sb.AppendLine("}");
+            }
+
+            foreach (var prop in classInfo.DefinitionDictionaryProps)
+            {
+                sb.AppendLine($"foreach (var value in this.{prop.Name})");
+                sb.AppendLine("{");
+                sb.AppendLine($"   value.Value.Compile();");
                 sb.AppendLine("}");
             }
 
@@ -324,10 +329,10 @@ private ICompiledCondition<T> CreateCondition<T>(string condition, bool formatte
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 sb.AppendLine(@"
-                    foreach(var additionalParameter in additionalParameters)
-                    {
-                        param[additionalParameter.Key] = additionalParameter.Value;
-                    }");
+foreach(var additionalParameter in additionalParameters)
+{
+    param[additionalParameter.Key] = additionalParameter.Value;
+}");
             }
 
             sb.AppendLine($"return this.compiledCondition{info.Name}.Value.Evaluate(rdm, param);");

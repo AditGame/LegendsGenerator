@@ -5,6 +5,8 @@
 namespace LegendsGenerator.Contracts.Definitions
 {
     using System;
+    using System.Collections.Generic;
+
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
@@ -34,6 +36,36 @@ namespace LegendsGenerator.Contracts.Definitions
             if (this.Compiler == null)
             {
                 throw new InvalidOperationException("You must attach the compiler via AttachCompiler before calling Eval methods.");
+            }
+        }
+
+        /// <summary>
+        /// Creates a compiled condition.
+        /// </summary>
+        /// <typeparam name="T">The return type of the condition.</typeparam>
+        /// <param name="condition">The condition to process.</param>
+        /// <param name="formattedText">True to represent it as formatted text (complex overrules)</param>
+        /// <param name="complex">True to represent as a complex condition.</param>
+        /// <param name="parameters">The parameters list of the strings.</param>
+        /// <returns></returns>
+        protected ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<string> parameters)
+        {
+            if (this.Compiler == null)
+            {
+                throw new ApplicationException("Compiler must be attached before this method is called.");
+            }
+
+            if (complex)
+            {
+                return this.Compiler.AsComplex<T>(condition, parameters);
+            }
+            else if (formattedText && typeof(T) == typeof(string))
+            {
+                return (this.Compiler.AsFormattedText(condition, parameters) as ICompiledCondition<T>)!;
+            }
+            else
+            {
+                return this.Compiler.AsSimple<T>(condition, parameters);
             }
         }
     }

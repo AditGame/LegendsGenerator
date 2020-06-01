@@ -79,6 +79,17 @@ namespace CompiledDefinitionSourceGenerator
                 .Select(x => new DefinitionPropertyInfo(x))
                 .ToArray();
 
+            this.DefinitionDictionaryProps = type
+                .GetMembers()
+                .OfType<IPropertySymbol>()
+                .Where(x =>
+                {
+                    var args = x.Type.GetTypeArguments();
+                    return args.Count() == 2 && args.Last().Derives("BaseDefinition");
+                })
+                .Select(x => new DefinitionPropertyInfo(x))
+                .ToArray();
+
             this.AdditionalParametersForMethods = type
                 .GetMembersRecursive()
                 .OfType<IMethodSymbol>()
@@ -127,6 +138,11 @@ namespace CompiledDefinitionSourceGenerator
         /// Gets properties which are also definitions arrays.
         /// </summary>
         public IReadOnlyCollection<DefinitionPropertyInfo> DefinitionArrayProps { get; }
+
+        /// <summary>
+        /// Gets properties which are also definitions dictionaries.
+        /// </summary>
+        public IReadOnlyCollection<DefinitionPropertyInfo> DefinitionDictionaryProps { get; }
 
         /// <summary>
         /// Gets the methods which modify the property list before compiling.

@@ -30,7 +30,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Getsor sets the objects of this event.
         /// </summary>
-        public ObjectDefinition[] Objects { get; set; } = Array.Empty<ObjectDefinition>();
+        public IDictionary<string, ObjectDefinition> Objects { get; set; } = new Dictionary<string, ObjectDefinition>();
 
         /// <summary>
         /// Gets or sets the descriptino of this event.
@@ -49,16 +49,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <returns>The list of additional parameters.</returns>
         public IList<string> AdditionalParametersForClass()
         {
-            return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
-        }
-
-        /// <summary>
-        /// Gets additional variable names for the Description method.
-        /// </summary>
-        /// <returns>The list of additional parameters.</returns>
-        public IList<string> AdditionalParametersForChance()
-        {
-            return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
+            return this.Objects?.Select(x => x.Key).ToList() ?? new List<string>();
         }
     }
 }

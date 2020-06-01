@@ -61,7 +61,7 @@ In the following scenarios code will be automatically generated to correctly cal
 * `public BaseDefinition SomeProperty {get; set;}`
 * `public IList<BaseDefinition> SomeProperty { get; set; }`
 * `public BaseDefinition[] SomeProperty { get; set; }`
-* **FUTURE WORK** `public IDictionary<string, BaseDefinition> SomeProperty { get; set; }`
+* `public IDictionary<string, BaseDefinition> SomeProperty { get; set; }`
 
 For example, the following class definition:
 ```csharp
