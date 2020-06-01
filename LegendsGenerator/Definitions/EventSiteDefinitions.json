@@ -1,0 +1,120 @@
+﻿{
+  "Events": [
+    {
+      "Chance": "50",
+      "Subject": {
+        "Condition": "Subject->Population > 50000",
+        "Type": "Site",
+      },
+      "Description": "The city {Subject.Name} has suffered massive population loss.",
+      "Results": [
+        {
+          "Default": true,
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(-1 * Subject->Population * (Rand.NextDouble() * .1))",
+              "Duration": "-1",
+              "Title": "A marginal ammount have died.",
+              "Description": "UNDEFINED_DESCRIPTION"
+            }
+          ],
+        },
+        {
+          "Chance": "75",
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(-1 * Subject->Population * (.5 + (Rand.NextDouble() * .25)))",
+              "Duration": "-1",
+              "Title": "Most of the population has died.",
+              "Description": "UNDEFINED_DESCRIPTION",
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Chance": "25",
+      "Subject": {
+        "Condition": "true",
+        "Type": "Site",
+      },
+      "Objects": {},
+      "Description": "The city {Subject.Name} has had population gain.",
+      "Results": [
+        {
+          "Default": true,
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(Subject->Population * 0.5)",
+              "Duration": "-1",
+              "Title": "Every woman has given birth.",
+              "Description": "UNDEFINED_DESCRIPTION",
+            }
+          ],
+        },
+        {
+          "Chance": "5",
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(Subject->Population)",
+              "Duration": "-1",
+              "Title": "Everyone has given birth somehow.",
+              "Description": "UNDEFINED_DESCRIPTION",
+            }
+          ],
+        },
+        {
+          "Chance": "1",
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(Subject->Population * 3 * 0.5)",
+              "Duration": "-1",
+              "Title": "Everyone has had triplets!",
+              "Description": "UNDEFINED_DESCRIPTION",
+            }
+          ],
+        },
+      ],
+    },    
+    {
+      "Chance": "50",
+      "Subject": {
+        "Condition": "Subject->Population > 50000",
+        "Type": "Site",
+      },
+      "Objects": {
+        "Rival": {
+          "Condition": "Rival->Population < 50000",
+          "Type": "Site",
+	    }
+	  },
+      "Description": "The city {Subject.Name} has issued a declaration of war at {Rival.Name}.",
+      "Results": [
+        {
+          "Default": true,
+          "Effects": [
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(-1 * Subject->Population * (Rand.NextDouble() * .1))",
+              "Duration": "-1",
+              "Title": "The city sent troops to {Rival.Name}.",
+              "Description": "UNDEFINED_DESCRIPTION"
+            },
+            {
+              "AffectedAttribute": "Population",
+              "Magnitude": "(int)(Subject->Population * (Rand.NextDouble() * .1))",
+              "Duration": "-1",
+              "Title": "Some troops from {Subject.Name} have arrived, but they decided to stay.",
+              "Description": "UNDEFINED_DESCRIPTION"
+            }
+          ],
+        },
+      ]
+    },
+  ]
+}

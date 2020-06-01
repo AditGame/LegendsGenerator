@@ -13,6 +13,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     [UsesAdditionalParametersForHoldingClass]
     public partial class EffectDefinition : BaseDefinition
     {
+        public string[] AppliedTo { get; set; } = new[] { "Subject" };
         public string AffectedAttribute { get; set; }
 
         [Compiled(typeof(int), "Subject")]

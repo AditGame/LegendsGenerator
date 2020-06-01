@@ -1,0 +1,30 @@
+{
+  "Sites": [
+    {
+      "Name": "Population Center",
+      "Description": "A center of population.",
+      "MaxEvents": "1",
+      "DefaultAttributes": {
+        "Evil": "Rand.Next(-5, 5)",
+        "Population": "Rand.Next(0, 1000000)"
+      },
+      "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "Name": "City",
+      "Description": "A moderate sized settlement",
+      "MaxEvents": "1",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(20000, 100000)"
+      },
+      "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    }
+  ]
+}

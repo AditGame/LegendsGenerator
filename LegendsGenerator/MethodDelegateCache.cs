@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using CSScriptLib;
@@ -35,9 +36,17 @@ namespace LegendsGenerator
                 return d;
             }
 
-            var entry = CSScript.Evaluator.CreateDelegate<T>(content);
-            Cache[content] = entry;
-            return entry;
+            try
+            {
+                var entry = CSScript.Evaluator.CreateDelegate<T>(content);
+
+                Cache[content] = entry;
+                return entry;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed compiling code: " + content, ex);
+            }
         }
     }
 #pragma warning restore CA1000 // Do not declare static members on generic types

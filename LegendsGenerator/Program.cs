@@ -16,7 +16,7 @@ namespace LegendsGenerator
         public static void Main(string[] args)
         {
             Log.Ts.Listeners.Add(new ConsoleTraceListener());
-            
+            /*
             var popCenter = new SiteDefinition()
             {
                 Name = "Population Center",
@@ -84,9 +84,8 @@ namespace LegendsGenerator
             var eventDefinitions = new EventCollection(events);
 
             DefinitionSerializer.SerializeToFile(definitions, eventDefinitions, "test.json");
-            
-            //var (definitions, eventDefinitions) = DefinitionSerializer.DeserializeFromDirectory(".");
-            DefinitionSerializer.SerializeToFile(definitions, eventDefinitions, "test.json");
+            */
+            var (definitions, eventDefinitions) = DefinitionSerializer.DeserializeFromDirectory("Definitions");
 
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);

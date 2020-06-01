@@ -45,13 +45,13 @@ namespace LegendsGenerator
                 Log.Info($"Processing site {site.Name}");
                 Random rdm = RandomFactory.GetRandom(world.WorldSeed, world.StepCount, site.ThingId);
 
-                IEnumerable<EventDefinition> occurredEvents =
-                    this.GetOccurringEvents(rdm, eventsBySubjectType[ThingType.Site], site);
+                IEnumerable<OccurredEvent> occurredEvents =
+                    this.GetOccurringEvents(rdm, world, eventsBySubjectType[ThingType.Site], site);
 
-                foreach (EventDefinition occurredEvent in occurredEvents)
+                foreach (OccurredEvent occurredEvent in occurredEvents)
                 {
-                    Log.Info($"Adding event {occurredEvent.Description}");
-                    this.ApplyEvent(rdm, world, occurredEvent, site, new Dictionary<string, BaseThing>());
+                    Log.Info($"Adding event {occurredEvent.Event.Description}");
+                    this.ApplyEvent(rdm, world, occurredEvent.Event, site, occurredEvent.Objects!);
                 }
             }
         }
@@ -92,7 +92,21 @@ namespace LegendsGenerator
                     TookEffect = world.StepCount,
                 };
 
-                thing.Effects.Add(effect);
+                foreach (var appliedTo in effectDefinition.AppliedTo)
+                {
+                    if (appliedTo.Equals("Subject"))
+                    {
+                        thing.Effects.Add(effect);
+                    }
+                    else if (objects.TryGetValue(appliedTo, out BaseThing? value))
+                    {
+                        value.Effects.Add(effect);
+                    }
+                    else
+                    {
+                        Log.Error($"Enable to apply effect to unknown Object {appliedTo}.");
+                    }
+                }
             }
         }
 
@@ -100,11 +114,13 @@ namespace LegendsGenerator
         /// Gets the events which will occur for the given thing.
         /// </summary>
         /// <param name="rdm">The random number generator.</param>
+        /// <param name="world">The world definition.</param>
         /// <param name="applicableEvents">The events by subject type.</param>
         /// <param name="thing">The thing to get the events for.</param>
         /// <returns>The list of events which will occur for this thing.</returns>
-        private IEnumerable<EventDefinition> GetOccurringEvents(
+        private IEnumerable<OccurredEvent> GetOccurringEvents(
             Random rdm,
+            World world,
             IEnumerable<EventDefinition> applicableEvents,
             BaseThing thing)
         {
@@ -113,10 +129,29 @@ namespace LegendsGenerator
             int minChance = rdm.Next(1, 100);
             return applicableEvents
                 .Shuffle(rdm)
-                .Where(e => this.Matches(
-                    minChance, 
-                    () => e.EvalChance(rdm, thing, new Dictionary<string, BaseThing>()), 
-                    () => e.Subject.EvalCondition(rdm, thing)))
+                .Where(e => e.Subject.EvalCondition(rdm, thing))
+                .Select(e =>
+                {
+                    var objects = this.GetMatchingObjects(
+                        rdm,
+                        world,
+                        e,
+                        thing);
+
+                    if (objects == null)
+                    {
+                        return null;
+                    }
+
+                    return new OccurredEvent()
+                    {
+                        Event = e,
+                        Objects = objects,
+                    };
+                })
+                .Where(o => o != null)
+                .Select(o => o!)
+                .Where(o => o.Event.EvalChance(rdm, thing, o.Objects!) >= minChance)
                 .Take(maxEvents);
         }
 
@@ -135,6 +170,42 @@ namespace LegendsGenerator
             }
 
             return condition();
+        }
+
+        /// <summary>
+        /// Gets objects matching the definition.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        /// <param name="world">The world information.</param>
+        /// <param name="eventDef">The event definition of the event.</param>
+        /// <param name="subject">The subject of the event.</param>
+        /// <returns>The dictionary of objects, or null if the objects coudl not be found.</returns>
+        private IDictionary<string, BaseThing>? GetMatchingObjects(
+            Random rdm,
+            World world,
+            EventDefinition eventDef, 
+            BaseThing subject)
+        {
+            IDictionary<string, BaseThing> output = new Dictionary<string, BaseThing>();
+            foreach (var @object in eventDef.Objects)
+            {
+                IEnumerable<BaseThing> things = world.GetThings(@object.Value.Type);
+                BaseThing? matchingThing = world
+                    .GetThings(@object.Value.Type)
+                    .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
+
+                if (matchingThing == null && !@object.Value.Optional)
+                {
+                    return null;
+                }
+
+                if (matchingThing != null)
+                {
+                    output[@object.Key] = matchingThing;
+                }
+            }
+
+            return output;
         }
     }
 }

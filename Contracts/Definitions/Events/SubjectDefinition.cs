@@ -8,7 +8,14 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
     using System.Text;
 
+    using LegendsGenerator.Contracts.Compiler;
+
     public partial class SubjectDefinition : ThingScopable
     {
+        /// <summary>
+        /// Gets or sets the condition on the thing to scope on.
+        /// </summary>
+        [Compiled(typeof(bool), "Subject")]
+        public string Condition { get; set; } = "true";
     }
 }

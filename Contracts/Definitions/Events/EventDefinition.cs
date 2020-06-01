@@ -28,7 +28,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         public SubjectDefinition Subject { get; set; }
 
         /// <summary>
-        /// Getsor sets the objects of this event.
+        /// Gets or sets the objects of this event.
         /// </summary>
         public IDictionary<string, ObjectDefinition> Objects { get; set; } = new Dictionary<string, ObjectDefinition>();
 

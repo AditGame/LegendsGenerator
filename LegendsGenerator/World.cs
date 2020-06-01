@@ -43,5 +43,21 @@ namespace LegendsGenerator
         {
             return this;
         }
+
+        /// <summary>
+        /// Gets things based on type.
+        /// </summary>
+        /// <param name="type">The type of thing to get.</param>
+        /// <returns>All thing matching type.</returns>
+        public IEnumerable<BaseThing> GetThings(ThingType type)
+        {
+            switch (type)
+            {
+                case ThingType.Site:
+                    return this.Sites;
+                default:
+                    throw new ApplicationException($"Thing type {type} not wired in here yet.");
+            }
+        }
     }
 }

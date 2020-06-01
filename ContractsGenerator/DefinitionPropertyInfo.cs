@@ -23,8 +23,7 @@ namespace LegendsGenerator.ContractsGenerator
                 this.UsesAdditionalParametersForHoldingClass = property
                     .Type
                     .GetTypeArguments()
-                    .First()
-                    .HasAttribute("UsesAdditionalParametersForHoldingClassAttribute");
+                    .Any(t => t.HasAttribute("UsesAdditionalParametersForHoldingClassAttribute"));
             }
             else
             {

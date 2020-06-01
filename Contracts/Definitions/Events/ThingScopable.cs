@@ -23,11 +23,5 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// If empty, any Definition is allowed.
         /// </summary>
         public string[] Definitions { get; set; } = Array.Empty<string>();
-
-        /// <summary>
-        /// Gets or sets the condition on the thing to scope on.
-        /// </summary>
-        [Compiled(typeof(bool), "Subject")]
-        public string Condition { get; set; } = "UNSET";
     }
 }

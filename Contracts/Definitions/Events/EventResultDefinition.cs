@@ -30,7 +30,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the string condition of this event.
         /// </summary>
         [Compiled(typeof(bool), "Subject")]
-        public string Condition { get; set; } = "false";
+        public string Condition { get; set; } = "true";
 
         /// <summary>
         /// Gets or sets the effects of this result.
