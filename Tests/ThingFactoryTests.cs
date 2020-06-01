@@ -29,8 +29,8 @@ namespace LegendsGenerator.Tests
                 Name = "Population Center",
                 Description = "A center of population.",
             };
-            popCenter.DefaultAttributes["Evil"] = "rand.Next(-5, 5)";
-            popCenter.DefaultAttributes["Population"] = "rand.Next(0, 1000000)";
+            popCenter.DefaultAttributes["Evil"] = "Rand.Next(-5, 5)";
+            popCenter.DefaultAttributes["Population"] = "Rand.Next(0, 1000000)";
 
             var cityDef = new SiteDefinition()
             {
@@ -38,7 +38,7 @@ namespace LegendsGenerator.Tests
                 Description = "A moderate sized settlement",
                 InheritsFrom = "Population Center",
             };
-            cityDef.DefaultAttributes["Population"] = "rand.Next(20000, 100000)";
+            cityDef.DefaultAttributes["Population"] = "Rand.Next(20000, 100000)";
 
             IList<SiteDefinition> sites = new List<SiteDefinition>();
             sites.Add(popCenter);
@@ -53,6 +53,7 @@ namespace LegendsGenerator.Tests
 
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
 
+            definitions.Attach(processor);
             ThingFactory factory = new ThingFactory(processor, definitions);
 
             for (int i = 0; i < 100; i++)

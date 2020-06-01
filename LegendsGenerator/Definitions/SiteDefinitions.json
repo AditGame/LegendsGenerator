@@ -9,9 +9,6 @@
         "Population": "Rand.Next(0, 1000000)"
       },
       "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "City",
@@ -22,9 +19,6 @@
         "Population": "Rand.Next(20000, 100000)"
       },
       "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
     }
   ]
 }
