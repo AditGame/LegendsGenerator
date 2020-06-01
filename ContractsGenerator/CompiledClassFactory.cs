@@ -45,24 +45,27 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine(CompileMethod(classInfo));
             sb.AppendLine(AttachMethod(classInfo));
 
+            bool classAddParams = 
+                classInfo.AdditionalParametersForMethods.Any(x => x.Equals(ClassInfo.AdditionalParamtersForClassMethod));
+
             foreach (var prop in classInfo.CompiledProps)
             {
-                sb.AppendLine(EvalConditionMethod(prop, classInfo.AdditionalParametersForMethods));
+                sb.AppendLine(EvalConditionMethod(prop, classInfo.AdditionalParametersForMethods, classAddParams));
             }
 
             foreach (var prop in classInfo.CompiledDictionaryProps)
             {
-                sb.AppendLine(EvalDictionaryConditionMethod(prop, classInfo.AdditionalParametersForMethods));
+                sb.AppendLine(EvalDictionaryConditionMethod(prop, classInfo.AdditionalParametersForMethods, classAddParams));
             }
 
             foreach (var prop in classInfo.CompiledProps)
             {
-                sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods));
+                sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods, classAddParams));
             }
 
             foreach (var prop in classInfo.CompiledDictionaryProps)
             {
-                sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods));
+                sb.AppendLine(GetParametersMethod(prop, classInfo.AdditionalParametersForMethods, classAddParams));
             }
 
             sb.AppendLine("}");
@@ -180,8 +183,12 @@ namespace CompiledDefinitionSourceGenerator
         /// </summary>
         /// <param name="info">The property info.</param>
         /// <param name="additionParameterMethods">The list of additional parameter methods.</param>
+        /// <param name="classAddParams">True if the class has additional parameters method.</param>
         /// <returns>The method, in string form.</returns>
-        private static string EvalConditionMethod(PropertyInfo info, IReadOnlyCollection<string> additionParameterMethods)
+        private static string EvalConditionMethod(
+            PropertyInfo info, 
+            IReadOnlyCollection<string> additionParameterMethods, 
+            bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
@@ -189,7 +196,7 @@ namespace CompiledDefinitionSourceGenerator
             List<string> allParameters = new List<string>() { "Random rdm" };
             allParameters.AddRange(info.Variables.Select(v => $"BaseThing {v}").ToList());
 
-            if (matchingAdditionalParamtersMethod != null)
+            if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 allParameters.Add("IDictionary<string, BaseThing> additionalParameters");
             }
@@ -208,7 +215,7 @@ namespace CompiledDefinitionSourceGenerator
 
             sb.AppendLine("};");
 
-            if (matchingAdditionalParamtersMethod != null)
+            if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 sb.AppendLine(@"
                     foreach(var additionalParameter in additionalParameters)
@@ -228,15 +235,19 @@ namespace CompiledDefinitionSourceGenerator
         /// </summary>
         /// <param name="info">The property info.</param>
         /// <param name="additionParameterMethods">The list of additional parameter methods.</param>
+        /// <param name="classAddParams">True if the class has additional parameters method.</param>
         /// <returns>The method, in string form.</returns>
-        private static string EvalDictionaryConditionMethod(PropertyInfo info, IReadOnlyCollection<string> additionParameterMethods)
+        private static string EvalDictionaryConditionMethod(
+            PropertyInfo info, 
+            IReadOnlyCollection<string> additionParameterMethods, 
+            bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
             List<string> allParameters = new List<string>() { "string key", "Random rdm" };
             allParameters.AddRange(info.Variables.Select(v => $"BaseThing {v}").ToList());
 
-            if (matchingAdditionalParamtersMethod != null)
+            if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 allParameters.Add("IDictionary<string, BaseThing> additionalParameters");
             }
@@ -275,8 +286,12 @@ namespace CompiledDefinitionSourceGenerator
         /// </summary>
         /// <param name="info">The property info.</param>
         /// <param name="additionParameterMethods">The list of methods which return addition parameter names.</param>
+        /// <param name="classAddParams">True if the class has additional parameters method.</param>
         /// <returns>A method, in string form</returns>
-        private static string GetParametersMethod(PropertyInfo info, IReadOnlyCollection<string> additionParameterMethods)
+        private static string GetParametersMethod(
+            PropertyInfo info, 
+            IReadOnlyCollection<string> additionParameterMethods, 
+            bool classAddParams)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"private IList<string> GetParameters{info.Name}()");
@@ -289,6 +304,11 @@ namespace CompiledDefinitionSourceGenerator
             if (matchingAdditionalParamtersMethod != null)
             {
                 sb.AppendLine($"parameters.AddRange(this.{matchingAdditionalParamtersMethod}());");
+            }
+
+            if (classAddParams)
+            {
+                sb.AppendLine($"parameters.AddRange(this.{ClassInfo.AdditionalParamtersForClassMethod}());");
             }
 
             sb.AppendLine("return parameters;\n}");

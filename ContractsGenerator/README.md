@@ -44,7 +44,7 @@ Then the condition will be compiled with the properties returned by this functio
 public int EvalAttributes(Random rdm, BaseThing subject, IDictionary<string, BaseThing> additionalPParameters);
 ```
 
-**FUTURE WORK** All compiled properties in a class can have additional parameters added via the below method function. This works in conjunction with the other AdditionalParametersFor* methods:
+All compiled properties in a class can have additional parameters added via the below method function. This works in conjunction with the other AdditionalParametersFor* methods:
 ```csharp
 public IList<string> AdditionalParametersForClass()
 ```

@@ -25,6 +25,11 @@ namespace CompiledDefinitionSourceGenerator
         public const string AdditionalParamtersMethodPrefix = "AdditionalParametersFor";
 
         /// <summary>
+        /// The start of method names which provide additional parameters for compiled conditions.
+        /// </summary>
+        public const string AdditionalParamtersForClassMethod = "AdditionalParametersForClass";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ClassInfo"/> class.
         /// </summary>
         /// <param name="type">The type of the class.</param>

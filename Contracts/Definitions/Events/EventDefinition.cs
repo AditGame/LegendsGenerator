@@ -47,7 +47,16 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets additional variable names for the Description method.
         /// </summary>
         /// <returns>The list of additional parameters.</returns>
-        public IList<string> AdditionalParametersForDescription()
+        public IList<string> AdditionalParametersForClass()
+        {
+            return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Gets additional variable names for the Description method.
+        /// </summary>
+        /// <returns>The list of additional parameters.</returns>
+        public IList<string> AdditionalParametersForChance()
         {
             return this.Objects?.Select(x => x.VariableName).ToList() ?? new List<string>();
         }

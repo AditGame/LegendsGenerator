@@ -112,7 +112,10 @@ namespace LegendsGenerator
             int minChance = rdm.Next(1, 100);
             return applicableEvents
                 .Shuffle(rdm)
-                .Where(e => this.Matches(minChance, () => e.EvalChance(rdm, thing), () => e.Subject.EvalCondition(rdm, thing)))
+                .Where(e => this.Matches(
+                    minChance, 
+                    () => e.EvalChance(rdm, thing, new Dictionary<string, BaseThing>()), 
+                    () => e.Subject.EvalCondition(rdm, thing)))
                 .Take(maxEvents);
         }
 
