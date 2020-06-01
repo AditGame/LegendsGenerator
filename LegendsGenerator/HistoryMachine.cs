@@ -51,7 +51,7 @@ namespace LegendsGenerator
                 foreach (EventDefinition occurredEvent in occurredEvents)
                 {
                     Log.Info($"Adding event {occurredEvent.Description}");
-                    this.ApplyEvent(rdm, world, occurredEvent, site);
+                    this.ApplyEvent(rdm, world, occurredEvent, site, new Dictionary<string, BaseThing>());
                 }
             }
         }
@@ -63,12 +63,13 @@ namespace LegendsGenerator
         /// <param name="world">The world.</param>
         /// <param name="ev">The event definition.</param>
         /// <param name="thing">The thing to apply the event to.</param>
-        private void ApplyEvent(Random rdm, World world, EventDefinition ev, BaseThing thing)
+        /// <param name="objects">The objects of this event.</param>
+        private void ApplyEvent(Random rdm, World world, EventDefinition ev, BaseThing thing, IDictionary<string, BaseThing> objects)
         {
             int minChance = rdm.Next(1, 100);
             EventResultDefinition? result = ev.Results
                 .Shuffle(rdm)
-                .FirstOrDefault(e => this.Matches(minChance, () => e.EvalChance(rdm, thing), () => e.EvalCondition(rdm, thing)));
+                .FirstOrDefault(e => this.Matches(minChance, () => e.EvalChance(rdm, thing, objects), () => e.EvalCondition(rdm, thing, objects)));
 
             result ??= ev.Results.FirstOrDefault(r => r.Default);
 
@@ -83,11 +84,11 @@ namespace LegendsGenerator
             {
                 Effect effect = new Effect()
                 {
-                    Title = effectDefinition.EvalTitle(rdm, thing),
-                    Description = effectDefinition.EvalDescription(rdm, thing),
+                    Title = effectDefinition.EvalTitle(rdm, thing, objects),
+                    Description = effectDefinition.EvalDescription(rdm, thing, objects),
                     Attribute = effectDefinition.AffectedAttribute,
-                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing),
-                    Duration = effectDefinition.EvalDuration(rdm, thing),
+                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing, objects),
+                    Duration = effectDefinition.EvalDuration(rdm, thing, objects),
                     TookEffect = world.StepCount,
                 };
 

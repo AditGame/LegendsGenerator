@@ -46,6 +46,22 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine(Usings);
             sb.AppendLine($"    {classInfo.Accesibility} partial class {classInfo.TypeName}");
             sb.AppendLine("    {");
+            sb.AppendLine(@"
+private ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<string> parameters)
+{
+    if (complex)
+    {
+        return this.Compiler.AsComplex<T>(condition, parameters);
+    }
+    else if (formattedText)
+    {
+        return this.Compiler.AsFormattedText(condition, parameters) as ICompiledCondition<T>;
+    }
+    else
+    {
+        return this.Compiler.AsSimple<T>(condition, parameters);
+    }
+}");
             sb.AppendLine(FieldDefinitions(classInfo));
             sb.AppendLine(CompileMethod(classInfo));
             sb.AppendLine(AttachMethod(classInfo));
@@ -54,6 +70,16 @@ namespace CompiledDefinitionSourceGenerator
             if (classInfo.UsesAdditionalParametersForHoldingClass)
             {
                 sb.AppendLine(AttachUpstreamParametersMethod());
+            }
+
+            foreach (var prop in classInfo.CompiledProps)
+            {
+                sb.AppendLine(IsComplexProperty(prop));
+            }
+
+            foreach (var prop in classInfo.CompiledDictionaryProps)
+            {
+                sb.AppendLine(IsComplexProperty(prop));
             }
 
             foreach (var prop in classInfo.CompiledProps)
@@ -165,17 +191,15 @@ namespace CompiledDefinitionSourceGenerator
             foreach (var prop in classInfo.CompiledProps)
             {
                 sb.AppendLine($"this.compiledCondition{prop.Name} = ");
-                string type = prop.AsFormattedText ? "AsFormattedText" : $"AsSimple<{prop.ReturnType}>";
-                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.{type}(this.{prop.Name}, this.GetParameters{prop.Name}()));");
+                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.CreateCondition<{prop.ReturnType}>(this.{prop.Name}, {prop.AsFormattedText.ToString().ToLower()}, this.{prop.Name}_IsComplex, this.GetParameters{prop.Name}()));");
             }
 
             foreach (var prop in classInfo.CompiledDictionaryProps)
             {
-                string type = prop.AsFormattedText ? "AsFormattedText" : $"AsSimple<{prop.ReturnType}>";
                 sb.AppendLine($"foreach (var entry in this.{prop.Name})");
                 sb.AppendLine("{");
                 sb.AppendLine($"this.compiledCondition{prop.Name}[entry.Key] = ");
-                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.Compiler.{type}(this.{prop.Name}[entry.Key], this.GetParameters{prop.Name}()));");
+                sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.CreateCondition<{prop.ReturnType}>(this.{prop.Name}[entry.Key], {prop.AsFormattedText.ToString().ToLower()}, this.{prop.Name}_IsComplex, this.GetParameters{prop.Name}()));");
                 sb.AppendLine("}");
             }
 
@@ -243,6 +267,19 @@ namespace CompiledDefinitionSourceGenerator
             }
 
             sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Generates the property which decides if a compiled property is complex.
+        /// </summary>
+        /// <returns>The method in string form.</returns>
+        private static string IsComplexProperty(PropertyInfo info)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"public bool {info.Name}_IsComplex {{ get; set; }}");
 
             return sb.ToString();
         }
