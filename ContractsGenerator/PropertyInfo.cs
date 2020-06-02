@@ -26,11 +26,11 @@ namespace CompiledDefinitionSourceGenerator
                 .SelectMany(a => a.ConstructorArguments);
 
             this.ReturnType = attributeConstructorArguments
-                .First(x => x.Type.Name == "Type").Value.ToString();
+                .First(x => x.Type.Name == "Type").Value?.ToString() ?? "void";
 
             this.Variables = attributeConstructorArguments
                 .First(x => x.Type.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase)).Values
-                .Select(x => x.Value.ToString())
+                .Select(x => x.Value?.ToString() ?? "void")
                 .ToList();
 
             this.AsFormattedText = property

@@ -14,6 +14,10 @@ namespace LegendsGenerator.ContractsGenerator
     /// </summary>
     public class DefinitionPropertyInfo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefinitionPropertyInfo"/> class.
+        /// </summary>
+        /// <param name="property">The property symbol to parse.</param>
         public DefinitionPropertyInfo(IPropertySymbol property)
         {
             this.Name = property.Name;
@@ -33,8 +37,14 @@ namespace LegendsGenerator.ContractsGenerator
             }
         }
 
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Gets or sets if the underlying type of this property needs upstream parameters.
+        /// </summary>
         public bool UsesAdditionalParametersForHoldingClass { get; set; }
     }
 }
