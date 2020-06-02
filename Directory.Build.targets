@@ -1,5 +1,23 @@
 <Project>
-  <PropertyGroup>
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+	</PropertyGroup>
+	
+    <!-- Stylecop and FxCop -->
+    <ItemGroup Condition=" $(DisableAnalyzers) != 'true'">
+        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+            <Version>3.0.0</Version>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers">
+            <Version>1.1.118</Version>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json">
+            <Link>stylecop.json</Link>
+            <Visible>false</Visible>
+        </AdditionalFiles>
+    </ItemGroup>
 </Project>

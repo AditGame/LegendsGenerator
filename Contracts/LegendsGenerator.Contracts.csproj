@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    
+    <!-- Source generators and analyzers don't work together well, disable for now. -->
+    <DisableAnalyzers>true</DisableAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
