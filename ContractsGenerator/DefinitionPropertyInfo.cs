@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using CompiledDefinitionSourceGenerator;
-
-using Microsoft.CodeAnalysis;
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="DefinitionPropertyInfo.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.ContractsGenerator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using CompiledDefinitionSourceGenerator;
+
+    using Microsoft.CodeAnalysis;
+
     /// <summary>
     /// Information about a property with a definition in it.
     /// </summary>
@@ -43,7 +49,7 @@ namespace LegendsGenerator.ContractsGenerator
         public string Name { get; }
 
         /// <summary>
-        /// Gets or sets if the underlying type of this property needs upstream parameters.
+        /// Gets or sets a value indicating whether the underlying type of this property needs upstream parameters.
         /// </summary>
         public bool UsesAdditionalParametersForHoldingClass { get; set; }
     }

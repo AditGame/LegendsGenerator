@@ -5,15 +5,15 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   
-    <!-- Stylecop and FxCop
+    <!-- Stylecop and FxCop -->
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-            <Version>2.6.0</Version>
+            <Version>3.0.0</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="StyleCop.Analyzers">
-            <Version>1.0.2</Version>
+            <Version>1.1.118</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -21,6 +21,6 @@
             <Link>stylecop.json</Link>
             <Visible>false</Visible>
         </AdditionalFiles>
-    </ItemGroup>-->
+    </ItemGroup>
 
 </Project>

@@ -50,7 +50,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         public IList<string> Usings { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets whether to enable Nullable on this class.
+        /// Gets or sets a value indicating whether to enable Nullable on this class.
         /// </summary>
         public bool Nullable { get; set; }
     }

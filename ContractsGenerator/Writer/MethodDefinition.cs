@@ -2,11 +2,11 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace LegendsGenerator.ContractsGenerator.Writer
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// the definition of a method.
     /// </summary>
@@ -59,7 +59,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         /// <summary>
         /// Gets or sets all parameters of this method.
         /// </summary>
-        public IEnumerable<ParamDef> Parameters { get; set; } = new ParamDef[0];
+        public IEnumerable<ParamDef> Parameters { get; set; } = System.Array.Empty<ParamDef>();
 
         /// <summary>
         /// Adds the method header to the class writer.

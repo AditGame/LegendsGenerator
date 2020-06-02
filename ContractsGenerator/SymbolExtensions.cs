@@ -105,7 +105,7 @@ namespace CompiledDefinitionSourceGenerator
         /// Evals if the symbol derives another type.
         /// </summary>
         /// <param name="symbol">The symbol.</param>
-        /// <param name="type">The type to check</param>
+        /// <param name="type">The type to check.</param>
         /// <returns>True if this class derives base definition.</returns>
         public static bool Derives(this ITypeSymbol symbol, string type)
         {

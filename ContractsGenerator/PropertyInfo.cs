@@ -10,14 +10,14 @@ namespace CompiledDefinitionSourceGenerator
     using Microsoft.CodeAnalysis;
 
     /// <summary>
-    /// Information about a property
+    /// Information about a property.
     /// </summary>
     public class PropertyInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyInfo"/> class.
         /// </summary>
-        /// <param name="property">The property</param>
+        /// <param name="property">The property.</param>
         public PropertyInfo(IPropertySymbol property)
         {
             this.Name = property.Name;

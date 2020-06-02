@@ -183,7 +183,7 @@ namespace LegendsGenerator
         private IDictionary<string, BaseThing>? GetMatchingObjects(
             Random rdm,
             World world,
-            EventDefinition eventDef, 
+            EventDefinition eventDef,
             BaseThing subject)
         {
             IDictionary<string, BaseThing> output = new Dictionary<string, BaseThing>();

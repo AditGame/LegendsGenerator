@@ -64,7 +64,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         }
 
         /// <summary>
-        /// The current tab level.
+        /// gets or sets the current tab level.
         /// </summary>
         protected int TabLevel
         {
@@ -72,6 +72,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
             {
                 return this.tabLevel;
             }
+
             set
             {
                 this.tabLevel = value < 0 ? 0 : value;
@@ -104,8 +105,8 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         /// <param name="value">An optional value to set to the field.</param>
         public void AddField(
             string summary,
-            AccessLevel access, 
-            string type, 
+            AccessLevel access,
+            string type,
             string name,
             string? value = null)
         {
@@ -269,7 +270,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         {
             if (line != null)
             {
-                string tabs = new string(' ', tabLevel * tabSpaces);
+                string tabs = new string(' ', this.tabLevel * this.tabSpaces);
                 this.sb.AppendLine(tabs + line);
             }
             else
@@ -282,7 +283,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         public override string ToString()
         {
             StringBuilder output = new StringBuilder(this.sb.ToString());
-            output.AppendLine(new string(' ', tabSpaces) + "}");
+            output.AppendLine(new string(' ', this.tabSpaces) + "}");
             output.AppendLine("}");
 
             return output.ToString();

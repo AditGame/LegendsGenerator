@@ -18,7 +18,7 @@ namespace CompiledDefinitionSourceGenerator
         /// <summary>
         /// The usings in the class.
         /// </summary>
-        private static readonly string[] usings = new string[]
+        private static readonly string[] Usings = new string[]
         {
             "System",
             "System.Collections.Generic",
@@ -47,7 +47,7 @@ namespace CompiledDefinitionSourceGenerator
                 {
                     Nullable = true,
                     Partial = true,
-                    Usings = usings,
+                    Usings = Usings,
                 });
 
             FieldDefinitions(sb, classInfo);
@@ -104,7 +104,7 @@ namespace CompiledDefinitionSourceGenerator
             {
                 sb.AddField(
                     "A method which returns the upstream additional parameters.",
-                    "Func<IList<string>>?", 
+                    "Func<IList<string>>?",
                     "upstreamAdditionalParametersMethod");
             }
 
@@ -112,7 +112,7 @@ namespace CompiledDefinitionSourceGenerator
             {
                 sb.AddField(
                     $"The lazy-compiled condition for the {prop.Name} property.",
-                    $"Lazy<ICompiledCondition<{prop.ReturnType}>>", 
+                    $"Lazy<ICompiledCondition<{prop.ReturnType}>>",
                     $"compiledCondition{prop.Name}");
             }
 
@@ -120,7 +120,7 @@ namespace CompiledDefinitionSourceGenerator
             {
                 sb.AddField(
                     $"The lazy-compiled conditions for the {prop.Name} property.",
-                    $"IDictionary<string, Lazy<ICompiledCondition<{prop.ReturnType}>>>", 
+                    $"IDictionary<string, Lazy<ICompiledCondition<{prop.ReturnType}>>>",
                     $"compiledCondition{prop.Name}",
                     $"new Dictionary<string, Lazy<ICompiledCondition<{prop.ReturnType}>>>()");
             }
@@ -170,8 +170,8 @@ namespace CompiledDefinitionSourceGenerator
                     SummaryDoc = "Attaches a method which returns additional parameters, typically from a holding class.",
                     Access = AccessLevel.Public,
                     New = true,
-                    Parameters = new ParamDef[] 
-                    { 
+                    Parameters = new ParamDef[]
+                    {
                         new ParamDef("Func<IList<string>>", "func", "The function which returns the upstream additional parameters."),
                     },
                 });
@@ -179,6 +179,11 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine("this.upstreamAdditionalParametersMethod = func;");
         }
 
+        /// <summary>
+        /// Adds the attach override to the source file.
+        /// </summary>
+        /// <param name="sb">The class writer.</param>
+        /// <param name="classInfo">The class info.</param>
         private static void AttachMethod(ClassWriter sb, ClassInfo classInfo)
         {
             using var braces = sb.AddMethod(
@@ -323,26 +328,26 @@ namespace CompiledDefinitionSourceGenerator
         /// <param name="classAddParams">True if the class has additional parameters method.</param>
         private static void EvalConditionMethod(
             ClassWriter sb,
-            PropertyInfo info, 
-            IReadOnlyCollection<string> additionParameterMethods, 
+            PropertyInfo info,
+            IReadOnlyCollection<string> additionParameterMethods,
             bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
 
-            List<ParamDef> allParameters = new List<ParamDef>() 
-            { 
-                new ParamDef("Random", "rdm" , "The random number generator"),
+            List<ParamDef> allParameters = new List<ParamDef>()
+            {
+                new ParamDef("Random", "rdm", "The random number generator"),
             };
 
-            allParameters.AddRange(info.Variables.Select(v => 
+            allParameters.AddRange(info.Variables.Select(v =>
                 new ParamDef($"BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 allParameters.Add(new ParamDef(
-                    "IDictionary<string, BaseThing>", 
-                    "additionalParameters", 
+                    "IDictionary<string, BaseThing>",
+                    "additionalParameters",
                     $"Additional parameters as defined by AdditionalParametersForClass and AdditionalParametersFor{info.Name} methods, or the upstream additional parameters."));
             }
 
@@ -382,8 +387,8 @@ namespace CompiledDefinitionSourceGenerator
         /// <param name="classAddParams">True if the class has additional parameters method.</param>
         private static void EvalDictionaryConditionMethod(
             ClassWriter sb,
-            PropertyInfo info, 
-            IReadOnlyCollection<string> additionParameterMethods, 
+            PropertyInfo info,
+            IReadOnlyCollection<string> additionParameterMethods,
             bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
@@ -392,7 +397,7 @@ namespace CompiledDefinitionSourceGenerator
             List<ParamDef> allParameters = new List<ParamDef>()
             {
                 new ParamDef("string", "key", "The key, in the condition dicitonary, to evalulate."),
-                new ParamDef("Random", "rdm" , "The random number generator"),
+                new ParamDef("Random", "rdm", "The random number generator"),
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
@@ -415,7 +420,6 @@ namespace CompiledDefinitionSourceGenerator
                     Type = info.ReturnType,
                     Parameters = allParameters,
                 });
-
 
             sb.AddDictionary(
                 "Dictionary<string, BaseThing>",
@@ -443,8 +447,8 @@ namespace CompiledDefinitionSourceGenerator
         /// <param name="classAddParams">True if the class has additional parameters method.</param>
         private static void GetParametersMethod(
             ClassWriter sb,
-            PropertyInfo info, 
-            IReadOnlyCollection<string> additionParameterMethods, 
+            PropertyInfo info,
+            IReadOnlyCollection<string> additionParameterMethods,
             bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =

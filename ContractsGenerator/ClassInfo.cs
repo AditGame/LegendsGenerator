@@ -114,7 +114,7 @@ namespace CompiledDefinitionSourceGenerator
         public string TypeName { get; }
 
         /// <summary>
-        /// Gets or sets a value indiating whether the compiled members of this class should use additional
+        /// Gets a value indicating whether the compiled members of this class should use additional
         /// parameters from the holding class.
         /// </summary>
         public bool UsesAdditionalParametersForHoldingClass { get; }

@@ -31,28 +31,28 @@ namespace LegendsGenerator.ContractsGenerator.Writer
             this.writer.StartBrace();
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         /// <summary>
         /// Disposes this class.
         /// </summary>
         /// <param name="disposing">True if disposing.</param>
         private void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            { 
+            if (!this.disposedValue)
+            {
                 if (disposing)
                 {
                     this.writer.EndBrace();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
