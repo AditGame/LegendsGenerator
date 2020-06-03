@@ -1,0 +1,53 @@
+﻿<Window x:Class="LegendsGenerator.Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LegendsGenerator.Editor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DataGridCell Grid.RowSpan="3">
+            <local:DefinitionList 
+                    x:Name="DefList"
+                    />
+        </DataGridCell>
+        <GridSplitter 
+              Grid.Column="1"
+              Grid.RowSpan="3"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Stretch"
+              Background="Black" 
+              ShowsPreview="True"
+              Width="5"
+              />
+        <DataGridCell Grid.Column="2">
+            <local:DefinitionEditor 
+                    x:Name="EditView"
+                    />
+        </DataGridCell>
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="2"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              Background="Black" 
+              ShowsPreview="True"
+              Height="5"
+           />
+        <DataGridCell Grid.Column="2" Grid.Row="3">
+            <TextBlock>Test!</TextBlock>
+        </DataGridCell>
+
+
+    </Grid>
+</Window>

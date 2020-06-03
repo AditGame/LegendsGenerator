@@ -28,7 +28,11 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         public IReadOnlyList<SiteDefinition> SiteDefinitions { get; }
 
-
+        /// <summary>
+        /// Gets the list of all definitions.
+        /// </summary>
+        public IReadOnlyList<BaseThingDefinition> AllDefinitions =>
+            this.SiteDefinitions;
 
         /// <summary>
         /// Attaches the compiler to all definitions.
@@ -36,7 +40,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="compiler">The csmpiler.</param>
         public void Attach(IConditionCompiler compiler)
         {
-            foreach (var def in this.SiteDefinitions)
+            foreach (var def in this.AllDefinitions)
             {
                 def.Attach(compiler);
             }

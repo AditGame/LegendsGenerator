@@ -19,6 +19,48 @@
         "Population": "Rand.Next(20000, 100000)"
       },
       "DefaultAspects": {},
-    }
+    },
+    {
+      "Name": "Town",
+      "Description": "A small sized settlement",
+      "MaxEvents": "1",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(2000, 10000)"
+      },
+      "DefaultAspects": {},
+    },
+    {
+      "Name": "Tower",
+      "Description": "Look, johnson!",
+      "MaxEvents": "1",
+      "DefaultAttributes": {
+        "Evil": "Rand.Next(-20, 20)",
+        "Population": "Rand.Next(0, 10)"
+      },
+      "DefaultAspects": {},
+    },
+    {
+      "Name": "Evil Tower",
+      "Description": "Evil.",
+      "MaxEvents": "1",
+      "InheritsFrom": "Tower",
+      "DefaultAttributes": {
+        "Evil": "Rand.Next(-5, 5)",
+        "Population": "Rand.Next(0, 1000000)"
+      },
+      "DefaultAspects": {},
+    },
+    {
+      "Name": "Annie",
+      "Description": "Evil.",
+      "MaxEvents": "1",
+      "InheritsFrom": "Her Parents :(",
+      "DefaultAttributes": {
+        "Evil": "Rand.Next(-5, 5)",
+        "Population": "Rand.Next(0, 1000000)"
+      },
+      "DefaultAspects": {},
+    },
   ]
 }
