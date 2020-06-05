@@ -28,26 +28,30 @@ namespace LegendsGenerator.Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Context context = new Context();
+
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             var defs = DefinitionSerializer.DeserializeFromDirectory(@"C:\Users\tt\Source\Repos\LegendsGenerator\LegendsGenerator\Definitions");
 
-            this.DefList.AttachDefinitions(defs);
-            this.DefList.Selected += this.ItemSelected;
-        }
+            this.DataContext = this.context;
 
-        public BaseDefinition? CurrentDefinition { get; set; }
+            foreach (var def in defs.events.Events)
+            {
+                this.context.Definitions.Add(new Definition(def));
+            }
+
+            foreach (var def in defs.definitions.AllDefinitions)
+            {
+                this.context.Definitions.Add(new Definition(def));
+            }
+        }
 
         public void ItemSelected(object sender, EventArgs e)
         {
-            this.CurrentDefinition = sender as BaseDefinition;
-
-            if (this.CurrentDefinition != null)
-            {
-                this.EditView.SetDefinition(this.CurrentDefinition);
-            }
+            this.context.SelectedDefinition = this.context.Definitions[new Random().Next(0, this.context.Definitions.Count())];
         }
     }
 }

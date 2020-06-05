@@ -8,31 +8,100 @@ namespace LegendsGenerator.Editor.ContractParsing
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Media;
+
+    using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
     /// Represents a node of the contract.
     /// </summary>
-    public abstract class DefinitionNode
+    public abstract class DefinitionNode : INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefinitionNode"/> class.
         /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="nullable">If the record can be set to null or not.</param>
+        /// <param name="thing">The thing this node points to.</param>
+        /// <param name="property">The property info.</param>
+        /// <param name="options">The options for this node.</param>
+        /// <param name="readOnly">If this instance should be read only.</param>
         public DefinitionNode(
-            string description,
-            bool nullable)
+            object? thing,
+            ElementInfo property,
+            IEnumerable<PropertyInfo> options,
+            bool readOnly = false)
         {
-            this.Description = description;
-            this.Nullable = nullable;
+            this.Name = property.Name.Split("_").Last();
+            this.Description = property.Description;
+            this.Nullable = property.Nullable;
+            this.ContentsModifiable = !readOnly;
+
+            this.GetContentsFunc = property.GetMethod;
+
+            if (!readOnly)
+            {
+                this.SetContentsFunc = property.SetMethod;
+            }
+
+            foreach (PropertyInfo option in options)
+            {
+                DefinitionNode? node = DefinitionParser.ToNode(thing, option);
+                if (node != null)
+                {
+                    this.Options.Add(node);
+                }
+            }
+
+            // Set up that changes to Content or underlying nodes causes validation changes.
+            this.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName?.Equals(nameof(this.Content)) ?? false)
+                {
+                    this.OnPropertyChanged(nameof(this.ValidationFailures));
+                }
+            };
+
+            foreach (DefinitionNode node in this.Nodes)
+            {
+                node.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                    {
+                        this.OnPropertyChanged(nameof(this.ValidationFailures));
+                    }
+                };
+            }
+
+            foreach (DefinitionNode node in this.Options)
+            {
+                node.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                    {
+                        this.OnPropertyChanged(nameof(this.ValidationFailures));
+                    }
+                };
+            }
+
+            this.Nodes.CollectionChanged += this.NodeListItemsChanged;
+
+            this.Options.CollectionChanged += this.NodeListItemsChanged;
         }
 
         /// <summary>
-        /// Gets the name of the node, typically either the property name or the dictionary key.
+        /// Notifies when a property is changed.
         /// </summary>
-        public abstract string Name { get; }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Gets or sets the name of the node, typically either the property name or the dictionary key.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the description of this node.
@@ -67,6 +136,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 }
 
                 this.SetContentsFunc.Invoke(value);
+                this.OnPropertyChanged(nameof(this.Content));
             }
         }
 
@@ -88,42 +158,63 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets the list of additional options which can be added to this node.
         /// </summary>
-        public List<DefinitionNode> Options { get; } = new List<DefinitionNode>();
+        public ObservableCollection<DefinitionNode> Options { get; } = new ObservableCollection<DefinitionNode>();
 
         /// <summary>
         /// Gets the list of subnodes on this node.
         /// </summary>
-        public List<DefinitionNode> SubNodes { get; } = new List<DefinitionNode>();
+        public ObservableCollection<DefinitionNode> Nodes { get; } = new ObservableCollection<DefinitionNode>();
 
         /// <summary>
         /// Gets the list of validation failures on this node.
         /// </summary>
-        public IList<string> ValidationFailures
+        public IList<ValidationIssue> ValidationFailures
         {
             get
             {
-                List<string> failures = new List<string>();
-                failures.AddRange(this.ValidateNodeFunc());
-                this.Options.ForEach(node => failures.AddRange(node.ValidationFailures));
-                this.SubNodes.ForEach(node => failures.AddRange(node.ValidationFailures));
+                List<ValidationIssue> failures = new List<ValidationIssue>();
+                failures.AddRange(this.GetLevelIssues());
+                this.Options.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
+                this.Nodes.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
                 return failures;
+            }
+        }
+
+        /// <summary>
+        /// Gets the text color to use for the title.
+        /// </summary>
+        public Brush GetTextColor
+        {
+            get
+            {
+                if (this.ValidationFailures.Any(v => v.Level == ValidationLevel.Info))
+                {
+                    return Brushes.Blue;
+                }
+                else if (this.ValidationFailures.Any(v => v.Level == ValidationLevel.Warning))
+                {
+                    return Brushes.Orange;
+                }
+                else if (this.ValidationFailures.Any(v => v.Level == ValidationLevel.Error))
+                {
+                    return Brushes.Red;
+                }
+                else
+                {
+                    return Brushes.Black;
+                }
             }
         }
 
         /// <summary>
         /// Gets or sets a function which returns the contents of this node.
         /// </summary>
-        protected Func<object>? GetContentsFunc { get; set; }
+        protected Func<object?>? GetContentsFunc { get; set; }
 
         /// <summary>
         /// Gets or sets a function which sets the contents of this node.
         /// </summary>
         protected Action<object?>? SetContentsFunc { get; set; }
-
-        /// <summary>
-        /// Gets or sets a function which validates that the contents are valid.
-        /// </summary>
-        protected Func<IList<string>> ValidateNodeFunc { get; set; } = () => Array.Empty<string>();
 
         /// <summary>
         /// Renames this instance.
@@ -165,6 +256,54 @@ namespace LegendsGenerator.Editor.ContractParsing
                     throw new InvalidOperationException($"Must set as {typeof(T).Name}.");
                 }
             });
+        }
+
+        /// <summary>
+        /// Gets the issues present on this specific level of definition.
+        /// </summary>
+        /// <returns>The list of issues on this level.</returns>
+        protected virtual IEnumerable<ValidationIssue> GetLevelIssues()
+        {
+            return Array.Empty<ValidationIssue>();
+        }
+
+        /// <summary>
+        /// Fires property changed events.
+        /// </summary>
+        /// <param name="propertyName">True when property changed.</param>
+        protected void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+            // If the vlidation changed, than the text color changed as well.
+            if (propertyName.Equals(nameof(this.ValidationFailures)))
+            {
+                this.OnPropertyChanged(nameof(this.GetTextColor));
+            }
+        }
+
+        /// <summary>
+        /// Action preformed when a node list changes.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void NodeListItemsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            this.OnPropertyChanged(nameof(this.ValidationFailures));
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems != null)
+            {
+                foreach (DefinitionNode node in e.NewItems.OfType<DefinitionNode>())
+                {
+                    node.PropertyChanged += (s, e) =>
+                    {
+                        if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                        {
+                            this.OnPropertyChanged(nameof(this.ValidationFailures));
+                        }
+                    };
+                }
+            }
         }
     }
 }

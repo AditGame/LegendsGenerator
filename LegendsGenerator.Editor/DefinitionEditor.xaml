@@ -4,8 +4,67 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LegendsGenerator.Editor"
+             xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
+             xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TreeView x:Name="TreeView"
-              Loaded="TreeView_Loaded" />
+              ItemsSource="{Binding SelectedDefinition.Nodes}"
+              SelectedItemChanged="TreeView_SelectedItemChanged">
+        <TreeView.ItemContainerStyle>
+            <Style TargetType="{x:Type TreeViewItem}">
+                <Setter Property="IsExpanded" Value="True" />
+            </Style>
+        </TreeView.ItemContainerStyle>
+        <TreeView.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:DefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem />
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:ListDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <Button Click="CreateButton_Click" Visibility="{Binding CanCreate}">
+                        <TextBlock Text="Create +" />
+                    </Button>
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:StringDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <TextBox Text="{Binding Content}" />
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:CompiledDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <code:SyntaxHighlightBox Text="{Binding Content}" IsEnabled="{Binding InlineEnabled}" IsLineNumbersMarginVisible="false" MaxLines="1" SyntaxLanguage="{Binding Language}" />
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:SectionDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Click="CreateButton_Click" Visibility="{Binding CanCreate}">
+                            <TextBlock Text="Create +" />
+                        </Button>
+                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete}">
+                            <TextBlock Text="Delete -" />
+                        </Button>
+                    </StackPanel>
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:EnumDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <ComboBox ItemsSource="{Binding EnumValues}" SelectedValue="{Binding EnumValue}" />
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:BoolDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:IntDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <xctk:IntegerUpDown Value="{Binding Content}" />
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+        </TreeView.Resources>
+    </TreeView>
 </UserControl>

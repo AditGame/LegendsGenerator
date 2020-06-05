@@ -30,10 +30,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the objects of this event.
         /// </summary>
-        public IDictionary<string, ObjectDefinition> Objects { get; set; } = new Dictionary<string, ObjectDefinition>();
+        public Dictionary<string, ObjectDefinition> Objects { get; set; } = new Dictionary<string, ObjectDefinition>();
 
         /// <summary>
-        /// Gets or sets the descriptino of this event.
+        /// Gets or sets the description of this event.
         /// </summary>
         [Compiled(typeof(string), "Subject", AsFormattedText = true)]
         public string Description { get; set; } = "UNDEFINED_DESCRIPTION";
@@ -41,7 +41,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the results of this event.
         /// </summary>
-        public EventResultDefinition[] Results { get; set; } = Array.Empty<EventResultDefinition>();
+        public List<EventResultDefinition> Results { get; set; } = new List<EventResultDefinition>();
 
         /// <summary>
         /// Gets additional variable names for the Description method.

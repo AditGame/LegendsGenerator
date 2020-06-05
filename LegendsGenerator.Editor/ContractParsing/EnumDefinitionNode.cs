@@ -1,47 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="EnumDefinitionNode.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     public class EnumDefinitionNode : DefinitionNode
     {
-        private ComboBox box = new ComboBox();
+        private Type type;
 
         public EnumDefinitionNode(
-            string description,
-            string name,
-            bool nullable,
-            Type enumType,
-            Func<Enum> getValue,
-            Action<Enum> setValue)
-            : base(description, nullable)
+            object? thing,
+            ElementInfo property,
+            IEnumerable<PropertyInfo> options,
+            bool readOnly = false)
+            : base(thing, property, options, readOnly)
         {
-            this.Name = name;
-            this.GetContentsFunc = getValue;
+            this.type = property.PropertyType;
 
-            if (setValue != null)
+            this.EnumValues = Enum.GetNames(this.type);
+        }
+
+        public string EnumValue
+        {
+            get
             {
-                this.ContentsModifiable = true;
-                this.SetContentsFunc = ConvertAction(setValue);
+                return Enum.GetName(this.type, this.Content);
             }
 
-            this.box.ItemsSource = Enum.GetNames(enumType);
-
-            this.box.SelectedIndex = (int) Convert.ChangeType(getValue(), typeof(int));
+            set
+            {
+                this.Content = Enum.Parse(this.type, value);
+            }
         }
 
-        /// <inheritdoc/>
-        public override string Name { get; }
-
-        /// <inheritdoc/>
-        public override UIElement GetContentElement()
-        {
-            return this.box;
-        }
+        /// <summary>
+        /// Gets the list of options.
+        /// </summary>
+        public IList<string> EnumValues { get; }
     }
 }

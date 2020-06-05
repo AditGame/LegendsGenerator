@@ -7,7 +7,7 @@
 namespace LegendsGenerator.Editor
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -21,92 +21,68 @@ namespace LegendsGenerator.Editor
     /// </summary>
     public partial class DefinitionEditor : UserControl
     {
-        /// <summary>
-        /// the current nodes to display.
-        /// </summary>
-        private IList<DefinitionNode> nodes = new List<DefinitionNode>();
-
         public DefinitionEditor()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
-        /// <summary>
-        /// Sets the definition to display/edit.
-        /// </summary>
-        /// <param name="definition">The definition.</param>
-        public void SetDefinition(BaseDefinition definition)
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.nodes = DefinitionParser.ParseToNodes(definition.GetType(), definition);
+            DefinitionNode? item = e.NewValue as DefinitionNode;
 
-            if (this.TreeView.IsLoaded)
+            if (item == null)
             {
-                this.UpdateItemList(this.TreeView);
+                return;
             }
+
+            Context? context = this.DataContext as Context;
+
+            if (context == null)
+            {
+                throw new InvalidOperationException("DataContext must be Context.");
+            }
+
+            context.SelectedNode = item;
         }
 
-        private void TreeView_Loaded(object sender, RoutedEventArgs e)
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            this.UpdateItemList(sender as TreeView);
+            Button? element = sender as Button;
+
+            if (element == null)
+            {
+                return;
+            }
+
+            ICreatable? node = element.DataContext as ICreatable;
+
+            if (node == null)
+            {
+                throw new InvalidOperationException(
+                    $"Datacontext must be of type ICreatable, is {element.DataContext.GetType().Name}");
+            }
+
+            node.HandleCreate(sender, e);
         }
 
-        private void UpdateItemList(TreeView tree)
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            tree.Items.Clear();
+            Button? element = sender as Button;
 
-            foreach (DefinitionNode subNode in this.nodes)
+            if (element == null)
             {
-                tree.Items.Add(ToTreeViewItem(subNode));
-            }
-        }
-
-        private static TreeViewItem ToTreeViewItem(DefinitionNode node)
-        {
-            var validationIssues = node.ValidationFailures;
-            StackPanel panel = new StackPanel()
-            {
-                Orientation = Orientation.Horizontal,
-            };
-
-            TextBlock header = new TextBlock();
-            header.Text = $"{node.Name}: ";
-            panel.Children.Add(header);
-            panel.Children.Add(node.GetContentElement());
-
-            StackPanel tooltip = new StackPanel();
-            tooltip.Children.Add(new TextBlock()
-            {
-                Text = node.Description,
-            });
-
-            if (validationIssues.Any())
-            {
-                header.Foreground = Brushes.DarkRed;
-
-                foreach (string validaitonIssue in validationIssues)
-                {
-                    tooltip.Children.Add(new TextBlock()
-                    {
-                        Text = validaitonIssue,
-                        Foreground = Brushes.DarkRed,
-                    });
-                }
+                return;
             }
 
-            TreeViewItem item = new TreeViewItem()
-            {
-                Header = panel,
-                ToolTip = tooltip,
-                IsExpanded = true,
-                DataContext = node,
-            };
+            IDeletable? node = element.DataContext as IDeletable;
 
-            foreach (DefinitionNode subNode in node.SubNodes)
+            if (node == null)
             {
-                item.Items.Add(ToTreeViewItem(subNode));
+                throw new InvalidOperationException(
+                    $"Datacontext must be of type IDeletable, is {element.DataContext.GetType().Name}");
             }
 
-            return item;
+            node.HandleDelete(sender, e);
         }
     }
 }

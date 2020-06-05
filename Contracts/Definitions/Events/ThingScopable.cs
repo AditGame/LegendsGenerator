@@ -5,7 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System;
-
+    using System.Collections.Generic;
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
@@ -22,6 +22,6 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the applicable Definition names which this relates to.
         /// If empty, any Definition is allowed.
         /// </summary>
-        public string[] Definitions { get; set; } = Array.Empty<string>();
+        public List<string> Definitions { get; set; } = new List<string>();
     }
 }

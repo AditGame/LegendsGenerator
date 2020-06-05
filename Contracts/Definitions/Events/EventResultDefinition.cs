@@ -6,7 +6,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System;
-
+    using System.Collections.Generic;
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the effects of this result.
         /// </summary>
-        public EffectDefinition[] Effects { get; set; } = Array.Empty<EffectDefinition>();
+        public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>();
 
         /// <summary>
         /// Gets or sets the spawns of this result.
         /// </summary>
-        public SpawnDefinition[] Spawns { get; set; } = Array.Empty<SpawnDefinition>();
+        public List<SpawnDefinition> Spawns { get; set; } = new List<SpawnDefinition>();
     }
 }

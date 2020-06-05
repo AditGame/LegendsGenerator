@@ -4,13 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LegendsGenerator.Editor"
+        xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
+        xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
@@ -31,13 +35,14 @@
               ShowsPreview="True"
               Width="5"
               />
-        <DataGridCell Grid.Column="2">
+        <DataGridCell Grid.Column="2" Grid.ColumnSpan="3">
             <local:DefinitionEditor 
                     x:Name="EditView"
                     />
         </DataGridCell>
         <GridSplitter Grid.Row="1"
                       Grid.Column="2"
+                      Grid.ColumnSpan="3"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Center"
               Background="Black" 
@@ -45,9 +50,45 @@
               Height="5"
            />
         <DataGridCell Grid.Column="2" Grid.Row="3">
-            <TextBlock>Test!</TextBlock>
+            <TabControl TabStripPlacement="Bottom">
+                <TabItem Header="Code Editor">
+                    <code:SyntaxHighlightBox Text="{Binding SelectedNode.Content}" />
+                </TabItem>
+                <TabItem Header="Warnings" />
+            </TabControl>
         </DataGridCell>
-
+        <GridSplitter 
+              Grid.Column="3"
+              Grid.Row="3"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Stretch"
+              Background="Black" 
+              ShowsPreview="True"
+              Width="5"
+              />
+        <DataGridCell Grid.Column="5" Grid.Row="3">
+            <StackPanel>
+                <ListView ItemsSource="{Binding SelectedNode.Options}" >
+                    <ListView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type nodes:BoolDefinitionNode}">
+                            <Label>
+                                <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text=": " />
+                                    <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
+                                </StackPanel>
+                            </Label>
+                        </HierarchicalDataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Return Type: " />
+                    <TextBlock Text="{Binding SelectedNode.ReturnType}" />
+                </StackPanel>
+                <TextBlock Text="Parameters: " />
+                <ListView ItemsSource="{Binding SelectedNode.Parameters}" />
+            </StackPanel>
+        </DataGridCell>
 
     </Grid>
 </Window>

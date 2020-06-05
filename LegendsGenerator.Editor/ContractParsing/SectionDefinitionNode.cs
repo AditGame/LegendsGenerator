@@ -9,6 +9,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -17,98 +18,55 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A node which is jsut the start of a new section.
     /// </summary>
-    public class SectionDefinitionNode : DefinitionNode
+    public class SectionDefinitionNode : DefinitionNode, ICreatable, IDeletable
     {
         /// <summary>
         /// The type to create when added.
         /// </summary>
         private Type type;
 
-        private Action<object>? onCreate;
-
-        private Action? onDelete;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SectionDefinitionNode"/> class.
-        /// </summary>
-        /// <param name="description">The description of this node.</param>
-        /// <param name="name">The name of this node.</param>
-        public SectionDefinitionNode(
-            string description,
-            string name,
-            Type definitionType,
-            object? definition,
-            bool nullable = false,
-            Action<object>? onCreate = null,
-            Action? onDelete = null)
-            : base(description, nullable)
+        public SectionDefinitionNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
+            : base(thing, property, options, readOnly)
         {
-            this.Name = name;
-            this.type = definitionType;
-            this.onCreate = onCreate;
-            this.onDelete = onDelete;
+            this.type = property.PropertyType;
 
-            if (definition != null)
+            if (thing != null)
             {
-                this.AddInnerDefinition(definitionType, definition);
+                this.AddInnerDefinition(this.type, property.GetMethod());
             }
         }
 
-        /// <inheritdoc/>
-        public override string Name { get; }
+        public Visibility CanCreate => !this.Nodes.Any() ? Visibility.Visible : Visibility.Collapsed;
 
-        /// <inheritdoc/>
-        public override UIElement GetContentElement()
-        {
-            if (this.SubNodes.Any())
-            {
-                if (this.Nullable)
-                {
-                    Button button = new Button()
-                    {
-                        Content = "-",
-                    };
+        public Visibility CanDelete => this.Nodes.Any() && this.Nullable ? Visibility.Visible : Visibility.Collapsed;
 
-                    button.Click += HandleCreate;
-
-                    return button;
-                }
-            }
-            else
-            {
-                Button button = new Button()
-                {
-                    Content = "+",
-                };
-
-                button.Click += HandleCreate;
-
-                return button;
-            }
-
-            return new TextBlock();
-        }
-
-        private void HandleCreate(object sender, RoutedEventArgs e)
+        public void HandleCreate(object sender, RoutedEventArgs e)
         {
             object def = Activator.CreateInstance(this.type);
-            this.onCreate?.Invoke(def);
+            this.Content = def;
             this.AddInnerDefinition(this.type, def);
+            this.OnPropertyChanged(nameof(this.CanCreate));
+            this.OnPropertyChanged(nameof(this.CanDelete));
         }
 
-        private void HandleDelete(object sender, RoutedEventArgs e)
+        public void HandleDelete(object sender, RoutedEventArgs e)
         {
-            this.onDelete?.Invoke();
+            this.Content = null;
             this.AddInnerDefinition(this.type, null);
+            this.OnPropertyChanged(nameof(this.CanCreate));
+            this.OnPropertyChanged(nameof(this.CanDelete));
         }
 
         private void AddInnerDefinition(Type type, object? definition)
         {
-            this.SubNodes.Clear();
+            this.Nodes.Clear();
 
             if (definition != null)
             {
-                this.SubNodes.AddRange(DefinitionParser.ParseToNodes(type, definition));
+                foreach (var element in DefinitionParser.ParseToNodes(type, definition))
+                {
+                    this.Nodes.Add(element);
+                }
             }
         }
     }

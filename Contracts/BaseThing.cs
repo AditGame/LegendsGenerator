@@ -38,7 +38,7 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets the base Attribute on this object before Effects are applied.
         /// </summary>
-        public IDictionary<string, int> BaseAttributes { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> BaseAttributes { get; } = new Dictionary<string, int>();
 
         /// <summary>
         /// Gets all effects on this thing. Expired effects should be culled on Step.

@@ -1,15 +1,15 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="StringContractNode.cs" company="Tom Luppi">
+// <copyright file="StringDefinitionNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
-    using System;
     using System.Collections.Generic;
-    using System.Windows;
-    using System.Windows.Controls;
+    using System.Reflection;
+
+    using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
     /// A contract node which is a string.
@@ -19,68 +19,28 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Initializes a new instance of the <see cref="StringDefinitionNode"/> class.
         /// </summary>
-        /// <param name="description">The description of this node.</param>
-        /// <param name="name">The name of this node.</param>
-        /// <param name="nullable">If this node can be null or not.</param>
-        /// <param name="contents">The contents of this node.</param>
-        /// <param name="update">An optional function to use to update the contents.</param>
-        public StringDefinitionNode(
-            string description,
-            string name,
-            bool nullable,
-            Func<string> contents,
-            Action<string>? update = null)
-            : base(description, nullable)
+        /// <param name="thing">The thing this node points to.</param>
+        /// <param name="property">The property info.</param>
+        /// <param name="options">The options for this node.</param>
+        /// <param name="readOnly">If this instance should be read only.</param>
+        public StringDefinitionNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
+            : base(thing, property, options, readOnly)
         {
-            this.Name = name;
-            this.GetContentsFunc = contents;
-
-            if (update != null)
-            {
-                this.ContentsModifiable = true;
-                this.SetContentsFunc = ConvertAction(update);
-            }
-
-            if (this.Name.Contains("Condition"))
-            {
-                this.ValidateNodeFunc = () => new List<string>()
-                {
-                    "An issue!",
-                };
-            }
-
-            this.ValidateNodeFunc = () =>
-            {
-                IList<string> errors = new List<string>();
-                if (string.IsNullOrWhiteSpace(contents()) && !this.Nullable)
-                {
-                    errors.Add("Can not be null, empty, or whitespace.");
-                }
-
-                return errors;
-            };
         }
 
         /// <inheritdoc/>
-        public override string Name { get; }
-
-        /// <inheritdoc/>
-        public override UIElement GetContentElement()
+        protected override IEnumerable<ValidationIssue> GetLevelIssues()
         {
-            TextBox box = new TextBox()
+            List<ValidationIssue> output = new List<ValidationIssue>();
+
+            if (string.IsNullOrWhiteSpace(this.Content as string))
             {
-                Text = this.Content as string,
-                IsReadOnly = !this.ContentsModifiable,
-            };
+                output.Add(new ValidationIssue(
+                    ValidationLevel.Error,
+                    "Can not be null, empty, or whitespace."));
+            }
 
-            box.TextChanged += this.OnTextChanged;
-
-            return box;
-        }
-
-        private void OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            this.Content = (sender as TextBox).Text;
+            return output;
         }
     }
 }

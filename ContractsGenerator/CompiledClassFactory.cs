@@ -459,7 +459,7 @@ namespace CompiledDefinitionSourceGenerator
                    {
                        SummaryDoc = $"Gets all parameters which should be presented to the {info.Name} expression.",
                        ReturnsDoc = "All parameters needed by the expression.",
-                       Access = AccessLevel.Private,
+                       Access = AccessLevel.Public,
                        Type = "IList<string>",
                    });
 
