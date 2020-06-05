@@ -6,36 +6,21 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.Linq;
-    using System.Text;
+
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
     /// Iterates the world state.
     /// </summary>
-    public class HistoryMachine
+    public static class HistoryMachine
     {
-        /// <summary>
-        /// The condition compiler.
-        /// </summary>
-        private ConditionCompiler compiler;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryMachine"/> class.
-        /// </summary>
-        /// <param name="compiler">The condition compiler.</param>
-        public HistoryMachine(ConditionCompiler compiler)
-        {
-            this.compiler = compiler;
-        }
-
         /// <summary>
         /// Advances the history of the world by one step.
         /// </summary>
         /// <param name="world">The world.</param>
-        public void Step(World world)
+        public static void Step(World world)
         {
             IDictionary<ThingType, List<EventDefinition>> eventsBySubjectType =
                 world.Events.GroupBy(ev => ev.Subject.Type).ToDictionary(kv => kv.Key, kv => kv.ToList());
@@ -46,12 +31,12 @@ namespace LegendsGenerator
                 Random rdm = RandomFactory.GetRandom(world.WorldSeed, world.StepCount, site.ThingId);
 
                 IEnumerable<OccurredEvent> occurredEvents =
-                    this.GetOccurringEvents(rdm, world, eventsBySubjectType[ThingType.Site], site);
+                    GetOccurringEvents(rdm, world, eventsBySubjectType[ThingType.Site], site);
 
                 foreach (OccurredEvent occurredEvent in occurredEvents)
                 {
                     Log.Info($"Adding event {occurredEvent.Event.Description}");
-                    this.ApplyEvent(rdm, world, occurredEvent.Event, site, occurredEvent.Objects!);
+                    ApplyEvent(rdm, world, occurredEvent.Event, site, occurredEvent.Objects!);
                 }
             }
         }
@@ -64,12 +49,12 @@ namespace LegendsGenerator
         /// <param name="ev">The event definition.</param>
         /// <param name="thing">The thing to apply the event to.</param>
         /// <param name="objects">The objects of this event.</param>
-        private void ApplyEvent(Random rdm, World world, EventDefinition ev, BaseThing thing, IDictionary<string, BaseThing> objects)
+        private static void ApplyEvent(Random rdm, World world, EventDefinition ev, BaseThing thing, IDictionary<string, BaseThing> objects)
         {
             int minChance = rdm.Next(1, 100);
             EventResultDefinition? result = ev.Results
                 .Shuffle(rdm)
-                .FirstOrDefault(e => this.Matches(minChance, () => e.EvalChance(rdm, thing, objects), () => e.EvalCondition(rdm, thing, objects)));
+                .FirstOrDefault(e => Matches(minChance, () => e.EvalChance(rdm, thing, objects), () => e.EvalCondition(rdm, thing, objects)));
 
             result ??= ev.Results.FirstOrDefault(r => r.Default);
 
@@ -118,7 +103,7 @@ namespace LegendsGenerator
         /// <param name="applicableEvents">The events by subject type.</param>
         /// <param name="thing">The thing to get the events for.</param>
         /// <returns>The list of events which will occur for this thing.</returns>
-        private IEnumerable<OccurredEvent> GetOccurringEvents(
+        private static IEnumerable<OccurredEvent> GetOccurringEvents(
             Random rdm,
             World world,
             IEnumerable<EventDefinition> applicableEvents,
@@ -132,7 +117,7 @@ namespace LegendsGenerator
                 .Where(e => e.Subject.EvalCondition(rdm, thing))
                 .Select(e =>
                 {
-                    var objects = this.GetMatchingObjects(
+                    var objects = GetMatchingObjects(
                         rdm,
                         world,
                         e,
@@ -162,7 +147,7 @@ namespace LegendsGenerator
         /// <param name="chance">The chance function.</param>
         /// <param name="condition">The condition function.</param>
         /// <returns>True if this event applies to the subject, false otherwise.</returns>
-        private bool Matches(int minChance, Func<int> chance, Func<bool> condition)
+        private static bool Matches(int minChance, Func<int> chance, Func<bool> condition)
         {
             if (chance() < minChance)
             {
@@ -180,7 +165,7 @@ namespace LegendsGenerator
         /// <param name="eventDef">The event definition of the event.</param>
         /// <param name="subject">The subject of the event.</param>
         /// <returns>The dictionary of objects, or null if the objects coudl not be found.</returns>
-        private IDictionary<string, BaseThing>? GetMatchingObjects(
+        private static IDictionary<string, BaseThing>? GetMatchingObjects(
             Random rdm,
             World world,
             EventDefinition eventDef,

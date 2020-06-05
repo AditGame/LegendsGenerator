@@ -23,7 +23,7 @@ namespace LegendsGenerator
             new Dictionary<string, MethodDelegate<T>>();
 
         /// <summary>
-        /// Gets a method delete
+        /// Gets a method delete.
         /// </summary>
         /// <param name="content">The script to create a method delegate.</param>
         /// <returns>The method delegate.</returns>

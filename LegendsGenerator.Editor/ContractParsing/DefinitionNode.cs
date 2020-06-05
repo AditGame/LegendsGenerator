@@ -41,11 +41,11 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.Nullable = property.Nullable;
             this.ContentsModifiable = !readOnly;
 
-            this.GetContentsFunc = property.GetMethod;
+            this.GetContentsFunc = property.GetValue;
 
             if (!readOnly)
             {
-                this.SetContentsFunc = property.SetMethod;
+                this.SetContentsFunc = property.SetValue;
             }
 
             foreach (PropertyInfo option in options)

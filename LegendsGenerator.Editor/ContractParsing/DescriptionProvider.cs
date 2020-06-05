@@ -10,10 +10,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Xml;
 
     /// <summary>
@@ -85,9 +82,19 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             if (!docCache.TryGetValue(docLocation, out XmlDocument? document))
             {
-                document = new XmlDocument();
-                document.Load(docLocation);
-                docCache[docLocation] = document;
+                try
+                {
+                    document = new XmlDocument();
+                    document.Load(docLocation);
+                    docCache[docLocation] = document;
+                }
+#pragma warning disable CA1031 // Do not catch general exception types. Want to be general to catch non-failing errors.
+                catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
+                {
+                    Console.WriteLine(ex.ToString());
+                    return null;
+                }
             }
 
             string summary;
@@ -95,7 +102,9 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 summary = document.SelectSingleNode(xpath).SelectSingleNode("summary").InnerText.Trim();
             }
+#pragma warning disable CA1031 // Do not catch general exception types. Want to be general to catch non-failing errors.
             catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 Console.WriteLine(ex.ToString());
                 return null;

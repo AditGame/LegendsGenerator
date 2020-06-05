@@ -17,6 +17,16 @@ namespace LegendsGenerator.Editor
     public partial class DefinitionEditorItem : UserControl
     {
         /// <summary>
+        /// The Additional Content property.
+        /// </summary>
+        public static readonly DependencyProperty AdditionalContentProperty =
+            DependencyProperty.Register(
+                "AdditionalContent",
+                typeof(object),
+                typeof(DefinitionEditorItem),
+                new PropertyMetadata(null));
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DefinitionEditorItem"/> class.
         /// </summary>
         public DefinitionEditorItem()
@@ -32,12 +42,5 @@ namespace LegendsGenerator.Editor
             get { return (object)this.GetValue(AdditionalContentProperty); }
             set { this.SetValue(AdditionalContentProperty, value); }
         }
-
-        public static readonly DependencyProperty AdditionalContentProperty =
-            DependencyProperty.Register(
-                "AdditionalContent",
-                typeof(object),
-                typeof(DefinitionEditorItem),
-                new PropertyMetadata(null));
     }
 }

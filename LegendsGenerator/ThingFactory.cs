@@ -16,11 +16,6 @@ namespace LegendsGenerator
     public class ThingFactory
     {
         /// <summary>
-        /// The condition processor.
-        /// </summary>
-        private ConditionCompiler processor;
-
-        /// <summary>
         /// The definitions.
         /// </summary>
         private DefinitionCollections definitions;
@@ -28,13 +23,10 @@ namespace LegendsGenerator
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingFactory"/> class.
         /// </summary>
-        /// <param name="processor">The condition processor.</param>
         /// <param name="definitions">The definitions.</param>
         public ThingFactory(
-            ConditionCompiler processor,
             DefinitionCollections definitions)
         {
-            this.processor = processor;
             this.definitions = definitions;
         }
 
@@ -46,7 +38,7 @@ namespace LegendsGenerator
         /// <returns>The site.</returns>
         public Site CreateSite(Random rdm, string siteDefinitionName)
         {
-            return this.CreateThing<Site, SiteDefinition>(rdm, this.definitions.SiteDefinitions, siteDefinitionName);
+            return CreateThing<Site, SiteDefinition>(rdm, this.definitions.SiteDefinitions, siteDefinitionName);
         }
 
         /// <summary>
@@ -55,10 +47,10 @@ namespace LegendsGenerator
         /// <typeparam name="TThing">The type of the thing to create.</typeparam>
         /// <typeparam name="TDefinition">The type of definition.</typeparam>
         /// <param name="rdm">The random nubmer generator.</param>
-        /// <param name="definitions">The list of all definitions for this thing type/</param>
+        /// <param name="definitions">The list of all definitions for this thing type.</param>
         /// <param name="thingName">The name of the thing to make.</param>
         /// <returns>The created thing.</returns>
-        private TThing CreateThing<TThing, TDefinition>(
+        private static TThing CreateThing<TThing, TDefinition>(
             Random rdm,
             IReadOnlyList<TDefinition> definitions,
             string thingName)
@@ -87,12 +79,12 @@ namespace LegendsGenerator
 
             TThing thing = new TThing()
             {
-                BaseDefinition = inheritanceList.First()
+                BaseDefinition = inheritanceList.First(),
             };
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {
-                foreach (var(attributeName, _) in inheritedDefinition.DefaultAttributes)
+                foreach (var (attributeName, _) in inheritedDefinition.DefaultAttributes)
                 {
                     int value = inheritedDefinition.EvalDefaultAttributes(attributeName, rdm);
 
@@ -102,7 +94,7 @@ namespace LegendsGenerator
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {
-                foreach (var(aspectName, _) in inheritedDefinition.DefaultAspects)
+                foreach (var (aspectName, _) in inheritedDefinition.DefaultAspects)
                 {
                     string value = inheritedDefinition.EvalDefaultAspects(aspectName, rdm);
 

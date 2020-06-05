@@ -7,13 +7,9 @@
 namespace LegendsGenerator.Editor
 {
     using System;
-    using System.Collections.ObjectModel;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Media;
 
-    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
@@ -21,11 +17,19 @@ namespace LegendsGenerator.Editor
     /// </summary>
     public partial class DefinitionEditor : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefinitionEditor"/> class.
+        /// </summary>
         public DefinitionEditor()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Fires when a Node is selected.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The arguments.</param>
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             DefinitionNode? item = e.NewValue as DefinitionNode;
@@ -45,6 +49,11 @@ namespace LegendsGenerator.Editor
             context.SelectedNode = item;
         }
 
+        /// <summary>
+        /// Fires when the create button is clicked, routes it to the node.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The arguments.</param>
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
             Button? element = sender as Button;
@@ -65,6 +74,11 @@ namespace LegendsGenerator.Editor
             node.HandleCreate(sender, e);
         }
 
+        /// <summary>
+        /// Fires when the delete button is clicked, routes it to the node.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The arguments.</param>
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button? element = sender as Button;

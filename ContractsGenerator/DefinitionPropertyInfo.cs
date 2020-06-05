@@ -6,10 +6,7 @@
 
 namespace LegendsGenerator.ContractsGenerator
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     using CompiledDefinitionSourceGenerator;
 

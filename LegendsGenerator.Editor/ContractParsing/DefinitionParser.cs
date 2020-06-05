@@ -11,8 +11,6 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
@@ -51,24 +49,22 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// </summary>
         /// <param name="thing">The object.</param>
         /// <param name="property">The property to convert.</param>
-        /// <param name="options">The options.</param>
+        /// <param name="optionsLookup">The options.</param>
         /// <returns>The node if it can be converted, otherwise null.</returns>
         public static DefinitionNode? ToNode(object? thing, PropertyInfo property, ILookup<string, PropertyInfo>? optionsLookup = null)
         {
             MethodInfo? getParameters = thing?.GetType().GetMethod($"GetParameters{property.Name}");
 
             CompiledAttribute? compiled = property.GetCustomAttribute<CompiledAttribute>();
-            ElementInfo info = new ElementInfo()
-            {
-                Name = property.Name.Split("_").Last(),
-                Description = DescriptionProvider.GetDescription(property),
-                PropertyType = property.PropertyType,
-                GetParametersMethod = () => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>(),
-                Compiled = compiled,
-                Nullable = property.IsNullable(),
-                GetMethod = () => property.GetValue(thing),
-                SetMethod = value => property.SetValue(thing, value),
-            };
+            ElementInfo info = new ElementInfo(
+                name: property.Name.Split("_").Last(),
+                description: DescriptionProvider.GetDescription(property),
+                propertyType: property.PropertyType,
+                nullable: property.IsNullable(),
+                getValue: () => property.GetValue(thing),
+                setValue: value => property.SetValue(thing, value),
+                getCompiledParameters: getParameters != null ? () => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<IList<string>>?)null,
+                compiled: compiled);
 
             return ToNode(thing, info, optionsLookup);
         }
@@ -90,7 +86,6 @@ namespace LegendsGenerator.Editor.ContractParsing
                 if (info.Compiled != null)
                 {
                     return new CompiledDefinitionNode(
-                        info.Compiled,
                         thing,
                         info,
                         options);

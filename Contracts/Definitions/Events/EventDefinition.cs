@@ -4,8 +4,6 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -25,7 +23,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the subject of this event.
         /// </summary>
-        public SubjectDefinition Subject { get; set; }
+        public SubjectDefinition Subject { get; set; } = new SubjectDefinition();
 
         /// <summary>
         /// Gets or sets the objects of this event.

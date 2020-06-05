@@ -4,7 +4,6 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System;
     using System.Text.Json.Serialization;
 
     /// <summary>

@@ -6,7 +6,7 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
+
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
 

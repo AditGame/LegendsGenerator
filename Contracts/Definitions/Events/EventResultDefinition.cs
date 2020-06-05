@@ -5,8 +5,8 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System;
     using System.Collections.Generic;
+
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>

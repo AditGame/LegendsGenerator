@@ -6,35 +6,27 @@
 
 namespace LegendsGenerator.Editor
 {
-    using LegendsGenerator.Contracts.Definitions;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+    using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>
     /// Interaction logic for MainWindow.
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The context with all the data in it.
+        /// </summary>
         private Context context = new Context();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
             this.InitializeComponent();
 
-            var defs = DefinitionSerializer.DeserializeFromDirectory(@"C:\Users\tt\Source\Repos\LegendsGenerator\LegendsGenerator\Definitions");
+            var defs = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
 
             this.DataContext = this.context;
 
@@ -47,11 +39,6 @@ namespace LegendsGenerator.Editor
             {
                 this.context.Definitions.Add(new Definition(def));
             }
-        }
-
-        public void ItemSelected(object sender, EventArgs e)
-        {
-            this.context.SelectedDefinition = this.context.Definitions[new Random().Next(0, this.context.Definitions.Count())];
         }
     }
 }

@@ -4,10 +4,8 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     using LegendsGenerator.Contracts.Definitions.Events;
 

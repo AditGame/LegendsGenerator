@@ -54,7 +54,7 @@ namespace LegendsGenerator.Tests
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
 
             definitions.Attach(processor);
-            ThingFactory factory = new ThingFactory(processor, definitions);
+            ThingFactory factory = new ThingFactory(definitions);
 
             for (int i = 0; i < 100; i++)
             {
@@ -98,7 +98,7 @@ namespace LegendsGenerator.Tests
 
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
 
-            ThingFactory factory = new ThingFactory(processor, definitions);
+            ThingFactory factory = new ThingFactory(definitions);
 
             factory.CreateSite(new Random(worldSeed), "City");
         }

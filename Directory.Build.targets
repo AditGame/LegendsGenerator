@@ -11,7 +11,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="StyleCop.Analyzers">
-            <Version>1.1.118</Version>
+            <Version>1.2.0-beta.164</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

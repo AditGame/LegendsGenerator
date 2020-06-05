@@ -4,9 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System;
     using System.Collections.Generic;
-    using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
     /// Defines a scope for a set of things.

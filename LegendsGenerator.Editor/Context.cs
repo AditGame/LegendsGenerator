@@ -6,30 +6,46 @@
 
 namespace LegendsGenerator.Editor
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Editor.ContractParsing;
 
+    /// <summary>
+    /// The underlying data context.
+    /// </summary>
     public class Context : INotifyPropertyChanged
     {
-        private Definition selectedDefinition;
+        /// <summary>
+        /// The currently selected definition.
+        /// </summary>
+        private Definition? selectedDefinition;
 
-        private DefinitionNode selectedNode;
+        /// <summary>
+        /// The currently selected definition node.
+        /// </summary>
+        private DefinitionNode? selectedNode;
 
+        /// <summary>
+        /// Handles when a property is changed.
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Gets the list of all definitions.
+        /// </summary>
         public ObservableCollection<Definition> Definitions { get; } = new ObservableCollection<Definition>();
 
+        /// <summary>
+        /// Gets the inheritance graph.
+        /// </summary>
         public IEnumerable<InheritanceNode> InheritanceGraph => InheritanceNode.ParseWithHeaders(this.Definitions);
 
-        public Definition SelectedDefinition
+        /// <summary>
+        /// Gets or sets the selected definition.
+        /// </summary>
+        public Definition? SelectedDefinition
         {
             get => this.selectedDefinition;
 
@@ -40,7 +56,10 @@ namespace LegendsGenerator.Editor
             }
         }
 
-        public DefinitionNode SelectedNode
+        /// <summary>
+        /// Gets or sets the selected definition node.
+        /// </summary>
+        public DefinitionNode? SelectedNode
         {
             get => this.selectedNode;
 
@@ -59,28 +78,5 @@ namespace LegendsGenerator.Editor
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    /// <summary>
-    /// The definition of a thing.
-    /// </summary>
-    public class Definition
-    {
-        public Definition(BaseDefinition definition)
-        {
-            this.BaseDefinition = definition;
-            this.Nodes = new ObservableCollection<DefinitionNode>(DefinitionParser.ParseToNodes(definition.GetType(), definition));
-        }
-
-        /// <summary>
-        /// Gets or sets the underlying definition.
-        /// </summary>
-        public BaseDefinition BaseDefinition { get; set; }
-
-        /// <summary>
-        /// Gets the parsed nodes of this definition.
-        /// </summary>
-        public ObservableCollection<DefinitionNode> Nodes { get; private set; }
-            = new ObservableCollection<DefinitionNode>();
     }
 }

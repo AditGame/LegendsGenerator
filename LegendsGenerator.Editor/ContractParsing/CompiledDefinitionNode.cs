@@ -6,8 +6,6 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
-    using LegendsGenerator.Contracts.Compiler;
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -41,18 +39,29 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// </summary>
         private Func<IList<string>> getParametersFunc;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompiledDefinitionNode"/> class.
+        /// </summary>
+        /// <param name="thing">The thing this node points to.</param>
+        /// <param name="property">The property info.</param>
+        /// <param name="options">The options for this node.</param>
+        /// <param name="readOnly">If this instance should be read only.</param>
         public CompiledDefinitionNode(
-            CompiledAttribute attribute,
             object? thing,
             ElementInfo property,
             IEnumerable<PropertyInfo> options,
             bool readOnly = false)
             : base(thing, property, options, readOnly)
         {
-            this.asFormattedText = attribute.AsFormattedText;
-            this.ReturnType = attribute.ReturnType;
+            if (property.Compiled == null)
+            {
+                throw new InvalidOperationException("ElementInfo.Compiled must be set if using Compiled node.");
+            }
 
-            this.getParametersFunc = property.GetParametersMethod;
+            this.asFormattedText = property.Compiled.AsFormattedText;
+            this.ReturnType = property.Compiled.ReturnType;
+
+            this.getParametersFunc = property.GetCompiledParameters;
 
             DefinitionNode? isComplexNode = this.Options.FirstOrDefault(o => o.Name.Equals("IsComplex"));
             if (isComplexNode != null)

@@ -4,9 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
 
     using LegendsGenerator.Contracts.Compiler;
 
@@ -24,13 +22,13 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the attribute effected by this.
         /// </summary>
-        public string AffectedAttribute { get; set; }
+        public string AffectedAttribute { get; set; } = "UNSET";
 
         /// <summary>
         /// Gets or sets the magnitude of the change.
         /// </summary>
         [Compiled(typeof(int), "Subject")]
-        public string Magnitude { get; set; }
+        public string Magnitude { get; set; } = "0";
 
         /// <summary>
         /// Gets or sets the duration of the change.

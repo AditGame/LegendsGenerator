@@ -5,8 +5,7 @@
 namespace LegendsGenerator.Contracts
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
+
     using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>

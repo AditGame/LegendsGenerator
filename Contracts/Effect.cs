@@ -5,8 +5,6 @@
 namespace LegendsGenerator.Contracts
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     /// The effect of an Event on a Thing.
@@ -16,17 +14,17 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets or sets a short title of the Effect.
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } = "UNSET";
 
         /// <summary>
         /// Gets or sets a long description of the Effect.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = "UNSET";
 
         /// <summary>
         /// Gets or sets the Attribute which this Effect will modify.
         /// </summary>
-        public string Attribute { get; set; }
+        public string Attribute { get; set; } = "UNSET";
 
         /// <summary>
         /// Gets or sets the effect this Effect has on the Attribute.

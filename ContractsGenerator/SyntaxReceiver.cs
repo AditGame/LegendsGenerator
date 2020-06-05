@@ -4,11 +4,10 @@
 
 namespace CompiledDefinitionSourceGenerator
 {
-    using System;
     using System.Collections.Generic;
+
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Text;
 
     /// <summary>
     /// Recieves and sorts the syntax in the assembly.

@@ -11,9 +11,15 @@ namespace LegendsGenerator
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
-    public class Program
+    /// <summary>
+    /// Main entry point.
+    /// </summary>
+    public static class Program
     {
-        public static void Main(string[] args)
+        /// <summary>
+        /// Main entry point to the application.
+        /// </summary>
+        public static void Main()
         {
             Log.Ts.Listeners.Add(new ConsoleTraceListener());
             /*
@@ -94,7 +100,7 @@ namespace LegendsGenerator
             definitions.Attach(processor);
             eventDefinitions.Attach(processor);
 
-            ThingFactory factory = new ThingFactory(processor, definitions);
+            ThingFactory factory = new ThingFactory(definitions);
 
             var cities = new List<Site>();
             for (int i = 0; i < 100; i++)
@@ -112,11 +118,9 @@ namespace LegendsGenerator
                 Sites = cities,
             };
 
-            HistoryMachine history = new HistoryMachine(processor);
-
             for (int i = 0; i < 100; i++)
             {
-                history.Step(world);
+                HistoryMachine.Step(world);
                 world.StepCount++;
             }
 
