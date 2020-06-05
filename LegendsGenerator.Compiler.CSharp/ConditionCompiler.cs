@@ -2,7 +2,7 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator
+namespace LegendsGenerator.Compiler.CSharp
 {
     using System;
     using System.Collections.Generic;

@@ -8,6 +8,9 @@
              xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
     <Label>
         <StackPanel Orientation="Horizontal">
             <StackPanel.ToolTip>
@@ -22,7 +25,8 @@
                     </ListView>
                 </StackPanel>
             </StackPanel.ToolTip>
-            <TextBlock Text="{Binding Name}" Foreground="{Binding GetTextColor}" />
+            <TextBox   Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
+            <TextBlock Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanNotBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
             <TextBlock Text=": " />
             <ContentPresenter Content="{Binding AdditionalContent, ElementName=userControl}" />
         </StackPanel>

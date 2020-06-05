@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contracts\LegendsGenerator.Contracts.csproj" />
+    <ProjectReference Include="..\LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

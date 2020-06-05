@@ -9,7 +9,8 @@ namespace LegendsGenerator.Editor
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-
+    using LegendsGenerator.Compiler.CSharp;
+    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
@@ -41,6 +42,11 @@ namespace LegendsGenerator.Editor
         /// Gets the inheritance graph.
         /// </summary>
         public IEnumerable<InheritanceNode> InheritanceGraph => InheritanceNode.ParseWithHeaders(this.Definitions);
+
+        /// <summary>
+        /// Gets the condition compiler.
+        /// </summary>
+        public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler(new Dictionary<string, object>());
 
         /// <summary>
         /// Gets or sets the selected definition.

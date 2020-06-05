@@ -20,12 +20,19 @@ namespace LegendsGenerator.Contracts.Definitions
         protected IConditionCompiler? Compiler { get; private set; } = null;
 
         /// <summary>
+        /// Gets the definition which holds this definition.
+        /// </summary>
+        protected BaseDefinition? UpsteamDefinition { get; private set; } = null;
+
+        /// <summary>
         /// Attaches the compiler to this definition.
         /// </summary>
         /// <param name="compiler">The compiler.</param>
-        public virtual void Attach(IConditionCompiler compiler)
+        /// <param name="upsteamDefinition">The upstream definition.</param>
+        public virtual void Attach(IConditionCompiler compiler, BaseDefinition? upsteamDefinition = null)
         {
             this.Compiler = compiler;
+            this.UpsteamDefinition = upsteamDefinition;
         }
 
         /// <summary>
@@ -37,6 +44,17 @@ namespace LegendsGenerator.Contracts.Definitions
             {
                 throw new InvalidOperationException("You must attach the compiler via AttachCompiler before calling Eval methods.");
             }
+        }
+
+        /// <summary>
+        /// Returns all additional class-wide parameters, cluding upstream parameters.
+        /// </summary>
+        /// <returns>The list of upstream parameters.</returns>
+        protected virtual List<string> CombinedAdditionalParametersForClass()
+        {
+            List<string> param = new List<string>();
+            param.AddRange(this.UpsteamDefinition?.CombinedAdditionalParametersForClass() ?? new List<string>());
+            return param;
         }
 
         /// <summary>

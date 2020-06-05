@@ -26,16 +26,18 @@ namespace LegendsGenerator.Editor
         {
             this.InitializeComponent();
 
-            var defs = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
+            var (defs, events) = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
+            defs.Attach(this.context.Compiler);
+            events.Attach(this.context.Compiler);
 
             this.DataContext = this.context;
 
-            foreach (var def in defs.events.Events)
+            foreach (var def in events.Events)
             {
                 this.context.Definitions.Add(new Definition(def));
             }
 
-            foreach (var def in defs.definitions.AllDefinitions)
+            foreach (var def in defs.AllDefinitions)
             {
                 this.context.Definitions.Add(new Definition(def));
             }

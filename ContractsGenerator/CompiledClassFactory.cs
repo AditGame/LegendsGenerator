@@ -52,12 +52,7 @@ namespace CompiledDefinitionSourceGenerator
             FieldDefinitions(sb, classInfo);
             CompileMethod(sb, classInfo);
             AttachMethod(sb, classInfo);
-            CombinedAdditionalParametersForClass(sb, classInfo, additionalParametersForClassDefined);
-
-            if (classInfo.UsesAdditionalParametersForHoldingClass)
-            {
-                AttachUpstreamParametersMethod(sb);
-            }
+            CombinedAdditionalParametersForClass(sb, additionalParametersForClassDefined);
 
             foreach (var prop in classInfo.CompiledProps)
             {
@@ -99,19 +94,11 @@ namespace CompiledDefinitionSourceGenerator
         /// <param name="classInfo">The class info.</param>
         private static void FieldDefinitions(ClassWriter sb, ClassInfo classInfo)
         {
-            if (classInfo.UsesAdditionalParametersForHoldingClass)
-            {
-                sb.AddField(
-                    "A method which returns the upstream additional parameters.",
-                    "Func<IList<string>>?",
-                    "upstreamAdditionalParametersMethod");
-            }
-
             foreach (var prop in classInfo.CompiledProps)
             {
                 sb.AddField(
                     $"The lazy-compiled condition for the {prop.Name} property.",
-                    $"Lazy<ICompiledCondition<{prop.ReturnType}>>",
+                    $"Lazy<ICompiledCondition<{prop.ReturnType}>>?",
                     $"compiledCondition{prop.Name}");
             }
 
@@ -129,53 +116,27 @@ namespace CompiledDefinitionSourceGenerator
         /// Creates a class which combined the class-wide additional parameters class and the upstream parameters.
         /// </summary>
         /// <param name="sb">The class writer.</param>
-        /// <param name="classInfo">The class info.</param>
         /// <param name="classAddParams">If the class has a class-wide additional parameters method.</param>
-        private static void CombinedAdditionalParametersForClass(ClassWriter sb, ClassInfo classInfo, bool classAddParams)
+        private static void CombinedAdditionalParametersForClass(ClassWriter sb, bool classAddParams)
         {
             using var braces = sb.AddMethod(
-                new MethodDefinition($"Combined{ClassInfo.AdditionalParamtersForClassMethod}")
+                new MethodDefinition($"CombinedAdditionalParametersForClass")
                 {
                     SummaryDoc = "Returns all class-wide additional parameters for this class, including upstream parameters.",
                     ReturnsDoc = "All class-wide additional parameters.",
-                    Access = AccessLevel.Private,
-                    Type = "IList<string>",
+                    Access = AccessLevel.Protected,
+                    Override = true,
+                    Type = "List<string>",
                 });
 
-            sb.AppendLine($"List<string> addParams = new List<string>();");
+            sb.AppendLine($"List<string> addParams = base.CombinedAdditionalParametersForClass();");
 
             if (classAddParams)
             {
                 sb.AppendLine($"addParams.AddRange(this.{ClassInfo.AdditionalParamtersForClassMethod}());");
             }
 
-            if (classInfo.UsesAdditionalParametersForHoldingClass)
-            {
-                sb.AppendLine($"addParams.AddRange(this.upstreamAdditionalParametersMethod?.Invoke() ?? new List<string>());");
-            }
-
             sb.AppendLine("return addParams;");
-        }
-
-        /// <summary>
-        /// Generates the method which allows attaching the upstream parameters method.
-        /// </summary>
-        /// <param name="sb">The class writer.</param>
-        private static void AttachUpstreamParametersMethod(ClassWriter sb)
-        {
-            using var braces = sb.AddMethod(
-                new MethodDefinition("AttachUpStreamParams")
-                {
-                    SummaryDoc = "Attaches a method which returns additional parameters, typically from a holding class.",
-                    Access = AccessLevel.Public,
-                    New = true,
-                    Parameters = new ParamDef[]
-                    {
-                        new ParamDef("Func<IList<string>>", "func", "The function which returns the upstream additional parameters."),
-                    },
-                });
-
-            sb.AppendLine("this.upstreamAdditionalParametersMethod = func;");
         }
 
         /// <summary>
@@ -193,10 +154,11 @@ namespace CompiledDefinitionSourceGenerator
                     Parameters = new ParamDef[]
                     {
                         new ParamDef("IConditionCompiler", "compiler", "The condition compiler."),
+                        new ParamDef("BaseDefinition?", "upsteamDefinition", "null", "The upstream definition."),
                     },
                 });
 
-            sb.AppendLine("base.Attach(compiler);");
+            sb.AppendLine("base.Attach(compiler, upsteamDefinition);");
             foreach (var prop in classInfo.CompiledProps)
             {
                 sb.AppendLine($"this.compiledCondition{prop.Name} = ");
@@ -215,24 +177,14 @@ namespace CompiledDefinitionSourceGenerator
 
             foreach (var prop in classInfo.DefinitionProps)
             {
-                sb.AppendLine($"this.{prop.Name}?.Attach(compiler);");
-
-                if (prop.UsesAdditionalParametersForHoldingClass)
-                {
-                    sb.AppendLine($"this.{prop.Name}?.AttachUpStreamParams(this.Combined{ClassInfo.AdditionalParamtersForClassMethod});");
-                }
+                sb.AppendLine($"this.{prop.Name}?.Attach(compiler, this);");
             }
 
             foreach (var prop in classInfo.DefinitionArrayProps)
             {
                 sb.AppendLine($"foreach (var value in this.{prop.Name})");
                 sb.StartBrace();
-                sb.AppendLine($"value.Attach(compiler);");
-
-                if (prop.UsesAdditionalParametersForHoldingClass)
-                {
-                    sb.AppendLine($"value.AttachUpStreamParams(this.Combined{ClassInfo.AdditionalParamtersForClassMethod});");
-                }
+                sb.AppendLine($"value.Attach(compiler, this);");
 
                 sb.EndBrace();
                 sb.AppendLine();
@@ -242,12 +194,7 @@ namespace CompiledDefinitionSourceGenerator
             {
                 sb.AppendLine($"foreach (var value in this.{prop.Name})");
                 sb.StartBrace();
-                sb.AppendLine($"value.Value.Attach(compiler);");
-
-                if (prop.UsesAdditionalParametersForHoldingClass)
-                {
-                    sb.AppendLine($"value.Value.AttachUpStreamParams(this.Combined{ClassInfo.AdditionalParamtersForClassMethod});");
-                }
+                sb.AppendLine($"value.Value.Attach(compiler, this);");
 
                 sb.EndBrace();
                 sb.AppendLine();
@@ -268,16 +215,22 @@ namespace CompiledDefinitionSourceGenerator
                     Override = true,
                 });
 
+            sb.AppendLine("if (this.Compiler == null)");
+            sb.StartBrace();
+            sb.AppendLine("throw new InvalidOperationException(\"Definition must be attached before Compile is called.\");");
+            sb.EndBrace();
+            sb.AppendLine();
+
             sb.AppendLine("base.Compile();");
 
             foreach (PropertyInfo prop in classInfo.CompiledProps)
             {
-                sb.AppendLine($"_ = this.compiledCondition{prop.Name}.Value;");
+                sb.AppendLine($"_ = this.compiledCondition{prop.Name}?.Value;");
             }
 
             foreach (PropertyInfo prop in classInfo.CompiledDictionaryProps)
             {
-                sb.AppendLine($"this.compiledCondition{prop.Name}.ToList().ForEach(x => _ = x.Value.Value);");
+                sb.AppendLine($"this.compiledCondition{prop.Name}?.ToList().ForEach(x => _ = x.Value?.Value);");
             }
 
             foreach (var prop in classInfo.DefinitionProps)
@@ -360,6 +313,12 @@ namespace CompiledDefinitionSourceGenerator
                     Parameters = allParameters,
                 });
 
+            sb.AppendLine($"if (this.Compiler == null || this.compiledCondition{info.Name} == null)");
+            sb.StartBrace();
+            sb.AppendLine("throw new InvalidOperationException(\"Definition must be attached before any Eval method is called.\");");
+            sb.EndBrace();
+            sb.AppendLine();
+
             sb.AddDictionary(
                 "Dictionary<string, BaseThing>",
                 "param",
@@ -419,6 +378,12 @@ namespace CompiledDefinitionSourceGenerator
                     Type = info.ReturnType,
                     Parameters = allParameters,
                 });
+
+            sb.AppendLine($"if (this.Compiler == null || this.compiledCondition{info.Name} == null)");
+            sb.StartBrace();
+            sb.AppendLine("throw new InvalidOperationException(\"Definition must be attached before any Eval method is called.\");");
+            sb.EndBrace();
+            sb.AppendLine();
 
             sb.AddDictionary(
                 "Dictionary<string, BaseThing>",

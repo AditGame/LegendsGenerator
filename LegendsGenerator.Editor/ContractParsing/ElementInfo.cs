@@ -85,5 +85,10 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets the compiled attribute.
         /// </summary>
         public CompiledAttribute? Compiled { get; set; }
+
+        /// <summary>
+        /// Gets or sets an optional method which changes the name of the node.
+        /// </summary>
+        public Action<string>? ChangeName { get; set; }
     }
 }

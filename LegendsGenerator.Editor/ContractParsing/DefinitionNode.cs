@@ -24,6 +24,16 @@ namespace LegendsGenerator.Editor.ContractParsing
     public abstract class DefinitionNode : INotifyPropertyChanged
     {
         /// <summary>
+        /// The underlying string field.
+        /// </summary>
+        private string name;
+
+        /// <summary>
+        /// The function which changes the name.
+        /// </summary>
+        private Action<string>? changeName;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DefinitionNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
@@ -36,10 +46,12 @@ namespace LegendsGenerator.Editor.ContractParsing
             IEnumerable<PropertyInfo> options,
             bool readOnly = false)
         {
-            this.Name = property.Name.Split("_").Last();
+            this.name = property.Name.Split("_").Last();
             this.Description = property.Description;
             this.Nullable = property.Nullable;
             this.ContentsModifiable = !readOnly;
+
+            this.changeName = property.ChangeName;
 
             this.GetContentsFunc = property.GetValue;
 
@@ -101,7 +113,30 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets the name of the node, typically either the property name or the dictionary key.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => this.name;
+
+            set
+            {
+                if (this.changeName == null)
+                {
+                    throw new InvalidOperationException("Name can not be changed.");
+                }
+
+                this.changeName(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether changing the name of this node is permitted.
+        /// </summary>
+        public bool NameCanBeChanged => this.changeName != null;
+
+        /// <summary>
+        /// Gets a value indicating whether changing the name of this node is not permitted.
+        /// </summary>
+        public bool NameCanNotBeChanged => this.changeName == null;
 
         /// <summary>
         /// Gets the description of this node.
