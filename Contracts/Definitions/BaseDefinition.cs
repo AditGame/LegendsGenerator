@@ -15,6 +15,11 @@ namespace LegendsGenerator.Contracts.Definitions
     public class BaseDefinition
     {
         /// <summary>
+        /// A value which indicates something is unset.
+        /// </summary>
+        public static readonly string UnsetString = "UNSET";
+
+        /// <summary>
         /// Gets the condition compiler
         /// </summary>
         protected IConditionCompiler? Compiler { get; private set; } = null;

@@ -12,10 +12,13 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
 
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
@@ -46,7 +49,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             IEnumerable<PropertyInfo> options,
             bool readOnly = false)
         {
-            this.name = property.Name.Split("_").Last();
+            this.name = property.Name;
             this.Description = property.Description;
             this.Nullable = property.Nullable;
             this.ContentsModifiable = !readOnly;
@@ -54,6 +57,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.changeName = property.ChangeName;
 
             this.GetContentsFunc = property.GetValue;
+            this.NameCreatesVariableName = property.NameCreatesVariableName;
 
             if (!readOnly)
             {
@@ -147,6 +151,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets a value indicating whether this node can be set to null.
         /// </summary>
         public bool Nullable { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the name represents a variable name.
+        /// </summary>
+        public bool NameCreatesVariableName { get; }
 
         /// <summary>
         /// Gets or sets the contents of the node; null if there's no contents beyond sub nodes.
@@ -297,9 +306,42 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets the issues present on this specific level of definition.
         /// </summary>
         /// <returns>The list of issues on this level.</returns>
-        protected virtual IEnumerable<ValidationIssue> GetLevelIssues()
+        protected virtual List<ValidationIssue> GetLevelIssues()
         {
-            return Array.Empty<ValidationIssue>();
+            List<ValidationIssue> issues = new List<ValidationIssue>();
+
+            if (string.IsNullOrWhiteSpace(this.Name))
+            {
+                issues.Add(new ValidationIssue(ValidationLevel.Error, "Name can not be null, empty, or whitespace."));
+            }
+            else if (this.Name.Equals(BaseDefinition.UnsetString))
+            {
+                issues.Add(new ValidationIssue(
+                    ValidationLevel.Error,
+                    "Name can not be the default string."));
+            }
+            else if (this.NameCreatesVariableName)
+            {
+                if (!ValidVariableName(this.Name))
+                {
+                    issues.Add(new ValidationIssue(
+                        ValidationLevel.Error,
+                        "Name must only consist of letters, numbers, and understores, also can not start with a number."));
+                }
+                else if (!char.IsUpper(this.Name.First()))
+                {
+                    issues.Add(new ValidationIssue(
+                        ValidationLevel.Info,
+                        "Name should start with an uppercase letter."));
+                }
+            }
+
+            if (!this.Nullable && this.Content == null)
+            {
+                issues.Add(new ValidationIssue(ValidationLevel.Error, "Contents can not be null."));
+            }
+
+            return issues;
         }
 
         /// <summary>
@@ -315,6 +357,28 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 this.OnPropertyChanged(nameof(this.GetTextColor));
             }
+        }
+
+        /// <summary>
+        /// Validates that the input string can be used as a string.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if the input is a valid name, false otherwise.</returns>
+        private static bool ValidVariableName(string name)
+        {
+            // Alphanumeric and underscores only.
+            if (name.Any(c => !char.IsLetterOrDigit(c) && c != '_'))
+            {
+                return false;
+            }
+
+            // Can't start with a number.
+            if (char.IsNumber(name.First()))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

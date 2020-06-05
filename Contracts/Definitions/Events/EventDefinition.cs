@@ -18,7 +18,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the event Condition, from one to one hundred.
         /// </summary>
         [Compiled(typeof(int), "Subject")]
-        public string Chance { get; set; } = "0";
+        public string Chance { get; set; } = "100";
 
         /// <summary>
         /// Gets or sets the subject of this event.
@@ -34,7 +34,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the description of this event.
         /// </summary>
         [Compiled(typeof(string), "Subject", AsFormattedText = true)]
-        public string Description { get; set; } = "UNDEFINED_DESCRIPTION";
+        public string Description { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the results of this event.

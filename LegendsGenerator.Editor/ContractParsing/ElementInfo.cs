@@ -90,5 +90,15 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets an optional method which changes the name of the node.
         /// </summary>
         public Action<string>? ChangeName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Name of this element creates a variable.
+        /// </summary>
+        public bool NameCreatesVariableName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Contents of this element represents an existing variable.
+        /// </summary>
+        public bool ContentsConsumeVariableName { get; set; }
     }
 }

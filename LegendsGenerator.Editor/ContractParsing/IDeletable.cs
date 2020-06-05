@@ -14,6 +14,11 @@ namespace LegendsGenerator.Editor.ContractParsing
     public interface IDeletable
     {
         /// <summary>
+        /// Gets a value indicating whether deleting can be done on this node.
+        /// </summary>
+        bool CanDelete { get; }
+
+        /// <summary>
         /// Handles delete events.
         /// </summary>
         /// <param name="sender">The sender.</param>

@@ -6,16 +6,19 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
+    using LegendsGenerator.Contracts.Definitions;
+
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Windows;
 
     /// <summary>
     /// A node which is a dictionary.
     /// </summary>
-    public class DictionaryDefinitionNode : DefinitionNode
+    public class DictionaryDefinitionNode : DefinitionNode, ICreatable
     {
         /// <summary>
         /// The type of the dictionary value.
@@ -49,6 +52,41 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.GenerateNodes();
         }
 
+        /// <inheritdoc/>
+        public bool CanCreate => true;
+
+        /// <inheritdoc/>
+        public void HandleCreate(object sender, RoutedEventArgs e)
+        {
+            // validate that this key isn't a duplicate.
+            foreach (var key in this.AsDictionary().Keys)
+            {
+                if (BaseDefinition.UnsetString.Equals(key))
+                {
+                    Console.WriteLine($"You must change the name of the {BaseDefinition.UnsetString} before adding another node..");
+                    return;
+                }
+            }
+
+            object? def;
+            if (this.valueType == typeof(string))
+            {
+                def = BaseDefinition.UnsetString;
+            }
+            else
+            {
+                def = Activator.CreateInstance(this.valueType);
+            }
+
+            if (def == null)
+            {
+                throw new InvalidOperationException("A null instance was created.");
+            }
+
+            this.AsDictionary().Add(BaseDefinition.UnsetString, def);
+            this.GenerateNodes();
+        }
+
         /// <summary>
         /// Generates all lower nodes based on content dictionary.
         /// </summary>
@@ -69,13 +107,14 @@ namespace LegendsGenerator.Editor.ContractParsing
                     name: kvp.Value.Key as string ?? "UNKNOWN",
                     description: this.info.Description,
                     propertyType: this.valueType,
-                    nullable: false,
+                    nullable: true, // Set nullable to true, if the value is set to null than the element will be deleted.
                     getValue: () => this.AsDictionary()[kvp.Value.Key],
-                    setValue: value => this.AsDictionary()[kvp.Value.Key] = value,
+                    setValue: value => this.HandleSetValue(kvp.Value.Key, value),
                     getCompiledParameters: this.info.GetCompiledParameters,
                     compiled: this.info.Compiled)
                 {
                     ChangeName = newName => this.ChangeName((kvp.Value.Key as string)!, newName),
+                    NameCreatesVariableName = true, // This is currently always true, should plumb in correctly with attribute for auto-magic.
                 };
 
                 DefinitionNode? node = DefinitionParser.ToNode(this.thing, kvpInfo);
@@ -104,6 +143,24 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
+        /// Handles te value being set, deleting the entry if it's set to null.
+        /// </summary>
+        /// <param name="key">The dictionary key.</param>
+        /// <param name="value">The new value.</param>
+        private void HandleSetValue(object key, object? value)
+        {
+            if (value == null)
+            {
+                this.AsDictionary().Remove(key);
+                this.GenerateNodes();
+            }
+            else
+            {
+                this.AsDictionary()[key] = value;
+            }
+        }
+
+        /// <summary>
         /// Handles te change name scenario.
         /// </summary>
         /// <param name="oldName">The old name.</param>
@@ -116,6 +173,17 @@ namespace LegendsGenerator.Editor.ContractParsing
             }
 
             IDictionary dictionary = this.AsDictionary();
+
+            // validate that this key isn't a duplicate.
+            foreach (var key in dictionary.Keys)
+            {
+                if (newName.Equals(key))
+                {
+                    Console.WriteLine($"A key with name {newName} already exists in the dictionary.");
+                    return;
+                }
+            }
+
             object? entry = dictionary[oldName];
             dictionary.Remove(oldName);
             dictionary[newName] = entry;

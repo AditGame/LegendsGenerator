@@ -15,6 +15,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Unknown type.
         /// </summary>
+        [Validation.InvalidEnumValue]
         None = 0,
 
         /// <summary>

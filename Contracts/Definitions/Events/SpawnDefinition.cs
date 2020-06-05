@@ -17,7 +17,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the name of the definition to spawn.
         /// </summary>
-        public string DefinitionName { get; set; } = "UNSET";
+        public string DefinitionName { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the type of thing to spawn.
@@ -34,6 +34,6 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the description of this spawn result.
         /// </summary>
         [Compiled(typeof(string), "Subject", AsFormattedText = true)]
-        public string Description { get; set; } = "UNSET_DESCRIPTION";
+        public string Description { get; set; } = UnsetString;
     }
 }

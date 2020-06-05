@@ -24,7 +24,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets a string which returns a number between 1 and 100 representing the chance of this happening.
         /// </summary>
         [Compiled(typeof(int), "Subject")]
-        public string Chance { get; set; } = "0";
+        public string Chance { get; set; } = "100";
 
         /// <summary>
         /// Gets or sets the string condition of this event.

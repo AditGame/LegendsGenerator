@@ -17,7 +17,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A definition node which is a list of other stuff.
     /// </summary>
-    public class ListDefinitionNode : DefinitionNode, ICreatable
+    public class ListDefinitionNode : DefinitionNode, ICreatable, IDeletable
     {
         /// <summary>
         /// The underlying element info.
@@ -52,12 +52,18 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
+        public bool CanCreate => true;
+
+        /// <inheritdoc/>
+        public bool CanDelete => this.AsList().Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition));
+
+        /// <inheritdoc/>
         public void HandleCreate(object sender, RoutedEventArgs e)
         {
             object? def;
             if (this.objectType == typeof(string))
             {
-                def = string.Empty;
+                def = BaseDefinition.UnsetString;
             }
             else
             {
@@ -77,6 +83,15 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             list.Add(def);
             this.CreateNodes();
+            this.OnPropertyChanged(nameof(this.CanDelete));
+        }
+
+        /// <inheritdoc/>
+        public void HandleDelete(object sender, RoutedEventArgs e)
+        {
+            this.AsList().Clear();
+            this.CreateNodes();
+            this.OnPropertyChanged(nameof(this.CanDelete));
         }
 
         /// <summary>
@@ -107,9 +122,9 @@ namespace LegendsGenerator.Editor.ContractParsing
                     name: $"[{i}]",
                     description: this.Description,
                     propertyType: this.objectType,
-                    nullable: false,
+                    nullable: true,
                     getValue: () => this.AsList()[iCopy],
-                    setValue: value => this.AsList()[iCopy] = value,
+                    setValue: value => this.HandleSetValue(iCopy, value),
                     getCompiledParameters: this.info.GetCompiledParameters,
                     compiled: this.info.Compiled);
 
@@ -118,6 +133,25 @@ namespace LegendsGenerator.Editor.ContractParsing
                 {
                     this.Nodes.Add(node);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Handles te value being set, deleting the entry if it's set to null.
+        /// </summary>
+        /// <param name="key">The dictionary key.</param>
+        /// <param name="value">The new value.</param>
+        private void HandleSetValue(int key, object? value)
+        {
+            if (value == null)
+            {
+                this.AsList().RemoveAt(key);
+                this.CreateNodes();
+                this.OnPropertyChanged(nameof(this.CanDelete));
+            }
+            else
+            {
+                this.AsList()[key] = value;
             }
         }
 

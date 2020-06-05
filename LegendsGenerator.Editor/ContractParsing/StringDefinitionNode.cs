@@ -8,7 +8,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 {
     using System.Collections.Generic;
     using System.Reflection;
-
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
@@ -29,15 +29,21 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
-        protected override IEnumerable<ValidationIssue> GetLevelIssues()
+        protected override List<ValidationIssue> GetLevelIssues()
         {
-            List<ValidationIssue> output = new List<ValidationIssue>();
+            List<ValidationIssue> output = base.GetLevelIssues();
 
             if (string.IsNullOrWhiteSpace(this.Content as string))
             {
                 output.Add(new ValidationIssue(
                     ValidationLevel.Error,
                     "Can not be null, empty, or whitespace."));
+            }
+            else if (this.Content?.ToString()?.Equals(BaseDefinition.UnsetString) == true)
+            {
+                output.Add(new ValidationIssue(
+                    ValidationLevel.Error,
+                    "String can not be the default string."));
             }
 
             return output;

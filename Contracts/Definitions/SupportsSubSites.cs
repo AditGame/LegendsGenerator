@@ -16,12 +16,12 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the condition which decides if subsites are allowed at all.
         /// </summary>
         [Compiled(typeof(bool), "Subject")]
-        public string Condition { get; set; } = "false";
+        public string Condition { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the condition which returns the number of subsites this site supports.
         /// </summary>
         [Compiled(typeof(int), "Subject")]
-        public string NumberOfSubSites { get; set; } = "1";
+        public string NumberOfSubSites { get; set; } = UnsetString;
     }
 }

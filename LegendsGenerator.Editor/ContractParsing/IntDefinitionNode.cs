@@ -6,6 +6,7 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -24,6 +25,27 @@ namespace LegendsGenerator.Editor.ContractParsing
         public IntDefinitionNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
             : base(thing, property, options, readOnly)
         {
+        }
+
+        /// <summary>
+        /// Gets or sets te contents as a string.
+        /// </summary>
+        public string AsString
+        {
+            get
+            {
+                return this.Content?.ToString() ?? "0";
+            }
+
+            set
+            {
+                if (!int.TryParse(value, out int val))
+                {
+                    throw new InvalidOperationException("Input must be a string.");
+                }
+
+                this.Content = val;
+            }
         }
     }
 }

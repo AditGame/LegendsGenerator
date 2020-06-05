@@ -27,8 +27,6 @@ namespace LegendsGenerator.Editor
             this.InitializeComponent();
 
             var (defs, events) = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
-            defs.Attach(this.context.Compiler);
-            events.Attach(this.context.Compiler);
 
             this.DataContext = this.context;
 
@@ -41,6 +39,8 @@ namespace LegendsGenerator.Editor
             {
                 this.context.Definitions.Add(new Definition(def));
             }
+
+            this.context.Attach();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Linq;
     using System.Reflection;
 
+    using LegendsGenerator.Contracts.Definitions.Validation;
+
     /// <summary>
     /// A definition node which is an enum.
     /// </summary>
@@ -47,7 +49,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             get
             {
-                return Enum.GetName(this.type, this.Content ?? "None") ?? Enum.GetNames(this.type).Last();
+                return Enum.GetName(this.type, this.Content ?? "None") ?? Enum.GetNames(this.type).First();
             }
 
             set
@@ -60,5 +62,20 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets the list of options.
         /// </summary>
         public IList<string> EnumValues { get; }
+
+        /// <inheritdoc/>
+        protected override List<ValidationIssue> GetLevelIssues()
+        {
+            List<ValidationIssue> output = base.GetLevelIssues();
+
+            if (this.type.GetMember(this.EnumValue).FirstOrDefault()?.GetCustomAttribute<InvalidEnumValueAttribute>() != null)
+            {
+                output.Add(new ValidationIssue(
+                    ValidationLevel.Error,
+                    "Invalid value."));
+            }
+
+            return output;
+        }
     }
 }

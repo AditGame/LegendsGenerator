@@ -6,9 +6,11 @@
              xmlns:local="clr-namespace:LegendsGenerator.Editor"
              xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
              xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
     <TreeView x:Name="TreeView"
               ItemsSource="{Binding SelectedDefinition.Nodes}"
               SelectedItemChanged="TreeView_SelectedItemChanged">
@@ -23,8 +25,20 @@
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:ListDefinitionNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <Button Click="CreateButton_Click" Visibility="{Binding CanCreate}">
-                        <TextBlock Text="Create +" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Click="CreateButton_Click">
+                            <TextBlock Text="Add +" />
+                        </Button>
+                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
+                            <TextBlock Text="Delete -" />
+                        </Button>
+                    </StackPanel>
+                </local:DefinitionEditorItem>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type nodes:DictionaryDefinitionNode}" ItemsSource="{Binding Nodes}">
+                <local:DefinitionEditorItem>
+                    <Button Click="CreateButton_Click">
+                        <TextBlock Text="Add +" />
                     </Button>
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
@@ -41,10 +55,10 @@
             <HierarchicalDataTemplate DataType="{x:Type nodes:SectionDefinitionNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <StackPanel Orientation="Horizontal">
-                        <Button Click="CreateButton_Click" Visibility="{Binding CanCreate}">
+                        <Button Click="CreateButton_Click" Visibility="{Binding CanCreate, Converter={StaticResource VisibleIfTrueConverter}}">
                             <TextBlock Text="Create +" />
                         </Button>
-                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete}">
+                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
                             <TextBlock Text="Delete -" />
                         </Button>
                     </StackPanel>
@@ -62,7 +76,7 @@
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:IntDefinitionNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <xctk:IntegerUpDown Value="{Binding Content}" />
+                    <TextBox Text="{Binding AsString}"  />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
         </TreeView.Resources>

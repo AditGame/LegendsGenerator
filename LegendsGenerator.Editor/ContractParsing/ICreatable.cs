@@ -14,6 +14,11 @@ namespace LegendsGenerator.Editor.ContractParsing
     public interface ICreatable
     {
         /// <summary>
+        /// Gets a value indicating whether creating can be done on this node.
+        /// </summary>
+        bool CanCreate { get; }
+
+        /// <summary>
         /// Handles create events.
         /// </summary>
         /// <param name="sender">The sender.</param>

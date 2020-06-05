@@ -72,6 +72,15 @@ namespace LegendsGenerator.Editor
             }
 
             node.HandleCreate(sender, e);
+
+            // Regenerate compilation
+            Context? context = this.DataContext as Context;
+            if (context == null)
+            {
+                throw new InvalidOperationException("DataContext msut be Context");
+            }
+
+            context.Attach();
         }
 
         /// <summary>
@@ -97,6 +106,15 @@ namespace LegendsGenerator.Editor
             }
 
             node.HandleDelete(sender, e);
+
+            // Regenerate compilation
+            Context? context = this.DataContext as Context;
+            if (context == null)
+            {
+                throw new InvalidOperationException("DataContext msut be Context");
+            }
+
+            context.Attach();
         }
     }
 }

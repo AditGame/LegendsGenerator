@@ -41,14 +41,14 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
-        /// Gets the visibility of the create button.
+        /// Gets a value indicating whether creating can be done on this node.
         /// </summary>
-        public Visibility CanCreate => !this.Nodes.Any() ? Visibility.Visible : Visibility.Collapsed;
+        public bool CanCreate => !this.Nodes.Any();
 
         /// <summary>
-        /// Gets the visibility of the delete button.
+        /// Gets a value indicating whether deleting can be done on this node.
         /// </summary>
-        public Visibility CanDelete => this.Nodes.Any() && this.Nullable ? Visibility.Visible : Visibility.Collapsed;
+        public bool CanDelete => this.Nodes.Any() && this.Nullable;
 
         /// <inheritdoc/>
         public void HandleCreate(object sender, RoutedEventArgs e)

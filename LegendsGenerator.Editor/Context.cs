@@ -11,6 +11,7 @@ namespace LegendsGenerator.Editor
     using System.ComponentModel;
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
@@ -73,6 +74,18 @@ namespace LegendsGenerator.Editor
             {
                 this.selectedNode = value;
                 this.OnPropertyChanged(nameof(this.SelectedNode));
+            }
+        }
+
+        /// <summary>
+        /// Attaches and initializes the compilation process.
+        /// Must be called again every time a node is added or removed.
+        /// </summary>
+        public void Attach()
+        {
+            foreach (Definition def in this.Definitions)
+            {
+                def.BaseDefinition.Attach(this.Compiler);
             }
         }
 

@@ -15,12 +15,12 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the name of the thing, such as Scholar.
         /// </summary>
-        public string Name { get; set; } = "UNSET";
+        public string Name { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the description of the thing.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the string which returns the maximum number of events.
