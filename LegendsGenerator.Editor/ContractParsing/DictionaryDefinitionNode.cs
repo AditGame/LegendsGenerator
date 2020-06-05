@@ -6,14 +6,13 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
-    using LegendsGenerator.Contracts.Definitions;
-
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Windows;
+    using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>
     /// A node which is a dictionary.
