@@ -6,14 +6,48 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json.Serialization;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
     /// The definition of a single event.
     /// </summary>
-    public partial class EventDefinition : BaseDefinition
+    public partial class EventDefinition : BaseDefinition, ITopLevelDefinition
     {
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public string SourceFile { get; set; } = UnsetString;
+
+        /// <summary>
+        /// Gets or sets the defintion name, if not set the definition name will be the event description.
+        /// </summary>
+        [ControlsDefinitionName]
+        public string? DefinitionName { get; set; }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        string ITopLevelDefinition.DefinitionName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.DefinitionName))
+                {
+                    return this.Description;
+                }
+                else
+                {
+                    return this.DefinitionName;
+                }
+            }
+
+            set
+            {
+                this.DefinitionName = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the event Condition, from one to one hundred.
         /// </summary>
@@ -34,6 +68,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the description of this event.
         /// </summary>
         [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        [ControlsDefinitionName]
         public string Description { get; set; } = UnsetString;
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 foreach (var element in DefinitionParser.ParseToNodes(type, definition))
                 {
-                    this.Nodes.Add(element);
+                    this.AddNode(element);
                 }
             }
         }

@@ -100,5 +100,10 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets a value indicating whether the Contents of this element represents an existing variable.
         /// </summary>
         public bool ContentsConsumeVariableName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a change to the contents of this property causes the definition name to change.
+        /// </summary>
+        public bool ControlsDefinitionName { get; set; }
     }
 }

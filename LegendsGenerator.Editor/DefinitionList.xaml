@@ -6,13 +6,22 @@
              xmlns:local="clr-namespace:LegendsGenerator.Editor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
     <TreeView x:Name="TreeView"
               ItemsSource="{Binding InheritanceGraph}"
               SelectedItemChanged="TreeView_SelectedItemChanged">
         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type local:InheritanceNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type local:InheritanceNode}" ItemsSource="{Binding Nodes}" >
                 <TextBlock Text="{Binding Name}" />
             </HierarchicalDataTemplate>
         </TreeView.Resources>
+        <TreeView.ItemContainerStyle>
+            <Style TargetType="{x:Type TreeViewItem}">
+                <Setter Property="IsExpanded" Value="True" />
+                <Setter Property="Visibility" Value="{Binding Visible, Converter={StaticResource VisibleIfTrueConverter}}"/>
+            </Style>
+        </TreeView.ItemContainerStyle>
     </TreeView>
 </UserControl>

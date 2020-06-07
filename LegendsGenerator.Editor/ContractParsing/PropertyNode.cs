@@ -12,10 +12,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Media;
 
     using LegendsGenerator.Contracts.Definitions;
@@ -58,6 +55,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             this.GetContentsFunc = property.GetValue;
             this.NameCreatesVariableName = property.NameCreatesVariableName;
+            this.ControlsDefinitionName = property.ControlsDefinitionName;
             this.ContentsType = property.PropertyType;
 
             if (!readOnly)
@@ -70,7 +68,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 PropertyNode? node = DefinitionParser.ToNode(thing, option);
                 if (node != null)
                 {
-                    this.Options.Add(node);
+                    this.AddOption(node);
                 }
             }
 
@@ -159,6 +157,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         public bool NameCreatesVariableName { get; }
 
         /// <summary>
+        /// Gets a value indicating whether a change to the contents should cause the definition name to change.
+        /// </summary>
+        public bool ControlsDefinitionName { get; }
+
+        /// <summary>
         /// Gets or sets the contents of the node; null if there's no contents beyond sub nodes.
         /// </summary>
         public object? Content
@@ -200,6 +203,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets a value indicating whether the subnodes can be modified.
         /// </summary>
         public bool SubNodesModifiable { get; protected set; }
+
+        /// <summary>
+        /// Gets the upstream node.
+        /// </summary>
+        public PropertyNode? UpstreamNode { get; private set; }
 
         /// <summary>
         /// Gets the list of additional options which can be added to this node.
@@ -281,6 +289,26 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets the type of the contents.
         /// </summary>
         protected Type ContentsType { get; set; }
+
+        /// <summary>
+        /// Adds a node, setting up the upstream.
+        /// </summary>
+        /// <param name="node">The node to add.</param>
+        public void AddNode(PropertyNode node)
+        {
+            node.UpstreamNode = this;
+            this.Nodes.Add(node);
+        }
+
+        /// <summary>
+        /// Adds an option, setting up the upstream.
+        /// </summary>
+        /// <param name="node">The node to add.</param>
+        public void AddOption(PropertyNode node)
+        {
+            node.UpstreamNode = this;
+            this.Options.Add(node);
+        }
 
         /// <summary>
         /// Renames this instance.

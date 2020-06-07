@@ -5,16 +5,31 @@
 namespace LegendsGenerator.Contracts.Definitions
 {
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
     /// THe base definition of a thing.
     /// </summary>
-    public partial class BaseThingDefinition : BaseDefinition
+    public partial class BaseThingDefinition : BaseDefinition, ITopLevelDefinition
     {
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public string SourceFile { get; set; } = UnsetString;
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        string ITopLevelDefinition.DefinitionName
+        {
+            get => this.Name;
+            set => this.Name = value;
+        }
+
         /// <summary>
         /// Gets or sets the name of the thing, such as Scholar.
         /// </summary>
+        [ControlsDefinitionName]
         public string Name { get; set; } = UnsetString;
 
         /// <summary>

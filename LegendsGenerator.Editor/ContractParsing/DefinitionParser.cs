@@ -14,6 +14,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Contracts.Definitions.Validation;
 
     /// <summary>
     /// Parses a contract definition into nodes for display and edit.
@@ -64,7 +65,10 @@ namespace LegendsGenerator.Editor.ContractParsing
                 getValue: () => property.GetValue(thing),
                 setValue: value => property.SetValue(thing, value),
                 getCompiledParameters: getParameters != null ? () => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<IList<string>>?)null,
-                compiled: compiled);
+                compiled: compiled)
+            {
+                ControlsDefinitionName = property.GetCustomAttribute<ControlsDefinitionNameAttribute>() != null,
+            };
 
             return ToNode(thing, info, optionsLookup);
         }

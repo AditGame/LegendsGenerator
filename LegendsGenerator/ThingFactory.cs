@@ -18,14 +18,14 @@ namespace LegendsGenerator
         /// <summary>
         /// The definitions.
         /// </summary>
-        private DefinitionCollections definitions;
+        private DefinitionCollection definitions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingFactory"/> class.
         /// </summary>
         /// <param name="definitions">The definitions.</param>
         public ThingFactory(
-            DefinitionCollections definitions)
+            DefinitionCollection definitions)
         {
             this.definitions = definitions;
         }

@@ -45,9 +45,9 @@ namespace LegendsGenerator.Tests
             sites.Add(popCenter);
             sites.Add(cityDef);
 
-            var definitions = new DefinitionCollections(sites);
+            var definitions = new DefinitionCollection(sites);
 
-            DefinitionSerializer.SerializeToFile(definitions, new EventCollection(new List<EventDefinition>()), "test.json");
+            DefinitionSerializer.SerializeToFile(definitions, new EventDefinitionCollection(new List<EventDefinition>()), "test.json");
 
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
@@ -91,9 +91,9 @@ namespace LegendsGenerator.Tests
             IList<SiteDefinition> sites = new List<SiteDefinition>();
             sites.Add(cityDef);
 
-            var definitions = new DefinitionCollections(sites);
+            var definitions = new DefinitionCollection(sites);
 
-            DefinitionSerializer.SerializeToFile(definitions, new EventCollection(new List<EventDefinition>()), "test.json");
+            DefinitionSerializer.SerializeToFile(definitions, new EventDefinitionCollection(new List<EventDefinition>()), "test.json");
 
             int worldSeed = 915434125;
 

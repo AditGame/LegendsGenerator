@@ -119,7 +119,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 PropertyNode? node = DefinitionParser.ToNode(this.thing, kvpInfo);
                 if (node != null)
                 {
-                    this.Nodes.Add(node);
+                    this.AddNode(node);
                 }
             }
         }

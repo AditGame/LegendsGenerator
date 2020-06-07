@@ -11,8 +11,10 @@ namespace LegendsGenerator.Editor
     using System.ComponentModel;
     using System.Linq;
 
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
     /// A single node of inheritance.
@@ -20,14 +22,29 @@ namespace LegendsGenerator.Editor
     public class InheritanceNode : INotifyPropertyChanged
     {
         /// <summary>
+        /// The nameof nodes with orphans.
+        /// </summary>
+        public static readonly string OrphanNodeName = "__Orphans__";
+
+        /// <summary>
         /// The name.
         /// </summary>
         private string name;
 
         /// <summary>
+        /// What this node inherits from.
+        /// </summary>
+        private string? inherits;
+
+        /// <summary>
         /// The definition.
         /// </summary>
         private Definition? definition;
+
+        /// <summary>
+        /// If true, will hide this node if it's empty.
+        /// </summary>
+        private bool hideIfEmpty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InheritanceNode"/> class.
@@ -38,7 +55,10 @@ namespace LegendsGenerator.Editor
         {
             this.name = name;
 
-            this.Nodes = new ObservableCollection<InheritanceNode>(nodes);
+            foreach (InheritanceNode node in nodes)
+            {
+                this.AddNode(node);
+            }
         }
 
         /// <summary>
@@ -53,8 +73,17 @@ namespace LegendsGenerator.Editor
 
             foreach (Definition def in definitions)
             {
-                this.Nodes.Add(new InheritanceNode(GetHeader(def.BaseDefinition), def, inheritanceList));
+                this.AddNode(new InheritanceNode(GetHeader(def.BaseDefinition), def, inheritanceList));
             }
+
+            // Wire up that, if the collection is modified, we may need to hide this node.
+            this.Nodes.CollectionChanged += (s, e) =>
+            {
+                if (this.HideIfEmpty)
+                {
+                    this.OnPropertyChanged(nameof(this.Visible));
+                }
+            };
         }
 
         /// <summary>
@@ -68,15 +97,50 @@ namespace LegendsGenerator.Editor
             this.name = name;
             this.Definition = definition;
 
-            if (inheritanceList == null)
+            // Wire up property changed notifier.
+            if (definition != null)
             {
-                return;
+                foreach (PropertyNode node in definition.Nodes.Where(d => d.ControlsDefinitionName))
+                {
+                    node.PropertyChanged += (s, e) =>
+                    {
+                        if (e.PropertyName?.Equals("Content") == true)
+                        {
+                            this.Name = GetHeader(definition.BaseDefinition);
+                        }
+                    };
+                }
+
+                PropertyNode? inheritsNode = definition.Nodes.FirstOrDefault(n => n.Name.Equals("InheritsFrom"));
+                if (inheritsNode != null)
+                {
+                    inheritsNode.PropertyChanged += (s, e) =>
+                    {
+                        if (e.PropertyName?.Equals("Content") == true)
+                        {
+                            this.InheritsFrom = inheritsNode.Content as string;
+                        }
+                    };
+                }
             }
 
-            foreach (var entry in inheritanceList[name])
+            // Continue with inherited nodes.
+            if (inheritanceList != null)
             {
-                this.Nodes.Add(new InheritanceNode(GetHeader(entry.BaseDefinition), entry, inheritanceList));
+                foreach (var entry in inheritanceList[name])
+                {
+                    this.AddNode(new InheritanceNode(GetHeader(entry.BaseDefinition), entry, inheritanceList));
+                }
             }
+
+            // Wire up that, if the collection is modified, we may need to hide this node.
+            this.Nodes.CollectionChanged += (s, e) =>
+            {
+                if (this.HideIfEmpty)
+                {
+                    this.OnPropertyChanged(nameof(this.Visible));
+                }
+            };
         }
 
         /// <inheritdoc/>
@@ -97,6 +161,20 @@ namespace LegendsGenerator.Editor
         }
 
         /// <summary>
+        /// Gets or sets the name of what this inherits.
+        /// </summary>
+        public string? InheritsFrom
+        {
+            get => this.inherits;
+
+            set
+            {
+                this.inherits = value;
+                this.OnPropertyChanged(nameof(this.InheritsFrom));
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the definition of this inheritance node.
         /// </summary>
         public Definition? Definition
@@ -109,6 +187,31 @@ namespace LegendsGenerator.Editor
                 this.OnPropertyChanged(nameof(this.Definition));
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this node should be hidden if it's empty.
+        /// </summary>
+        public bool HideIfEmpty
+        {
+            get => this.hideIfEmpty;
+
+            set
+            {
+                this.hideIfEmpty = value;
+                this.OnPropertyChanged(nameof(this.HideIfEmpty));
+                this.OnPropertyChanged(nameof(this.Visible));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this node should be hidden.
+        /// </summary>
+        public bool Visible => !this.HideIfEmpty || this.Nodes.Any();
+
+        /// <summary>
+        /// Gets or sets the upstream node.
+        /// </summary>
+        public InheritanceNode? Upstream { get; protected set; }
 
         /// <summary>
         /// Gets the underlying nodes.
@@ -158,10 +261,10 @@ namespace LegendsGenerator.Editor
 
             IList<InheritanceNode> nodes = new List<InheritanceNode>();
 
-            if (orphans.Any())
+            nodes.Add(new InheritanceNode(OrphanNodeName, orphans, inheritanceList)
             {
-                nodes.Add(new InheritanceNode("__Orphans__", orphans, inheritanceList));
-            }
+                HideIfEmpty = true,
+            });
 
             foreach (Definition nonThing in nonThingDefs)
             {
@@ -174,6 +277,16 @@ namespace LegendsGenerator.Editor
             }
 
             return nodes;
+        }
+
+        /// <summary>
+        /// Adds the node to the child nodes.
+        /// </summary>
+        /// <param name="node">The node to add.</param>
+        public void AddNode(InheritanceNode node)
+        {
+            node.Upstream = this;
+            this.Nodes.Add(node);
         }
 
         /// <summary>
@@ -192,13 +305,9 @@ namespace LegendsGenerator.Editor
         /// <returns>the string header.</returns>
         private static string GetHeader(BaseDefinition def)
         {
-            if (def is BaseThingDefinition thing)
+            if (def is ITopLevelDefinition thing)
             {
-                return thing.Name;
-            }
-            else if (def is EventDefinition eve)
-            {
-                return eve.Description;
+                return thing.DefinitionName;
             }
             else
             {

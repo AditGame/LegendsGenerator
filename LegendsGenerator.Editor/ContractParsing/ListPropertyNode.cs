@@ -107,7 +107,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 foreach (PropertyNode node in DefinitionParser.ParseToNodes(this.objectType, list[0]))
                 {
-                    this.Nodes.Add(node);
+                    this.AddNode(node);
                 }
 
                 return;
@@ -131,7 +131,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 PropertyNode? node = DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
                 if (node != null)
                 {
-                    this.Nodes.Add(node);
+                    this.AddNode(node);
                 }
             }
         }

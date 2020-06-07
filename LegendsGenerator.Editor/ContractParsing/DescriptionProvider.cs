@@ -97,16 +97,21 @@ namespace LegendsGenerator.Editor.ContractParsing
                 }
             }
 
-            string summary;
+            string? summary;
             try
             {
-                summary = document.SelectSingleNode(xpath).SelectSingleNode("summary").InnerText.Trim();
+                summary = document?.SelectSingleNode(xpath)?.SelectSingleNode("summary")?.InnerText?.Trim();
             }
 #pragma warning disable CA1031 // Do not catch general exception types. Want to be general to catch non-failing errors.
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
                 Console.WriteLine(ex.ToString());
+                return null;
+            }
+
+            if (summary == null)
+            {
                 return null;
             }
 

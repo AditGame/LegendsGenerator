@@ -17,7 +17,7 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// The context with all the data in it.
         /// </summary>
-        private Context context = new Context();
+        private Context context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -26,20 +26,10 @@ namespace LegendsGenerator.Editor
         {
             this.InitializeComponent();
 
-            var (defs, events) = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
+            DefinitionCollection? defs = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
 
+            this.context = new Context(defs);
             this.DataContext = this.context;
-
-            foreach (var def in events.Events)
-            {
-                this.context.Definitions.Add(new Definition(def));
-            }
-
-            foreach (var def in defs.AllDefinitions)
-            {
-                this.context.Definitions.Add(new Definition(def));
-            }
-
             this.context.Attach();
         }
     }

@@ -1,6 +1,7 @@
 ﻿{
   "Events": [
     {
+      "DefinitionName": "Site_ManyPeopleDie",
       "Chance": "50",
       "Subject": {
         "Condition": "Subject->Population > 50000",
@@ -35,6 +36,7 @@
       ]
     },
     {
+      "DefinitionName": "Site_PeopleBorn",
       "Chance": "25",
       "Subject": {
         "Condition": "true",
@@ -82,6 +84,7 @@
       ],
     },    
     {
+      "DefinitionName": "Site_WarWereDeclared",
       "Chance": "50",
       "Subject": {
         "Condition": "Subject->Population > 50000",

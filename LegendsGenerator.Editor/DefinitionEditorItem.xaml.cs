@@ -71,7 +71,7 @@ namespace LegendsGenerator.Editor
 
             node.HandleCreate(sender, e);
 
-            if (node.Content is BaseDefinition def)
+            if (node.UpstreamNode?.Content is BaseDefinition def)
             {
                 def.Reattach();
             }
@@ -101,7 +101,7 @@ namespace LegendsGenerator.Editor
 
             node.HandleDelete(sender, e);
 
-            if (node.Content is BaseDefinition def)
+            if (node.UpstreamNode?.Content is BaseDefinition def)
             {
                 def.Reattach();
             }

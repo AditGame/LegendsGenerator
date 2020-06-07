@@ -17,7 +17,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the name of the definition to spawn.
         /// </summary>
-        public string DefinitionName { get; set; } = UnsetString;
+        public string DefinitionNameToSpawn { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the type of thing to spawn.

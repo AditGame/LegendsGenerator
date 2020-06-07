@@ -25,11 +25,21 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Initializes a new instance of the <see cref="DefinitionFile"/> class.
         /// </summary>
         /// <param name="definitions">The list of definitions.</param>
-        /// <param name="events">The list of events.</param>
-        public DefinitionFile(DefinitionCollections definitions, EventCollection events)
+        public DefinitionFile(DefinitionCollection definitions)
         {
+            this.Events = definitions.Events.ToList();
             this.Sites = definitions.SiteDefinitions.ToList();
-            this.Events = events.Events.ToList();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefinitionFile"/> class.
+        /// </summary>
+        /// <param name="definitions">The list of definitions.</param>
+        public DefinitionFile(IEnumerable<BaseDefinition> definitions)
+        {
+            ILookup<System.Type, BaseDefinition>? byType = definitions.ToLookup(d => d.GetType());
+            this.Events = byType[typeof(EventDefinition)].OfType<EventDefinition>().ToList();
+            this.Sites = byType[typeof(SiteDefinition)].OfType<SiteDefinition>().ToList();
         }
 
         /// <summary>
@@ -41,5 +51,17 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the list of site definitions.
         /// </summary>
         public List<SiteDefinition> Sites { get; set; } = new List<SiteDefinition>();
+
+        /// <summary>
+        /// Gets all definitions in this file.
+        /// </summary>
+        /// <returns>All defintions.</returns>
+        public IEnumerable<BaseDefinition> AllDefinitions()
+        {
+            List<BaseDefinition> defs = new List<BaseDefinition>();
+            defs.AddRange(this.Events.OfType<BaseDefinition>());
+            defs.AddRange(this.Sites.OfType<BaseDefinition>());
+            return defs;
+        }
     }
 }
