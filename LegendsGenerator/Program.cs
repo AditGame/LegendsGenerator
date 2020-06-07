@@ -93,14 +93,13 @@ namespace LegendsGenerator
 
             DefinitionSerializer.SerializeToFile(definitions, eventDefinitions, "test.json");
             */
-            var (definitions, eventDefinitions) = DefinitionSerializer.DeserializeFromDirectory("Definitions");
+            var definitions = DefinitionSerializer.DeserializeFromDirectory("Definitions");
 
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
 
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
             definitions.Attach(processor);
-            eventDefinitions.Attach(processor);
 
             ThingFactory factory = new ThingFactory(definitions);
 
@@ -116,7 +115,7 @@ namespace LegendsGenerator
             {
                 WorldSeed = worldSeed,
                 StepCount = 1,
-                Events = new List<EventDefinition>(eventDefinitions.Events),
+                Events = new List<EventDefinition>(definitions.Events),
                 Sites = cities,
             };
 

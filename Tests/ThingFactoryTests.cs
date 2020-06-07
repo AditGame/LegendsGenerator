@@ -47,8 +47,6 @@ namespace LegendsGenerator.Tests
 
             var definitions = new DefinitionCollection(sites);
 
-            DefinitionSerializer.SerializeToFile(definitions, new EventDefinitionCollection(new List<EventDefinition>()), "test.json");
-
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
 
@@ -92,8 +90,6 @@ namespace LegendsGenerator.Tests
             sites.Add(cityDef);
 
             var definitions = new DefinitionCollection(sites);
-
-            DefinitionSerializer.SerializeToFile(definitions, new EventDefinitionCollection(new List<EventDefinition>()), "test.json");
 
             int worldSeed = 915434125;
 

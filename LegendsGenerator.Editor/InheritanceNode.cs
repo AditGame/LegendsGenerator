@@ -219,9 +219,11 @@ namespace LegendsGenerator.Editor
         public bool CanCreate => this.definition == null && this.name != OrphanNodeName;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the name can be changed in the list.
+        /// Gets a value indicating whether the name can be changed in the list.
         /// </summary>
+#pragma warning disable CA1822 // Mark members as static. From reflection.
         public bool NameCanBeChanged => false;
+#pragma warning restore CA1822 // Mark members as static
 
         /// <summary>
         /// Gets or sets the upstream node.
