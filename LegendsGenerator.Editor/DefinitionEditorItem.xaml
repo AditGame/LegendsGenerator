@@ -35,6 +35,12 @@
             <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
                 <TextBlock Text="Delete -" />
             </Button>
+            <StackPanel.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="Delete" Click="DeleteButton_Click">
+                    </MenuItem>
+                </ContextMenu>
+            </StackPanel.ContextMenu>
         </StackPanel>
     </Label>
 </UserControl>

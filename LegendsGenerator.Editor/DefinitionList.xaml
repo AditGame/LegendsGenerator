@@ -14,7 +14,7 @@
               SelectedItemChanged="TreeView_SelectedItemChanged">
         <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type local:InheritanceNode}" ItemsSource="{Binding Nodes}" >
-                <TextBlock Text="{Binding Name}" />
+                <local:DefinitionEditorItem />
             </HierarchicalDataTemplate>
         </TreeView.Resources>
         <TreeView.ItemContainerStyle>

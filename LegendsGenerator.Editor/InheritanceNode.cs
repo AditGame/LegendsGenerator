@@ -209,6 +209,21 @@ namespace LegendsGenerator.Editor
         public bool Visible => !this.HideIfEmpty || this.Nodes.Any();
 
         /// <summary>
+        /// Gets a value indicating whether this node can be deleted.
+        /// </summary>
+        public bool CanDelete => this.definition != null;
+
+        /// <summary>
+        /// Gets a value indicating whether this node can be created.
+        /// </summary>
+        public bool CanCreate => this.definition == null && this.name != OrphanNodeName;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the name can be changed in the list.
+        /// </summary>
+        public bool NameCanBeChanged => false;
+
+        /// <summary>
         /// Gets or sets the upstream node.
         /// </summary>
         public InheritanceNode? Upstream { get; protected set; }
