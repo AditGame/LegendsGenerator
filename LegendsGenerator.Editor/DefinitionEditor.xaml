@@ -20,61 +20,30 @@
             </Style>
         </TreeView.ItemContainerStyle>
         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:DefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:PropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem />
             </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:ListDefinitionNode}" ItemsSource="{Binding Nodes}">
-                <local:DefinitionEditorItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Click="CreateButton_Click">
-                            <TextBlock Text="Add +" />
-                        </Button>
-                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
-                            <TextBlock Text="Delete -" />
-                        </Button>
-                    </StackPanel>
-                </local:DefinitionEditorItem>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:DictionaryDefinitionNode}" ItemsSource="{Binding Nodes}">
-                <local:DefinitionEditorItem>
-                    <Button Click="CreateButton_Click">
-                        <TextBlock Text="Add +" />
-                    </Button>
-                </local:DefinitionEditorItem>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:StringDefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:StringPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <TextBox Text="{Binding Content}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:CompiledDefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:CompiledPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <code:SyntaxHighlightBox Text="{Binding Content}" IsEnabled="{Binding InlineEnabled}" IsLineNumbersMarginVisible="false" MaxLines="1" SyntaxLanguage="{Binding Language}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:SectionDefinitionNode}" ItemsSource="{Binding Nodes}">
-                <local:DefinitionEditorItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Click="CreateButton_Click" Visibility="{Binding CanCreate, Converter={StaticResource VisibleIfTrueConverter}}">
-                            <TextBlock Text="Create +" />
-                        </Button>
-                        <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
-                            <TextBlock Text="Delete -" />
-                        </Button>
-                    </StackPanel>
-                </local:DefinitionEditorItem>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:EnumDefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:EnumPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <ComboBox ItemsSource="{Binding EnumValues}" SelectedValue="{Binding EnumValue}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:BoolDefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:BoolPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type nodes:IntDefinitionNode}" ItemsSource="{Binding Nodes}">
+            <HierarchicalDataTemplate DataType="{x:Type nodes:IntPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
                     <TextBox Text="{Binding AsString}"  />
                 </local:DefinitionEditorItem>

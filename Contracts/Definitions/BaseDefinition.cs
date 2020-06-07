@@ -30,6 +30,19 @@ namespace LegendsGenerator.Contracts.Definitions
         protected BaseDefinition? UpsteamDefinition { get; private set; } = null;
 
         /// <summary>
+        /// Reattaches all the definitions, in case new definitions were added as downstream dependencies.
+        /// </summary>
+        public void Reattach()
+        {
+            if (this.Compiler == null)
+            {
+                throw new InvalidOperationException("Can not reattach before attaching.");
+            }
+
+            this.Attach(this.Compiler, this.UpsteamDefinition);
+        }
+
+        /// <summary>
         /// Attaches the compiler to this definition.
         /// </summary>
         /// <param name="compiler">The compiler.</param>

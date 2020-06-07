@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="CompiledDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="CompiledPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A node of compiled text.
     /// </summary>
-    public class CompiledDefinitionNode : DefinitionNode
+    public class CompiledPropertyNode : PropertyNode
     {
         /// <summary>
         /// Parameters which are available to all functions.
@@ -40,13 +40,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private Func<IList<string>> getParametersFunc;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompiledDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="CompiledPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public CompiledDefinitionNode(
+        public CompiledPropertyNode(
             object? thing,
             ElementInfo property,
             IEnumerable<PropertyInfo> options,
@@ -63,7 +63,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             this.getParametersFunc = property.GetCompiledParameters;
 
-            DefinitionNode? isComplexNode = this.Options.FirstOrDefault(o => o.Name.Equals("IsComplex"));
+            PropertyNode? isComplexNode = this.Options.FirstOrDefault(o => o.Name.Equals("IsComplex"));
             if (isComplexNode != null)
             {
                 this.isComplexFunc = () => (bool)(isComplexNode.Content ?? false);

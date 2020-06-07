@@ -23,7 +23,7 @@ namespace LegendsGenerator.Editor
         public Definition(BaseDefinition definition)
         {
             this.BaseDefinition = definition;
-            this.Nodes = new ObservableCollection<DefinitionNode>(DefinitionParser.ParseToNodes(definition.GetType(), definition));
+            this.Nodes = new ObservableCollection<PropertyNode>(DefinitionParser.ParseToNodes(definition.GetType(), definition));
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Gets the parsed nodes of this definition.
         /// </summary>
-        public ObservableCollection<DefinitionNode> Nodes { get; private set; }
-            = new ObservableCollection<DefinitionNode>();
+        public ObservableCollection<PropertyNode> Nodes { get; private set; }
+            = new ObservableCollection<PropertyNode>();
     }
 }

@@ -27,7 +27,7 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// The currently selected definition node.
         /// </summary>
-        private DefinitionNode? selectedNode;
+        private PropertyNode? selectedNode;
 
         /// <summary>
         /// Handles when a property is changed.
@@ -66,7 +66,7 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Gets or sets the selected definition node.
         /// </summary>
-        public DefinitionNode? SelectedNode
+        public PropertyNode? SelectedNode
         {
             get => this.selectedNode;
 

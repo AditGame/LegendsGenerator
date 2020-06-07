@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="EnumDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="EnumPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A definition node which is an enum.
     /// </summary>
-    public class EnumDefinitionNode : DefinitionNode
+    public class EnumPropertyNode : PropertyNode
     {
         /// <summary>
         /// The enum type.
@@ -24,13 +24,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private Type type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnumDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="EnumPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public EnumDefinitionNode(
+        public EnumPropertyNode(
             object? thing,
             ElementInfo property,
             IEnumerable<PropertyInfo> options,

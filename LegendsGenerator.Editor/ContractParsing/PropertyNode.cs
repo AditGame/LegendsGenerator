@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="DefinitionNode.cs" company="Tom Luppi">
+// <copyright file="PropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// Represents a node of the contract.
     /// </summary>
-    public abstract class DefinitionNode : INotifyPropertyChanged
+    public abstract class PropertyNode : INotifyPropertyChanged
     {
         /// <summary>
         /// The underlying string field.
@@ -37,13 +37,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private Action<string>? changeName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="PropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public DefinitionNode(
+        public PropertyNode(
             object? thing,
             ElementInfo property,
             IEnumerable<PropertyInfo> options,
@@ -58,6 +58,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             this.GetContentsFunc = property.GetValue;
             this.NameCreatesVariableName = property.NameCreatesVariableName;
+            this.ContentsType = property.PropertyType;
 
             if (!readOnly)
             {
@@ -66,7 +67,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             foreach (PropertyInfo option in options)
             {
-                DefinitionNode? node = DefinitionParser.ToNode(thing, option);
+                PropertyNode? node = DefinitionParser.ToNode(thing, option);
                 if (node != null)
                 {
                     this.Options.Add(node);
@@ -82,7 +83,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 }
             };
 
-            foreach (DefinitionNode node in this.Nodes)
+            foreach (PropertyNode node in this.Nodes)
             {
                 node.PropertyChanged += (s, e) =>
                 {
@@ -93,7 +94,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 };
             }
 
-            foreach (DefinitionNode node in this.Options)
+            foreach (PropertyNode node in this.Options)
             {
                 node.PropertyChanged += (s, e) =>
                 {
@@ -202,12 +203,12 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets the list of additional options which can be added to this node.
         /// </summary>
-        public ObservableCollection<DefinitionNode> Options { get; } = new ObservableCollection<DefinitionNode>();
+        public ObservableCollection<PropertyNode> Options { get; } = new ObservableCollection<PropertyNode>();
 
         /// <summary>
         /// Gets the list of subnodes on this node.
         /// </summary>
-        public ObservableCollection<DefinitionNode> Nodes { get; } = new ObservableCollection<DefinitionNode>();
+        public ObservableCollection<PropertyNode> Nodes { get; } = new ObservableCollection<PropertyNode>();
 
         /// <summary>
         /// Gets the list of validation failures on this node.
@@ -251,6 +252,16 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
+        /// Gets a value indicating whether creating can be done on this node.
+        /// </summary>
+        public virtual bool CanCreate => this.Content == null;
+
+        /// <summary>
+        /// Gets a value indicating whether deleting can be done on this node.
+        /// </summary>
+        public virtual bool CanDelete => this.Content != null && this.Nullable;
+
+        /// <summary>
         /// Gets or sets a function which returns the contents of this node.
         /// </summary>
         protected Func<object?>? GetContentsFunc { get; set; }
@@ -259,6 +270,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets or sets a function which sets the contents of this node.
         /// </summary>
         protected Action<object?>? SetContentsFunc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the contents.
+        /// </summary>
+        protected Type ContentsType { get; set; }
 
         /// <summary>
         /// Renames this instance.
@@ -270,15 +286,37 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
-        /// gets the UI element to display as the content.
+        /// Handles create events.
         /// </summary>
-        /// <returns>The UI element.</returns>
-        public virtual UIElement GetContentElement()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        public virtual void HandleCreate(object sender, RoutedEventArgs e)
         {
-            return new TextBlock()
+            object? def;
+            if (this.ContentsType == typeof(string))
             {
-                Text = this.Content?.ToString(),
-            };
+                def = BaseDefinition.UnsetString;
+            }
+            else
+            {
+                def = Activator.CreateInstance(this.ContentsType);
+            }
+
+            this.Content = def;
+            this.OnPropertyChanged(nameof(this.CanCreate));
+            this.OnPropertyChanged(nameof(this.CanDelete));
+        }
+
+        /// <summary>
+        /// Handles delete events.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        public virtual void HandleDelete(object sender, RoutedEventArgs e)
+        {
+            this.Content = null;
+            this.OnPropertyChanged(nameof(this.CanCreate));
+            this.OnPropertyChanged(nameof(this.CanDelete));
         }
 
         /// <summary>
@@ -392,7 +430,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems != null)
             {
-                foreach (DefinitionNode node in e.NewItems.OfType<DefinitionNode>())
+                foreach (PropertyNode node in e.NewItems.OfType<PropertyNode>())
                 {
                     node.PropertyChanged += (s, e) =>
                     {

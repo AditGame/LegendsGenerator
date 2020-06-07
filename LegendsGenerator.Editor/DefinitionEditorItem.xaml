@@ -29,6 +29,12 @@
             <TextBlock Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanNotBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
             <TextBlock Text=": " />
             <ContentPresenter Content="{Binding AdditionalContent, ElementName=userControl}" />
+            <Button Click="CreateButton_Click" Visibility="{Binding CanCreate, Converter={StaticResource VisibleIfTrueConverter}}">
+                <TextBlock Text="Add +" />
+            </Button>
+            <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
+                <TextBlock Text="Delete -" />
+            </Button>
         </StackPanel>
     </Label>
 </UserControl>

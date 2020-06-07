@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="StringDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="StringPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -14,16 +14,16 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A contract node which is a string.
     /// </summary>
-    public class StringDefinitionNode : DefinitionNode
+    public class StringPropertyNode : PropertyNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StringDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="StringPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public StringDefinitionNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
+        public StringPropertyNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
             : base(thing, property, options, readOnly)
         {
         }

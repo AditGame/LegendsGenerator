@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="SectionDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="DefinitionPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A node which is jsut the start of a new section.
     /// </summary>
-    public class SectionDefinitionNode : DefinitionNode, ICreatable, IDeletable
+    public class DefinitionPropertyNode : PropertyNode
     {
         /// <summary>
         /// The type to create when added.
@@ -23,13 +23,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private Type type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SectionDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="DefinitionPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public SectionDefinitionNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
+        public DefinitionPropertyNode(object? thing, ElementInfo property, IEnumerable<PropertyInfo> options, bool readOnly = false)
             : base(thing, property, options, readOnly)
         {
             this.type = property.PropertyType;
@@ -38,35 +38,21 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 this.AddInnerDefinition(this.type, property.GetValue());
             }
+
+            this.PropertyChanged += this.HandlePropertyChanged;
         }
 
         /// <summary>
-        /// Gets a value indicating whether creating can be done on this node.
+        /// Handles property changed events.
         /// </summary>
-        public bool CanCreate => !this.Nodes.Any();
-
-        /// <summary>
-        /// Gets a value indicating whether deleting can be done on this node.
-        /// </summary>
-        public bool CanDelete => this.Nodes.Any() && this.Nullable;
-
-        /// <inheritdoc/>
-        public void HandleCreate(object sender, RoutedEventArgs e)
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event args.</param>
+        private void HandlePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            object? def = Activator.CreateInstance(this.type);
-            this.Content = def;
-            this.AddInnerDefinition(this.type, def);
-            this.OnPropertyChanged(nameof(this.CanCreate));
-            this.OnPropertyChanged(nameof(this.CanDelete));
-        }
-
-        /// <inheritdoc/>
-        public void HandleDelete(object sender, RoutedEventArgs e)
-        {
-            this.Content = null;
-            this.AddInnerDefinition(this.type, null);
-            this.OnPropertyChanged(nameof(this.CanCreate));
-            this.OnPropertyChanged(nameof(this.CanDelete));
+            if (e.PropertyName?.Equals(nameof(this.Content)) == true)
+            {
+                this.AddInnerDefinition(this.ContentsType, this.Content);
+            }
         }
 
         /// <summary>

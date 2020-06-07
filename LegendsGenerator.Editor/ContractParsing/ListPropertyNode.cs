@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ListDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="ListPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A definition node which is a list of other stuff.
     /// </summary>
-    public class ListDefinitionNode : DefinitionNode, ICreatable, IDeletable
+    public class ListPropertyNode : PropertyNode
     {
         /// <summary>
         /// The underlying element info.
@@ -35,13 +35,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private Type objectType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ListDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="ListPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="info">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public ListDefinitionNode(object? thing, ElementInfo info, IEnumerable<PropertyInfo> options, bool readOnly = false)
+        public ListPropertyNode(object? thing, ElementInfo info, IEnumerable<PropertyInfo> options, bool readOnly = false)
             : base(thing, info, options, readOnly)
         {
             this.info = info;
@@ -52,13 +52,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
-        public bool CanCreate => true;
+        public override bool CanCreate => true;
 
         /// <inheritdoc/>
-        public bool CanDelete => this.AsList().Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition));
+        public override bool CanDelete => this.AsList().Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition));
 
         /// <inheritdoc/>
-        public void HandleCreate(object sender, RoutedEventArgs e)
+        public override void HandleCreate(object sender, RoutedEventArgs e)
         {
             object? def;
             if (this.objectType == typeof(string))
@@ -87,7 +87,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
-        public void HandleDelete(object sender, RoutedEventArgs e)
+        public override void HandleDelete(object sender, RoutedEventArgs e)
         {
             this.AsList().Clear();
             this.CreateNodes();
@@ -105,7 +105,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             // If there's only one element and it's a definition node, don't bother showing it in list form.
             if (list.Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition)))
             {
-                foreach (DefinitionNode node in DefinitionParser.ParseToNodes(this.objectType, list[0]))
+                foreach (PropertyNode node in DefinitionParser.ParseToNodes(this.objectType, list[0]))
                 {
                     this.Nodes.Add(node);
                 }
@@ -128,7 +128,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                     getCompiledParameters: this.info.GetCompiledParameters,
                     compiled: this.info.Compiled);
 
-                DefinitionNode? node = DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
+                PropertyNode? node = DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
                 if (node != null)
                 {
                     this.Nodes.Add(node);

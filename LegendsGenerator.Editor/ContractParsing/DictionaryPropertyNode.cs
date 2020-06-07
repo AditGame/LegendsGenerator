@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="DictionaryDefinitionNode.cs" company="Tom Luppi">
+// <copyright file="DictionaryPropertyNode.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// A node which is a dictionary.
     /// </summary>
-    public class DictionaryDefinitionNode : DefinitionNode, ICreatable
+    public class DictionaryPropertyNode : PropertyNode
     {
         /// <summary>
         /// The type of the dictionary value.
@@ -35,13 +35,13 @@ namespace LegendsGenerator.Editor.ContractParsing
         private object? thing;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DictionaryDefinitionNode"/> class.
+        /// Initializes a new instance of the <see cref="DictionaryPropertyNode"/> class.
         /// </summary>
         /// <param name="thing">The thing this node points to.</param>
         /// <param name="info">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public DictionaryDefinitionNode(object? thing, ElementInfo info, IEnumerable<PropertyInfo> options, bool readOnly = false)
+        public DictionaryPropertyNode(object? thing, ElementInfo info, IEnumerable<PropertyInfo> options, bool readOnly = false)
             : base(thing, info, options, readOnly)
         {
             this.valueType = info.PropertyType.GetGenericArguments().Last();
@@ -52,10 +52,10 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
-        public bool CanCreate => true;
+        public override bool CanCreate => true;
 
         /// <inheritdoc/>
-        public void HandleCreate(object sender, RoutedEventArgs e)
+        public override void HandleCreate(object sender, RoutedEventArgs e)
         {
             // validate that this key isn't a duplicate.
             foreach (var key in this.AsDictionary().Keys)
@@ -116,7 +116,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                     NameCreatesVariableName = true, // This is currently always true, should plumb in correctly with attribute for auto-magic.
                 };
 
-                DefinitionNode? node = DefinitionParser.ToNode(this.thing, kvpInfo);
+                PropertyNode? node = DefinitionParser.ToNode(this.thing, kvpInfo);
                 if (node != null)
                 {
                     this.Nodes.Add(node);

@@ -70,7 +70,7 @@
             <StackPanel>
                 <ListView ItemsSource="{Binding SelectedNode.Options}" >
                     <ListView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type nodes:BoolDefinitionNode}">
+                        <HierarchicalDataTemplate DataType="{x:Type nodes:BoolPropertyNode}">
                             <Label>
                                 <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
                                     <TextBlock Text="{Binding Name}" />

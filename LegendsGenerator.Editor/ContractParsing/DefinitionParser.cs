@@ -26,12 +26,12 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="type">The type of definition.</param>
         /// <param name="definition">The definition to convert.</param>
         /// <returns>A lsit of all nodes on the definition.</returns>
-        public static IList<DefinitionNode> ParseToNodes(Type type, object? definition)
+        public static IList<PropertyNode> ParseToNodes(Type type, object? definition)
         {
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             var options = properties.Where(p => p.Name.Contains("_")).ToLookup(p => p.Name.Split("_").First());
 
-            List<DefinitionNode> nodes = new List<DefinitionNode>();
+            List<PropertyNode> nodes = new List<PropertyNode>();
             foreach (var property in properties.Where(p => !p.Name.Contains("_")))
             {
                 var node = ToNode(definition, property, options);
@@ -51,7 +51,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="property">The property to convert.</param>
         /// <param name="optionsLookup">The options.</param>
         /// <returns>The node if it can be converted, otherwise null.</returns>
-        public static DefinitionNode? ToNode(object? thing, PropertyInfo property, ILookup<string, PropertyInfo>? optionsLookup = null)
+        public static PropertyNode? ToNode(object? thing, PropertyInfo property, ILookup<string, PropertyInfo>? optionsLookup = null)
         {
             MethodInfo? getParameters = thing?.GetType().GetMethod($"GetParameters{property.Name}");
 
@@ -76,7 +76,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="info">The info to convert.</param>
         /// <param name="optionsLookup">The options.</param>
         /// <returns>The node if it can be converted, otherwise null.</returns>
-        public static DefinitionNode? ToNode(object? thing, ElementInfo info, ILookup<string, PropertyInfo>? optionsLookup = null)
+        public static PropertyNode? ToNode(object? thing, ElementInfo info, ILookup<string, PropertyInfo>? optionsLookup = null)
         {
             optionsLookup = optionsLookup ?? Array.Empty<PropertyInfo>().ToLookup(p => p.Name);
             IEnumerable<PropertyInfo> options = optionsLookup[info.Name];
@@ -85,14 +85,14 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 if (info.Compiled != null)
                 {
-                    return new CompiledDefinitionNode(
+                    return new CompiledPropertyNode(
                         thing,
                         info,
                         options);
                 }
                 else
                 {
-                    return new StringDefinitionNode(
+                    return new StringPropertyNode(
                         thing,
                         info,
                         options);
@@ -100,42 +100,42 @@ namespace LegendsGenerator.Editor.ContractParsing
             }
             else if (info.PropertyType.IsSubclassOf(typeof(BaseDefinition)))
             {
-                return new SectionDefinitionNode(
+                return new DefinitionPropertyNode(
                     thing,
                     info,
                     options);
             }
             else if (info.PropertyType.IsEnum)
             {
-                return new EnumDefinitionNode(
+                return new EnumPropertyNode(
                     thing,
                     info,
                     options);
             }
             else if (info.PropertyType == typeof(bool))
             {
-                return new BoolDefinitionNode(
+                return new BoolPropertyNode(
                     thing,
                     info,
                     options);
             }
             else if (info.PropertyType == typeof(int))
             {
-                return new IntDefinitionNode(
+                return new IntPropertyNode(
                     thing,
                     info,
                     options);
             }
             else if (typeof(IDictionary).IsAssignableFrom(info.PropertyType))
             {
-                return new DictionaryDefinitionNode(
+                return new DictionaryPropertyNode(
                     thing,
                     info,
                     options);
             }
             else if (typeof(IList).IsAssignableFrom(info.PropertyType))
             {
-                return new ListDefinitionNode(
+                return new ListPropertyNode(
                     thing,
                     info,
                     options);
