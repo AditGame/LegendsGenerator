@@ -123,7 +123,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                     description: this.Description,
                     propertyType: this.objectType,
                     nullable: true,
-                    getValue: () => this.AsList()[iCopy],
+                    getValue: () => this.HandleGetValue(iCopy),
                     setValue: value => this.HandleSetValue(iCopy, value),
                     getCompiledParameters: this.info.GetCompiledParameters,
                     compiled: this.info.Compiled);
@@ -134,6 +134,22 @@ namespace LegendsGenerator.Editor.ContractParsing
                     this.Nodes.Add(node);
                 }
             }
+        }
+
+        /// <summary>
+        /// Handles getting the value, returning null if the key does not exist.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The value, or null.</returns>
+        private object? HandleGetValue(int key)
+        {
+            IList list = this.AsList();
+            if (key < list.Count)
+            {
+                return list[key];
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             List<ValidationIssue> output = base.GetLevelIssues();
 
-            if (string.IsNullOrWhiteSpace(this.Content as string))
+            if (string.IsNullOrWhiteSpace(this.Content as string) && !this.Nullable)
             {
                 output.Add(new ValidationIssue(
                     ValidationLevel.Error,

@@ -182,6 +182,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
                 this.SetContentsFunc.Invoke(value);
                 this.OnPropertyChanged(nameof(this.Content));
+                this.OnPropertyChanged(nameof(this.ShowControl));
             }
         }
 
@@ -260,6 +261,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets a value indicating whether deleting can be done on this node.
         /// </summary>
         public virtual bool CanDelete => this.Content != null && this.Nullable;
+
+        /// <summary>
+        /// Gets a value indicating whether the control should be shown.
+        /// </summary>
+        public virtual bool ShowControl => this.Content != null;
 
         /// <summary>
         /// Gets or sets a function which returns the contents of this node.
