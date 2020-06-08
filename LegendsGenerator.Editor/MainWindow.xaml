@@ -7,20 +7,20 @@
         xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
         xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="LegendsGenerator Editor"
+        WindowState="Maximized">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" />
-                <MenuItem Header="_Open" />
-                <MenuItem Header="_Save" />
+                <MenuItem Header="_Open" Click="Open_Click" />
+                <MenuItem Header="_Save" Click="Save_Click" />
                 <Separator />
                 <MenuItem Header="_Exit" />
             </MenuItem>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="Auto" />
@@ -31,7 +31,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <DataGridCell Grid.RowSpan="3">
+            <DataGridCell Grid.Column="0"
+                          Grid.RowSpan="3">
                 <local:DefinitionList 
                     x:Name="DefList"
                     />

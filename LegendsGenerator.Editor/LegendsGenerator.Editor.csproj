@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Contracts\LegendsGenerator.Contracts.csproj" />
     <ProjectReference Include="..\LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj" />
   </ItemGroup>

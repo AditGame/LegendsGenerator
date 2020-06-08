@@ -78,9 +78,9 @@ namespace LegendsGenerator.Contracts.Definitions
                     $"The following definitions have unset source files: {string.Join(", ", unsetGroup.Select(d => d.DefinitionName))}");
             }
 
-            foreach (IGrouping<string, BaseDefinition> file in byFile)
+            foreach (IGrouping<string, ITopLevelDefinition> file in byFile)
             {
-                SerializeToFile(new DefinitionCollection(file), file.Key);
+                SerializeToFile(new DefinitionCollection(file.OfType<BaseDefinition>()), file.Key);
             }
         }
 

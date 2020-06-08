@@ -6,8 +6,11 @@
 
 namespace LegendsGenerator.Editor
 {
+    using System;
+    using System.Linq;
     using System.Windows;
     using LegendsGenerator.Contracts.Definitions;
+    using Ookii.Dialogs.Wpf;
 
     /// <summary>
     /// Interaction logic for MainWindow.
@@ -26,11 +29,37 @@ namespace LegendsGenerator.Editor
         {
             this.InitializeComponent();
 
-            DefinitionCollection? defs = DefinitionSerializer.DeserializeFromDirectory(@"..\..\..\..\LegendsGenerator\Definitions");
-
-            this.context = new Context(defs);
+            this.context = new Context();
             this.DataContext = this.context;
-            this.context.Attach();
+        }
+
+        /// <summary>
+        /// Handles the Open click event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                this.context.SetDefinitions(dialog.SelectedPath);
+            }
+
+            Console.WriteLine(dialog.SelectedPath);
+        }
+
+        /// <summary>
+        /// Handles the Save click event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            DefinitionSerializer.ReserializeToFiles(
+                new DefinitionCollection(this.context.Definitions.Select(x => x.BaseDefinition)));
         }
     }
 }

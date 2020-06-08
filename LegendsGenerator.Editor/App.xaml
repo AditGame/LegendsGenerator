@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:LegendsGenerator.Editor"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>

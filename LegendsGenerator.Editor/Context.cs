@@ -34,17 +34,8 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
-        /// <param name="definitions">The definitions.</param>
-        public Context(DefinitionCollection definitions)
+        public Context()
         {
-            foreach (var def in definitions.AllDefinitions)
-            {
-                this.Definitions.Add(new Definition(def));
-            }
-
-            Instance = this;
-
-            this.RegenerateInheritanceGraph();
         }
 
         /// <summary>
@@ -153,6 +144,29 @@ namespace LegendsGenerator.Editor
                     throw new InvalidOperationException("The node is an orphan and there is no orphan section.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the definitions.
+        /// </summary>
+        /// <param name="path">The path to the definitions.</param>
+        public void SetDefinitions(string path)
+        {
+            this.Definitions.Clear();
+            this.InheritanceGraph.Clear();
+
+            DefinitionCollection? definitions =
+                DefinitionSerializer.DeserializeFromDirectory(path);
+
+            foreach (var def in definitions.AllDefinitions)
+            {
+                this.Definitions.Add(new Definition(def));
+            }
+
+            Instance = this;
+
+            this.RegenerateInheritanceGraph();
+            this.Attach();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 {
+  "Events": [],
   "Sites": [
     {
       "Name": "Population Center",
@@ -9,6 +10,9 @@
         "Population": "Rand.Next(0, 1000000)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "City",
@@ -19,6 +23,9 @@
         "Population": "Rand.Next(20000, 100000)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "Town",
@@ -29,6 +36,9 @@
         "Population": "Rand.Next(2000, 10000)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "Tower",
@@ -39,6 +49,9 @@
         "Population": "Rand.Next(0, 10)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "Evil Tower",
@@ -50,6 +63,9 @@
         "Population": "Rand.Next(0, 1000000)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
     },
     {
       "Name": "Annie",
@@ -61,6 +77,9 @@
         "Population": "Rand.Next(0, 1000000)"
       },
       "DefaultAspects": {},
-    },
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    }
   ]
 }
