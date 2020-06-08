@@ -7,8 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Add_grey_8x_16x.png" />
+    <None Remove="Resources\Remove_8x_16x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Contracts\LegendsGenerator.Contracts.csproj" />
     <ProjectReference Include="..\LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Add_grey_8x_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Remove_8x_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

@@ -25,7 +25,7 @@
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:StringPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <TextBox Text="{Binding Content}" />
+                    <TextBox Text="{Binding Content}" GotFocus="TextBox_GotFocus" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:CompiledPropertyNode}" ItemsSource="{Binding Nodes}">

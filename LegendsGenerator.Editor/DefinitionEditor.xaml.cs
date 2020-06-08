@@ -12,6 +12,8 @@ namespace LegendsGenerator.Editor
 
     using LegendsGenerator.Editor.ContractParsing;
 
+    using Microsoft.Win32;
+
     /// <summary>
     /// Interaction logic for DefinitionEditor.
     /// </summary>
@@ -47,6 +49,19 @@ namespace LegendsGenerator.Editor
             }
 
             context.SelectedNode = item;
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox dep = sender as TextBox;
+            DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
+            while (!(obj is TreeViewItem))
+            {
+                obj = System.Windows.Media.VisualTreeHelper.GetParent(obj);
+            }
+
+            TreeViewItem item = (obj as TreeViewItem)!;
+            item.IsSelected = true;
         }
     }
 }

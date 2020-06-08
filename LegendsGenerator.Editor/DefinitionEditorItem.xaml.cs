@@ -10,7 +10,6 @@ namespace LegendsGenerator.Editor
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
-
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Editor.ContractParsing;
 
@@ -61,19 +60,22 @@ namespace LegendsGenerator.Editor
                 return;
             }
 
-            PropertyNode? node = element.DataContext as PropertyNode;
+            ICreateDelete? node = element.DataContext as ICreateDelete;
 
             if (node == null)
             {
                 throw new InvalidOperationException(
-                    $"Datacontext must be of type ICreatable, is {element.DataContext.GetType().Name}");
+                    $"Datacontext must be of type ICreateDelete, is {element.DataContext.GetType().Name}");
             }
 
             node.HandleCreate(sender, e);
 
-            if (node.UpstreamNode?.Content is BaseDefinition def)
+            if (node is PropertyNode propNode)
             {
-                def.Reattach();
+                if (propNode.UpstreamNode?.Content is BaseDefinition def)
+                {
+                    def.Reattach();
+                }
             }
         }
 
@@ -91,7 +93,7 @@ namespace LegendsGenerator.Editor
                 return;
             }
 
-            PropertyNode? node = element.DataContext as PropertyNode;
+            ICreateDelete? node = element.DataContext as ICreateDelete;
 
             if (node == null)
             {
@@ -101,9 +103,12 @@ namespace LegendsGenerator.Editor
 
             node.HandleDelete(sender, e);
 
-            if (node.UpstreamNode?.Content is BaseDefinition def)
+            if (node is PropertyNode propNode)
             {
-                def.Reattach();
+                if (propNode.UpstreamNode?.Content is BaseDefinition def)
+                {
+                    def.Reattach();
+                }
             }
         }
     }

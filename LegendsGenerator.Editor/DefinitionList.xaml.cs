@@ -10,6 +10,8 @@ namespace LegendsGenerator.Editor
     using System.Windows;
     using System.Windows.Controls;
 
+    using LegendsGenerator.Editor.DefinitionSelector;
+
     /// <summary>
     /// Interaction logic for DefinitionList.
     /// </summary>

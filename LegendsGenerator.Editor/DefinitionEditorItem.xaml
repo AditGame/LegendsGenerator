@@ -10,6 +10,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <Image x:Key="AddImage" Source="Resources/Add_grey_8x_16x.png" />
+        <Image x:Key="RemoveImage" Source="Resources/Remove_8x_16x.png" />
     </UserControl.Resources>
     <Label>
         <StackPanel Orientation="Horizontal">
@@ -29,18 +31,8 @@
             <TextBlock Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanNotBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
             <TextBlock Text=": " />
             <ContentPresenter Content="{Binding AdditionalContent, ElementName=userControl}" Visibility="{Binding ShowControl, Converter={StaticResource VisibleIfTrueConverter}}" />
-            <Button Click="CreateButton_Click" Visibility="{Binding CanCreate, Converter={StaticResource VisibleIfTrueConverter}}">
-                <TextBlock Text="Add +" />
-            </Button>
-            <Button Click="DeleteButton_Click" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}">
-                <TextBlock Text="Delete -" />
-            </Button>
-            <StackPanel.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="Delete" Click="DeleteButton_Click">
-                    </MenuItem>
-                </ContextMenu>
-            </StackPanel.ContextMenu>
+            <Button Click="CreateButton_Click" ToolTip="Create" Visibility="{Binding CanCreate, Converter={StaticResource VisibleIfTrueConverter}}" Content="{StaticResource AddImage}" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+            <Button Click="DeleteButton_Click" ToolTip="Delete" Visibility="{Binding CanDelete, Converter={StaticResource VisibleIfTrueConverter}}" Content="{StaticResource RemoveImage}" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
         </StackPanel>
     </Label>
 </UserControl>

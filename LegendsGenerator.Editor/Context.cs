@@ -14,6 +14,7 @@ namespace LegendsGenerator.Editor
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Editor.ContractParsing;
+    using LegendsGenerator.Editor.DefinitionSelector;
 
     /// <summary>
     /// The underlying data context.
@@ -41,6 +42,8 @@ namespace LegendsGenerator.Editor
                 this.Definitions.Add(new Definition(def));
             }
 
+            Instance = this;
+
             this.RegenerateInheritanceGraph();
         }
 
@@ -48,6 +51,11 @@ namespace LegendsGenerator.Editor
         /// Handles when a property is changed.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Gets the current instance if one exists.
+        /// </summary>
+        public static Context? Instance { get; private set; }
 
         /// <summary>
         /// Gets the list of all definitions.
@@ -156,6 +164,31 @@ namespace LegendsGenerator.Editor
             foreach (Definition def in this.Definitions)
             {
                 def.BaseDefinition.Attach(this.Compiler);
+            }
+        }
+
+        /// <summary>
+        /// Adds a definition to the definition list.
+        /// </summary>
+        /// <param name="definition">The definition.</param>
+        public void AddDefinition(Definition definition)
+        {
+            this.Definitions.Add(definition);
+            definition.BaseDefinition.Attach(this.Compiler);
+        }
+
+        /// <summary>
+        /// Adds a definition to the definition list.
+        /// </summary>
+        /// <param name="definition">The definition.</param>
+        public void RemoveDefinition(Definition definition)
+        {
+            this.Definitions.Remove(definition);
+
+            if (this.SelectedDefinition == definition)
+            {
+                this.SelectedDefinition = null;
+                this.SelectedNode = null;
             }
         }
 

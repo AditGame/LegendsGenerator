@@ -4,14 +4,14 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace LegendsGenerator.Editor
+namespace LegendsGenerator.Editor.DefinitionSelector
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using System.Windows;
 
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Editor.ContractParsing;
@@ -19,7 +19,7 @@ namespace LegendsGenerator.Editor
     /// <summary>
     /// A single node of inheritance.
     /// </summary>
-    public class InheritanceNode : INotifyPropertyChanged
+    public abstract class InheritanceNode : INotifyPropertyChanged, ICreateDelete
     {
         /// <summary>
         /// The nameof nodes with orphans.
@@ -73,7 +73,7 @@ namespace LegendsGenerator.Editor
 
             foreach (Definition def in definitions)
             {
-                this.AddNode(new InheritanceNode(GetHeader(def.BaseDefinition), def, inheritanceList));
+                this.AddNode(new DefinitionInheritanceNode(GetHeader(def.BaseDefinition), def, inheritanceList));
             }
 
             // Wire up that, if the collection is modified, we may need to hide this node.
@@ -129,7 +129,7 @@ namespace LegendsGenerator.Editor
             {
                 foreach (var entry in inheritanceList[name])
                 {
-                    this.AddNode(new InheritanceNode(GetHeader(entry.BaseDefinition), entry, inheritanceList));
+                    this.AddNode(new DefinitionInheritanceNode(GetHeader(entry.BaseDefinition), entry, inheritanceList));
                 }
             }
 
@@ -211,12 +211,12 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Gets a value indicating whether this node can be deleted.
         /// </summary>
-        public bool CanDelete => this.definition != null;
+        public virtual bool CanDelete => false;
 
         /// <summary>
         /// Gets a value indicating whether this node can be created.
         /// </summary>
-        public bool CanCreate => this.definition == null && this.name != OrphanNodeName;
+        public virtual bool CanCreate => false;
 
         /// <summary>
         /// Gets a value indicating whether the name can be changed in the list.
@@ -244,8 +244,8 @@ namespace LegendsGenerator.Editor
         public static IEnumerable<InheritanceNode> ParseWithHeaders(IEnumerable<Definition> definitions)
         {
             IList<InheritanceNode> nodes = new List<InheritanceNode>();
-            nodes.Add(new InheritanceNode("Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))));
-            nodes.Add(new InheritanceNode("Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))));
+            nodes.Add(new SectionInheritanceNode(typeof(EventDefinition), "Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))));
+            nodes.Add(new SectionInheritanceNode(typeof(SiteDefinition), "Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))));
             return nodes;
         }
 
@@ -278,19 +278,19 @@ namespace LegendsGenerator.Editor
 
             IList<InheritanceNode> nodes = new List<InheritanceNode>();
 
-            nodes.Add(new InheritanceNode(OrphanNodeName, orphans, inheritanceList)
+            nodes.Add(new SectionInheritanceNode(null, OrphanNodeName, orphans, inheritanceList)
             {
                 HideIfEmpty = true,
             });
 
             foreach (Definition nonThing in nonThingDefs)
             {
-                nodes.Add(new InheritanceNode(GetHeader(nonThing.BaseDefinition), nonThing, null));
+                nodes.Add(new DefinitionInheritanceNode(GetHeader(nonThing.BaseDefinition), nonThing, null));
             }
 
             foreach (Definition thing in inheritanceList[null])
             {
-                nodes.Add(new InheritanceNode(GetHeader(thing.BaseDefinition), thing, inheritanceList));
+                nodes.Add(new DefinitionInheritanceNode(GetHeader(thing.BaseDefinition), thing, inheritanceList));
             }
 
             return nodes;
@@ -306,13 +306,16 @@ namespace LegendsGenerator.Editor
             this.Nodes.Add(node);
         }
 
-        /// <summary>
-        /// Fires property changed events.
-        /// </summary>
-        /// <param name="propertyName">True when property changed.</param>
-        protected void OnPropertyChanged(string propertyName)
+        /// <inheritdoc/>
+        public virtual void HandleCreate(object sender, RoutedEventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public virtual void HandleDelete(object sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -320,7 +323,7 @@ namespace LegendsGenerator.Editor
         /// </summary>
         /// <param name="def">The definition.</param>
         /// <returns>the string header.</returns>
-        private static string GetHeader(BaseDefinition def)
+        protected static string GetHeader(BaseDefinition def)
         {
             if (def is ITopLevelDefinition thing)
             {
@@ -330,6 +333,15 @@ namespace LegendsGenerator.Editor
             {
                 return "idk";
             }
+        }
+
+        /// <summary>
+        /// Fires property changed events.
+        /// </summary>
+        /// <param name="propertyName">True when property changed.</param>
+        protected void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

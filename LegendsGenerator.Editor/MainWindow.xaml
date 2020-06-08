@@ -8,25 +8,35 @@
         xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <DataGridCell Grid.RowSpan="3">
-            <local:DefinitionList 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" />
+                <MenuItem Header="_Open" />
+                <MenuItem Header="_Save" />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <DataGridCell Grid.RowSpan="3">
+                <local:DefinitionList 
                     x:Name="DefList"
                     />
-        </DataGridCell>
-        <GridSplitter 
+            </DataGridCell>
+            <GridSplitter 
               Grid.Column="1"
               Grid.RowSpan="3"
               HorizontalAlignment="Center"
@@ -35,12 +45,12 @@
               ShowsPreview="True"
               Width="5"
               />
-        <DataGridCell Grid.Column="2" Grid.ColumnSpan="3">
-            <local:DefinitionEditor 
+            <DataGridCell Grid.Column="2" Grid.ColumnSpan="3">
+                <local:DefinitionEditor 
                     x:Name="EditView"
                     />
-        </DataGridCell>
-        <GridSplitter Grid.Row="1"
+            </DataGridCell>
+            <GridSplitter Grid.Row="1"
                       Grid.Column="2"
                       Grid.ColumnSpan="3"
               HorizontalAlignment="Stretch"
@@ -49,15 +59,15 @@
               ShowsPreview="True"
               Height="5"
            />
-        <DataGridCell Grid.Column="2" Grid.Row="3">
-            <TabControl TabStripPlacement="Bottom">
-                <TabItem Header="Code Editor">
-                    <code:SyntaxHighlightBox Text="{Binding SelectedNode.Content}" />
-                </TabItem>
-                <TabItem Header="Warnings" />
-            </TabControl>
-        </DataGridCell>
-        <GridSplitter 
+            <DataGridCell Grid.Column="2" Grid.Row="3">
+                <TabControl TabStripPlacement="Bottom">
+                    <TabItem Header="Code Editor">
+                        <code:SyntaxHighlightBox Text="{Binding SelectedNode.Content}" />
+                    </TabItem>
+                    <TabItem Header="Warnings" />
+                </TabControl>
+            </DataGridCell>
+            <GridSplitter 
               Grid.Column="3"
               Grid.Row="3"
               HorizontalAlignment="Center"
@@ -66,29 +76,30 @@
               ShowsPreview="True"
               Width="5"
               />
-        <DataGridCell Grid.Column="5" Grid.Row="3">
-            <StackPanel>
-                <ListView ItemsSource="{Binding SelectedNode.Options}" >
-                    <ListView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type nodes:BoolPropertyNode}">
-                            <Label>
-                                <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Text=": " />
-                                    <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
-                                </StackPanel>
-                            </Label>
-                        </HierarchicalDataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Return Type: " />
-                    <TextBlock Text="{Binding SelectedNode.ReturnType}" />
+            <DataGridCell Grid.Column="5" Grid.Row="3">
+                <StackPanel>
+                    <ListView ItemsSource="{Binding SelectedNode.Options}" >
+                        <ListView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type nodes:BoolPropertyNode}">
+                                <Label>
+                                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
+                                        <TextBlock Text="{Binding Name}" />
+                                        <TextBlock Text=": " />
+                                        <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
+                                    </StackPanel>
+                                </Label>
+                            </HierarchicalDataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Return Type: " />
+                        <TextBlock Text="{Binding SelectedNode.ReturnType}" />
+                    </StackPanel>
+                    <TextBlock Text="Parameters: " />
+                    <ListView ItemsSource="{Binding SelectedNode.Parameters}" />
                 </StackPanel>
-                <TextBlock Text="Parameters: " />
-                <ListView ItemsSource="{Binding SelectedNode.Parameters}" />
-            </StackPanel>
-        </DataGridCell>
+            </DataGridCell>
 
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>

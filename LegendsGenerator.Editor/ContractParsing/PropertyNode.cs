@@ -21,7 +21,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     /// <summary>
     /// Represents a node of the contract.
     /// </summary>
-    public abstract class PropertyNode : INotifyPropertyChanged
+    public abstract class PropertyNode : INotifyPropertyChanged, ICreateDelete
     {
         /// <summary>
         /// The underlying string field.
