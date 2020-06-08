@@ -25,27 +25,27 @@
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:StringPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <TextBox Text="{Binding Content}" GotFocus="TextBox_GotFocus" />
+                    <TextBox Text="{Binding Content}" GotFocus="PassFocusToTreeItem" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:CompiledPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <code:SyntaxHighlightBox Text="{Binding Content}" IsEnabled="{Binding InlineEnabled}" IsLineNumbersMarginVisible="false" MaxLines="1" SyntaxLanguage="{Binding Language}" />
+                    <code:SyntaxHighlightBox Text="{Binding Content}" GotFocus="PassFocusToTreeItem" IsEnabled="{Binding InlineEnabled}" IsLineNumbersMarginVisible="false" MaxLines="1" SyntaxLanguage="{Binding Language}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:EnumPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <ComboBox ItemsSource="{Binding EnumValues}" SelectedValue="{Binding EnumValue}" />
+                    <ComboBox ItemsSource="{Binding EnumValues}" GotFocus="PassFocusToTreeItem" SelectedValue="{Binding EnumValue}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:BoolPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <CheckBox IsChecked="{Binding Content}" IsEnabled="{Binding ContentsModifiable}" />
+                    <CheckBox IsChecked="{Binding Content}" GotFocus="PassFocusToTreeItem" IsEnabled="{Binding ContentsModifiable}" />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type nodes:IntPropertyNode}" ItemsSource="{Binding Nodes}">
                 <local:DefinitionEditorItem>
-                    <TextBox Text="{Binding AsString}"  />
+                    <TextBox Text="{Binding AsString}" GotFocus="PassFocusToTreeItem"  />
                 </local:DefinitionEditorItem>
             </HierarchicalDataTemplate>
         </TreeView.Resources>

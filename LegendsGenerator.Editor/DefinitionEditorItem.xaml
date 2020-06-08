@@ -27,7 +27,7 @@
                     </ListView>
                 </StackPanel>
             </StackPanel.ToolTip>
-            <TextBox   Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
+            <TextBox   Text="{Binding Name}" Foreground="{Binding GetTextColor}" GotFocus="PassFocusToTreeItem" Visibility="{Binding NameCanBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
             <TextBlock Text="{Binding Name}" Foreground="{Binding GetTextColor}" Visibility="{Binding NameCanNotBeChanged, Converter={StaticResource VisibleIfTrueConverter}}" />
             <TextBlock Text=": " />
             <ContentPresenter Content="{Binding AdditionalContent, ElementName=userControl}" Visibility="{Binding ShowControl, Converter={StaticResource VisibleIfTrueConverter}}" />

@@ -51,9 +51,19 @@ namespace LegendsGenerator.Editor
             context.SelectedNode = item;
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Continues the focus event to the underlying TreeViewItem.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void PassFocusToTreeItem(object sender, RoutedEventArgs e)
         {
-            TextBox dep = sender as TextBox;
+            DependencyObject? dep = sender as DependencyObject;
+            if (dep == null)
+            {
+                return;
+            }
+
             DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
             while (!(obj is TreeViewItem))
             {
