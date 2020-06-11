@@ -31,9 +31,9 @@ namespace LegendsGenerator.Editor.ContractParsing
             string description,
             Type propertyType,
             bool nullable,
-            Func<object?> getValue,
-            Action<object?> setValue,
-            Func<IList<string>>? getCompiledParameters,
+            Func<PropertyNode, object?> getValue,
+            Action<PropertyNode, object?> setValue,
+            Func<PropertyNode, IList<string>>? getCompiledParameters,
             CompiledAttribute? compiled)
         {
             this.Name = name;
@@ -42,7 +42,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.Nullable = nullable;
             this.GetValue = getValue;
             this.SetValue = setValue;
-            this.GetCompiledParameters = getCompiledParameters != null ? getCompiledParameters : () => Array.Empty<string>();
+            this.GetCompiledParameters = getCompiledParameters != null ? getCompiledParameters : prop => Array.Empty<string>();
             this.Compiled = compiled;
         }
 
@@ -54,12 +54,12 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets a method which gets the value of this element.
         /// </summary>
-        public Func<object?> GetValue { get; set; }
+        public Func<PropertyNode, object?> GetValue { get; set; }
 
         /// <summary>
         /// Gets or sets a method which sets the value of this element.
         /// </summary>
-        public Action<object?> SetValue { get; set; }
+        public Action<PropertyNode, object?> SetValue { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this element can be set to null.
@@ -79,7 +79,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets a method which gets the compiled parameters of this element.
         /// </summary>
-        public Func<IList<string>> GetCompiledParameters { get; set; }
+        public Func<PropertyNode, IList<string>> GetCompiledParameters { get; set; }
 
         /// <summary>
         /// Gets or sets the compiled attribute.
@@ -89,7 +89,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets an optional method which changes the name of the node.
         /// </summary>
-        public Action<string>? ChangeName { get; set; }
+        public Action<PropertyNode, string>? ChangeName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the Name of this element creates a variable.

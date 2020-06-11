@@ -7,9 +7,6 @@
              xmlns:selector="clr-namespace:LegendsGenerator.Editor.DefinitionSelector"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
-    </UserControl.Resources>
     <TreeView x:Name="TreeView"
               ItemsSource="{Binding InheritanceGraph}"
               SelectedItemChanged="TreeView_SelectedItemChanged">

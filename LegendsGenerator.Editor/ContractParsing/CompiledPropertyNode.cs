@@ -37,7 +37,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// A function which gets the parameters for the compiled conditions.
         /// </summary>
-        private Func<IList<string>> getParametersFunc;
+        private Func<PropertyNode, IList<string>> getParametersFunc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledPropertyNode"/> class.
@@ -96,7 +96,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 List<string> param = new List<string>();
                 param.AddRange(StaticParameters);
-                param.AddRange(this.getParametersFunc());
+                param.AddRange(this.getParametersFunc(this));
                 return param;
             }
         }

@@ -36,7 +36,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             if (thing != null)
             {
-                this.AddInnerDefinition(this.type, property.GetValue());
+                this.AddInnerDefinition(this.type, property.GetValue(this));
             }
 
             this.PropertyChanged += this.HandlePropertyChanged;

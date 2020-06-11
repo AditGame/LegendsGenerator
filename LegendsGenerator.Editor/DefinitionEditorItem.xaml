@@ -9,7 +9,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
         <Image x:Key="AddImage" Source="Resources/Add_grey_8x_16x.png" />
         <Image x:Key="RemoveImage" Source="Resources/Remove_8x_16x.png" />
     </UserControl.Resources>

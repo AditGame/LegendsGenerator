@@ -13,6 +13,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Reflection;
     using System.Windows;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Editor.ChangeHistory;
 
     /// <summary>
     /// A node which is a dictionary.
@@ -48,7 +49,21 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.info = info;
             this.thing = thing;
 
-            this.GenerateNodes();
+            this.Nodes.Clear();
+
+            foreach (DictionaryEntry? kvp in this.AsDictionary())
+            {
+                if (kvp == null)
+                {
+                    continue;
+                }
+
+                PropertyNode? node = this.CreateNode(kvp.Value.Key);
+                if (node != null)
+                {
+                    this.AddNode(node);
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -82,46 +97,40 @@ namespace LegendsGenerator.Editor.ContractParsing
                 throw new InvalidOperationException("A null instance was created.");
             }
 
-            this.AsDictionary().Add(BaseDefinition.UnsetString, def);
-            this.GenerateNodes();
+            PropertyNode? node = this.HandleSetValue(BaseDefinition.UnsetString, def);
+
+            // TODO: Better way to get the definition that owns this.
+            Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+                new ActionHistoryItem(
+                    $"{this.FullName}.Items",
+                    $"Item Count {this.AsDictionary().Count - 1}",
+                    $"Item Count {this.AsDictionary().Count}",
+                    () => this.HandleSetValue(BaseDefinition.UnsetString, null),
+                    () => this.HandleSetValue(BaseDefinition.UnsetString, def, node)));
         }
 
         /// <summary>
-        /// Generates all lower nodes based on content dictionary.
+        /// Creates a new node.
         /// </summary>
-        private void GenerateNodes()
+        /// <param name="key">The node key.</param>
+        /// <returns>The node.</returns>
+        private PropertyNode? CreateNode(object key)
         {
-            this.Nodes.Clear();
-
-            IDictionary dictionary = this.AsDictionary();
-
-            foreach (DictionaryEntry? kvp in dictionary)
+            ElementInfo kvpInfo = new ElementInfo(
+                name: key as string ?? "UNKNOWN",
+                description: this.info.Description,
+                propertyType: this.valueType,
+                nullable: true, // Set nullable to true, if the value is set to null than the element will be deleted.
+                getValue: prop => this.AsDictionary()[prop.Name],
+                setValue: (prop, value) => this.HandleSetValue(prop.Name, value),
+                getCompiledParameters: this.info.GetCompiledParameters,
+                compiled: this.info.Compiled)
             {
-                if (kvp == null)
-                {
-                    continue;
-                }
+                ChangeName = (prop, newName) => this.ChangeName(prop.Name, newName),
+                NameCreatesVariableName = true, // This is currently always true, should plumb in correctly with attribute for auto-magic.
+            };
 
-                ElementInfo kvpInfo = new ElementInfo(
-                    name: kvp.Value.Key as string ?? "UNKNOWN",
-                    description: this.info.Description,
-                    propertyType: this.valueType,
-                    nullable: true, // Set nullable to true, if the value is set to null than the element will be deleted.
-                    getValue: () => this.AsDictionary()[kvp.Value.Key],
-                    setValue: value => this.HandleSetValue(kvp.Value.Key, value),
-                    getCompiledParameters: this.info.GetCompiledParameters,
-                    compiled: this.info.Compiled)
-                {
-                    ChangeName = newName => this.ChangeName((kvp.Value.Key as string)!, newName),
-                    NameCreatesVariableName = true, // This is currently always true, should plumb in correctly with attribute for auto-magic.
-                };
-
-                PropertyNode? node = DefinitionParser.ToNode(this.thing, kvpInfo);
-                if (node != null)
-                {
-                    this.AddNode(node);
-                }
-            }
+            return DefinitionParser.ToNode(this.thing, kvpInfo);
         }
 
         /// <summary>
@@ -142,20 +151,81 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
-        /// Handles te value being set, deleting the entry if it's set to null.
+        /// Handles the value being set, deleting the entry if it's set to null and creating if it's a new key.
         /// </summary>
         /// <param name="key">The dictionary key.</param>
         /// <param name="value">The new value.</param>
-        private void HandleSetValue(object key, object? value)
+        /// <param name="node">the node if already created.</param>
+        /// <returns>The node, if one was created.</returns>
+        private PropertyNode? HandleSetValue(object key, object? value, PropertyNode? node = null)
         {
             if (value == null)
             {
-                this.AsDictionary().Remove(key);
-                this.GenerateNodes();
+                PropertyNode? matchingNode = this.Nodes.FirstOrDefault(n => n.Name.Equals(key));
+                if (matchingNode != null)
+                {
+                    this.AsDictionary().Remove(key);
+                    this.Nodes.Remove(matchingNode);
+                }
             }
             else
             {
-                this.AsDictionary()[key] = value;
+                if (this.AsDictionary().Contains(key))
+                {
+                    this.AsDictionary()[key] = value;
+                }
+                else
+                {
+                    this.AsDictionary()[key] = value;
+                    PropertyNode? newNode = node ?? this.CreateNode(key);
+                    if (newNode != null)
+                    {
+                        this.AddNode(newNode);
+                        return newNode;
+                    }
+                    else
+                    {
+                        // The key must be in the dictionary when the property node function runs, so remove it if no property node is created.
+                        this.AsDictionary().Remove(key);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Ensures the nodes in the display match the nodes in the dictionary.
+        /// </summary>
+        private void FixNodes()
+        {
+            IList<PropertyNode> nodes = new List<PropertyNode>(this.Nodes);
+            foreach (DictionaryEntry? kvp in this.AsDictionary())
+            {
+                if (kvp == null)
+                {
+                    continue;
+                }
+
+                string key = kvp.Value.Key.ToString() ?? "NULL";
+                PropertyNode? matchingNode = nodes.FirstOrDefault(n => n.Name.Equals(key));
+                if (matchingNode != null)
+                {
+                    nodes.Remove(matchingNode);
+                }
+                else
+                {
+                    PropertyNode? newNode = this.CreateNode(key);
+                    if (newNode != null)
+                    {
+                        this.AddNode(newNode);
+                    }
+                }
+            }
+
+            foreach (PropertyNode badNode in nodes)
+            {
+                this.Nodes.Remove(badNode);
             }
         }
 
@@ -186,8 +256,6 @@ namespace LegendsGenerator.Editor.ContractParsing
             object? entry = dictionary[oldName];
             dictionary.Remove(oldName);
             dictionary[newName] = entry;
-
-            this.GenerateNodes();
         }
     }
 }

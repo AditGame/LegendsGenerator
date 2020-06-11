@@ -73,5 +73,28 @@ namespace LegendsGenerator.Editor
             TreeViewItem item = (obj as TreeViewItem)!;
             item.IsSelected = true;
         }
+
+        /// <summary>
+        /// Continues the focus event to the underlying TreeViewItem.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void Undo(object sender, RoutedEventArgs e)
+        {
+            DependencyObject? dep = sender as DependencyObject;
+            if (dep == null)
+            {
+                return;
+            }
+
+            DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
+            while (!(obj is TreeViewItem))
+            {
+                obj = System.Windows.Media.VisualTreeHelper.GetParent(obj);
+            }
+
+            TreeViewItem item = (obj as TreeViewItem)!;
+            item.IsSelected = true;
+        }
     }
 }

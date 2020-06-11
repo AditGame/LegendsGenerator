@@ -6,9 +6,11 @@
 
 namespace LegendsGenerator.Editor
 {
+    using System;
     using System.Collections.ObjectModel;
-
+    using System.Windows.Input;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Editor.ChangeHistory;
     using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
@@ -36,5 +38,68 @@ namespace LegendsGenerator.Editor
         /// </summary>
         public ObservableCollection<PropertyNode> Nodes { get; private set; }
             = new ObservableCollection<PropertyNode>();
+
+        /// <summary>
+        /// Gets the history of this definition.
+        /// </summary>
+        public History History { get; } = new History();
+
+        /// <summary>
+        /// Gets the command which undoes the last change to this definition.
+        /// </summary>
+        public ICommand Undo
+        {
+            get
+            {
+                return new ActionCommand(() => this.History.Undo());
+            }
+        }
+
+        /// <summary>
+        /// Gets the command which redoes a change to this definition.
+        /// </summary>
+        public ICommand Redo
+        {
+            get
+            {
+                return new ActionCommand(() => this.History.Redo());
+            }
+        }
+
+        /// <summary>
+        /// A command which runs an action.
+        /// </summary>
+        private class ActionCommand : ICommand
+        {
+            /// <summary>
+            /// The action to run.
+            /// </summary>
+            private Action act;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ActionCommand"/> class.
+            /// </summary>
+            /// <param name="act">The action to run.</param>
+            public ActionCommand(Action act)
+            {
+                this.act = act;
+                this.CanExecuteChanged += (s, e) => { };
+            }
+
+            /// <inheritdoc/>
+            public event EventHandler CanExecuteChanged;
+
+            /// <inheritdoc/>
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public void Execute(object? parameter)
+            {
+                this.act();
+            }
+        }
     }
 }

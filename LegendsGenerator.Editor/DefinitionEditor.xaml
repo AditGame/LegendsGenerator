@@ -8,9 +8,10 @@
              xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
-    </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding SelectedDefinition.Undo}" />
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding SelectedDefinition.Redo}" />
+    </UserControl.InputBindings>
     <TreeView x:Name="TreeView"
               ItemsSource="{Binding SelectedDefinition.Nodes}"
               SelectedItemChanged="TreeView_SelectedItemChanged">

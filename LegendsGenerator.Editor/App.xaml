@@ -4,5 +4,6 @@
              xmlns:local="clr-namespace:LegendsGenerator.Editor"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </Application.Resources>
 </Application>

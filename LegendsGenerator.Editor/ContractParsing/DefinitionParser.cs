@@ -62,9 +62,9 @@ namespace LegendsGenerator.Editor.ContractParsing
                 description: DescriptionProvider.GetDescription(property),
                 propertyType: property.PropertyType,
                 nullable: property.IsNullable(),
-                getValue: () => property.GetValue(thing),
-                setValue: value => property.SetValue(thing, value),
-                getCompiledParameters: getParameters != null ? () => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<IList<string>>?)null,
+                getValue: prop => property.GetValue(thing),
+                setValue: (prop, value) => property.SetValue(thing, value),
+                getCompiledParameters: getParameters != null ? prop => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<PropertyNode, IList<string>>?)null,
                 compiled: compiled)
             {
                 ControlsDefinitionName = property.GetCustomAttribute<ControlsDefinitionNameAttribute>() != null,

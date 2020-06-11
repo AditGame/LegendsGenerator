@@ -12,11 +12,13 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Windows;
     using System.Windows.Media;
 
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Validation;
+    using LegendsGenerator.Editor.ChangeHistory;
 
     /// <summary>
     /// Represents a node of the contract.
@@ -31,7 +33,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The function which changes the name.
         /// </summary>
-        private Action<string>? changeName;
+        private Action<PropertyNode, string>? changeName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNode"/> class.
@@ -122,12 +124,32 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             set
             {
-                if (this.changeName == null)
+
+                string oldName = this.name;
+                string newName = value;
+                Context.Instance?.SelectedDefinition?.History.AddHistoryItem(new ActionHistoryItem(
+                    $"{this.FullName}::Name",
+                    this.name,
+                    value,
+                    () => this.SetNameBypassingHistory(oldName),
+                    () => this.SetNameBypassingHistory(newName)));
+                this.SetNameBypassingHistory(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the full name of this node.
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                if (this.UpstreamNode == null)
                 {
-                    throw new InvalidOperationException("Name can not be changed.");
+                    return this.Name;
                 }
 
-                this.changeName(value);
+                return $"{this.UpstreamNode.FullName}.{this.Name}";
             }
         }
 
@@ -168,24 +190,15 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             get
             {
-                return this.GetContentsFunc?.Invoke();
+                return this.GetContentsFunc?.Invoke(this);
             }
 
             set
             {
-                if (!this.ContentsModifiable)
-                {
-                    throw new InvalidOperationException("Can not modify contents");
-                }
-
-                if (this.SetContentsFunc == null)
-                {
-                    throw new InvalidOperationException($"{nameof(this.SetContentsFunc)} msut be attached to set contents.");
-                }
-
-                this.SetContentsFunc.Invoke(value);
-                this.OnPropertyChanged(nameof(this.Content));
-                this.OnPropertyChanged(nameof(this.ShowControl));
+                // TODO: Better way to get the definition that owns this.
+                Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+                    new PropertyNodeHistoryItem(this, this.Content, value));
+                this.SetContentBypassingHistory(value);
             }
         }
 
@@ -278,17 +291,54 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets a function which returns the contents of this node.
         /// </summary>
-        protected Func<object?>? GetContentsFunc { get; set; }
+        protected Func<PropertyNode, object?>? GetContentsFunc { get; set; }
 
         /// <summary>
         /// Gets or sets a function which sets the contents of this node.
         /// </summary>
-        protected Action<object?>? SetContentsFunc { get; set; }
+        protected Action<PropertyNode, object?>? SetContentsFunc { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the contents.
         /// </summary>
         protected Type ContentsType { get; set; }
+
+        /// <summary>
+        /// Sets the contents without changing history.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        public void SetContentBypassingHistory(object? value)
+        {
+            if (!this.ContentsModifiable)
+            {
+                throw new InvalidOperationException("Can not modify contents");
+            }
+
+            if (this.SetContentsFunc == null)
+            {
+                throw new InvalidOperationException($"{nameof(this.SetContentsFunc)} msut be attached to set contents.");
+            }
+
+            this.SetContentsFunc.Invoke(this, value);
+            this.OnPropertyChanged(nameof(this.Content));
+            this.OnPropertyChanged(nameof(this.ShowControl));
+        }
+
+        /// <summary>
+        /// Gets the name without changing history.
+        /// </summary>
+        /// <param name="value">The new name.</param>
+        public void SetNameBypassingHistory(string value)
+        {
+            if (this.changeName == null)
+            {
+                throw new InvalidOperationException("Name can not be changed.");
+            }
+
+            this.changeName(this, value);
+            this.name = value;
+            this.OnPropertyChanged(nameof(this.Name));
+        }
 
         /// <summary>
         /// Adds a node, setting up the upstream.

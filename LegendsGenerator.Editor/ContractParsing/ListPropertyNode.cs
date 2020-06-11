@@ -123,8 +123,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                     description: this.Description,
                     propertyType: this.objectType,
                     nullable: true,
-                    getValue: () => this.HandleGetValue(iCopy),
-                    setValue: value => this.HandleSetValue(iCopy, value),
+                    getValue: prop => this.HandleGetValue(iCopy),
+                    setValue: (prop, value) => this.HandleSetValue(iCopy, value),
                     getCompiledParameters: this.info.GetCompiledParameters,
                     compiled: this.info.Compiled);
 
