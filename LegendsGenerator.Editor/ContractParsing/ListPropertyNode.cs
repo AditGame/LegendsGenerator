@@ -13,6 +13,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Reflection;
     using System.Windows;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Editor.ChangeHistory;
 
     /// <summary>
     /// A definition node which is a list of other stuff.
@@ -75,22 +76,39 @@ namespace LegendsGenerator.Editor.ContractParsing
                 throw new InvalidOperationException("A null instance was created.");
             }
 
-            IList? list = this.Content as IList;
-            if (list == null)
+            this.AsList().Add(def);
+            int index = this.AsList().Count - 1;
+            PropertyNode? node = this.CreateNode(index);
+            if (node != null)
             {
-                throw new InvalidOperationException($"Content type must be list, was {this.Content?.GetType().Name ?? "Null"}");
+                this.Nodes.Add(node);
+            }
+            else
+            {
+                return;
             }
 
-            list.Add(def);
-            this.CreateNodes();
             this.OnPropertyChanged(nameof(this.CanDelete));
+
+            // TODO: Better way to get the definition that owns this.
+            Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+                new ActionHistoryItem(
+                    $"{this.FullName}.Items",
+                    $"Item Count {this.AsList().Count - 1}",
+                    $"Item Count {this.AsList().Count}",
+                    () => this.HandleSetValue(index, null),
+                    () =>
+                    {
+                        this.HandleSetValue(index, def);
+                        this.Nodes.Add(node);
+                    }));
         }
 
         /// <inheritdoc/>
         public override void HandleDelete(object sender, RoutedEventArgs e)
         {
             this.AsList().Clear();
-            this.CreateNodes();
+            this.Nodes.Clear();
             this.OnPropertyChanged(nameof(this.CanDelete));
         }
 
@@ -103,7 +121,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             IList list = this.AsList();
 
             // If there's only one element and it's a definition node, don't bother showing it in list form.
-            if (list.Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition)))
+           /* if (list.Count == 1 && this.objectType.IsSubclassOf(typeof(BaseDefinition)))
             {
                 foreach (PropertyNode node in DefinitionParser.ParseToNodes(this.objectType, list[0]))
                 {
@@ -111,29 +129,36 @@ namespace LegendsGenerator.Editor.ContractParsing
                 }
 
                 return;
-            }
+            }*/
 
             for (int i = 0; i < list.Count; i++)
             {
-                int iCopy = i;
-                object? value = list[i];
-
-                ElementInfo kvpInfo = new ElementInfo(
-                    name: $"[{i}]",
-                    description: this.Description,
-                    propertyType: this.objectType,
-                    nullable: true,
-                    getValue: prop => this.HandleGetValue(iCopy),
-                    setValue: (prop, value) => this.HandleSetValue(iCopy, value),
-                    getCompiledParameters: this.info.GetCompiledParameters,
-                    compiled: this.info.Compiled);
-
-                PropertyNode? node = DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
+                PropertyNode? node = this.CreateNode(i);
                 if (node != null)
                 {
                     this.AddNode(node);
                 }
             }
+        }
+
+        /// <summary>
+        /// Create a new node.
+        /// </summary>
+        /// <param name="i">The index.</param>
+        /// <returns>The return value.</returns>
+        private PropertyNode? CreateNode(int i)
+        {
+            ElementInfo kvpInfo = new ElementInfo(
+                name: $"[{i}]",
+                description: this.Description,
+                propertyType: this.objectType,
+                nullable: true,
+                getValue: prop => this.HandleGetValue(i),
+                setValue: (prop, value) => this.HandleSetValue(i, value),
+                getCompiledParameters: this.info.GetCompiledParameters,
+                compiled: this.info.Compiled);
+
+            return DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
         }
 
         /// <summary>
@@ -161,8 +186,9 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             if (value == null)
             {
-                this.AsList().RemoveAt(key);
-                this.CreateNodes();
+                var matchingNode = this.Nodes.First(x => x?.Name.Contains(key.ToString()) == true);
+                this.AsList()[key] = null;
+                this.Nodes.Remove(matchingNode);
                 this.OnPropertyChanged(nameof(this.CanDelete));
             }
             else

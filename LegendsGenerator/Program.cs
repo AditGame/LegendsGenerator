@@ -54,37 +54,36 @@ namespace LegendsGenerator
                     Type = ThingType.Site,
                     Condition = "Subject->Population > 50000",
                 },
-                Results = new EventResultDefinition[]
+                Results = new List<EventResultDefinition>()
                 {
                     new EventResultDefinition()
                     {
                         Default = true,
-                        Effects = new EffectDefinition[]
+                        Effects = new List<EffectDefinition>()
                         {
                             new EffectDefinition()
                             {
                                 Title = "A marginal ammount have died.",
                                 AffectedAttribute = "Population",
                                 Magnitude = "(int)(-1 * Subject->Population * (Rand.NextDouble() * .1))",
-                            }
-                        }
+                            },
+                        },
                     },
                     new EventResultDefinition()
                     {
                         Chance = "75",
-                        Effects = new EffectDefinition[]
+                        Effects = new List<EffectDefinition>()
                         {
                             new EffectDefinition()
                             {
                                 Title = "Most of the population has died.",
                                 AffectedAttribute = "Population",
                                 Magnitude = "(int)(-1 * Subject->Population * (.5 + (Rand.NextDouble() * .25)))",
-                            }
-                        }
-                    }
-                }
+                            },
+                        },
+                    },
+                },
             };
-
             IList<EventDefinition> events = new List<EventDefinition>();
             events.Add(ev);
 

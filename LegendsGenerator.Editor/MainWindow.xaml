@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:LegendsGenerator.Editor"
         xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
         xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
+        xmlns:history="clr-namespace:LegendsGenerator.Editor.ChangeHistory"
         mc:Ignorable="d"
         Title="LegendsGenerator Editor"
         WindowState="Maximized">
@@ -70,21 +71,7 @@
                     </TabItem>
                     <TabItem Header="Warnings" />
                     <TabItem Header="History">
-                        <ListBox ItemsSource="{Binding SelectedDefinition.History.Items}" >
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text=": " />
-                                        <TextBlock Text="{Binding PreviousString}" Visibility="{Binding NotUndone, Converter={StaticResource VisibleIfTrueConverter}}" />
-                                        <TextBlock Text="{Binding PreviousString}" Visibility="{Binding Undone, Converter={StaticResource VisibleIfTrueConverter}}" Foreground="DarkGray" />
-                                        <TextBlock Text=" => " />
-                                        <TextBlock Text="{Binding NextString}" Visibility="{Binding Undone, Converter={StaticResource VisibleIfTrueConverter}}" />
-                                        <TextBlock Text="{Binding NextString}" Visibility="{Binding NotUndone, Converter={StaticResource VisibleIfTrueConverter}}" Foreground="DarkGray" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <history:HistoryPane />
                     </TabItem>
                 </TabControl>
             </DataGridCell>

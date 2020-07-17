@@ -195,41 +195,6 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
-        /// Ensures the nodes in the display match the nodes in the dictionary.
-        /// </summary>
-        private void FixNodes()
-        {
-            IList<PropertyNode> nodes = new List<PropertyNode>(this.Nodes);
-            foreach (DictionaryEntry? kvp in this.AsDictionary())
-            {
-                if (kvp == null)
-                {
-                    continue;
-                }
-
-                string key = kvp.Value.Key.ToString() ?? "NULL";
-                PropertyNode? matchingNode = nodes.FirstOrDefault(n => n.Name.Equals(key));
-                if (matchingNode != null)
-                {
-                    nodes.Remove(matchingNode);
-                }
-                else
-                {
-                    PropertyNode? newNode = this.CreateNode(key);
-                    if (newNode != null)
-                    {
-                        this.AddNode(newNode);
-                    }
-                }
-            }
-
-            foreach (PropertyNode badNode in nodes)
-            {
-                this.Nodes.Remove(badNode);
-            }
-        }
-
-        /// <summary>
         /// Handles te change name scenario.
         /// </summary>
         /// <param name="oldName">The old name.</param>

@@ -158,7 +158,12 @@
         "Condition": "Subject->Population > 50000",
         "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": []
+        "Definitions": [
+          "UNSET",
+          "UNSET",
+          "UNSET",
+          "UNSET"
+        ]
       },
       "Objects": {
         "Rival": {
