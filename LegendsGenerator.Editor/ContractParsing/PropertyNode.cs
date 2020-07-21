@@ -124,6 +124,10 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             set
             {
+                if (this.changeName == null)
+                {
+                    throw new InvalidOperationException("Name can not be changed.");
+                }
 
                 string oldName = this.name;
                 string newName = value;
@@ -330,12 +334,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="value">The new name.</param>
         public void SetNameBypassingHistory(string value)
         {
-            if (this.changeName == null)
-            {
-                throw new InvalidOperationException("Name can not be changed.");
-            }
-
-            this.changeName(this, value);
+            this.changeName?.Invoke(this, value);
             this.name = value;
             this.OnPropertyChanged(nameof(this.Name));
         }

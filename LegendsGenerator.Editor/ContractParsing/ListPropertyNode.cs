@@ -173,11 +173,12 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             if (value == null)
             {
-                var matchingNode = this.Nodes.FirstOrDefault(x => x?.Name.Contains(key.ToString()) == true);
+                var matchingNode = this.Nodes[this.GetNodeIndex(key)];
                 if (matchingNode != null)
                 {
                     this.AsList()[key] = null;
                     this.Nodes.Remove(matchingNode);
+                    this.ResetNodeNames();
                     this.OnPropertyChanged(nameof(this.CanDelete));
                 }
             }
@@ -205,10 +206,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                     PropertyNode? newNode = node ?? this.CreateNode(key);
                     if (newNode != null)
                     {
-                        // Use last instead of first in case the user mashes add a lot, the new element should go at the end.
-                        int realIndex = this.AsList().Cast<object>().Where(e => e != null).Select((e, i) => (e, i)).Last(kv => kv.e == this.AsList()[key]).i;
-
-                        this.AddNode(newNode, realIndex);
+                        this.AddNode(newNode, this.GetNodeIndex(key));
+                        this.ResetNodeNames();
                         return newNode;
                     }
                     else
@@ -220,6 +219,37 @@ namespace LegendsGenerator.Editor.ContractParsing
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Resets the node names to be correct for their place in the list.
+        /// </summary>
+        private void ResetNodeNames()
+        {
+            for (int i = 0; i < this.Nodes.Count; i++)
+            {
+                this.Nodes[i].SetNameBypassingHistory($"[{i}]");
+            }
+        }
+
+        /// <summary>
+        /// Gets the node index for the given content index.
+        /// </summary>
+        /// <param name="contentIndex">The content index.</param>
+        /// <returns>The node index.</returns>
+        private int GetNodeIndex(int contentIndex)
+        {
+            int realIndex = 0;
+            IList list = this.AsList();
+            for (int i = 0; i < contentIndex; i++)
+            {
+                if (list[i] != null)
+                {
+                    realIndex++;
+                }
+            }
+
+            return realIndex;
         }
 
         /// <summary>
