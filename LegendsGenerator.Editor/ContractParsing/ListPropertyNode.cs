@@ -205,7 +205,10 @@ namespace LegendsGenerator.Editor.ContractParsing
                     PropertyNode? newNode = node ?? this.CreateNode(key);
                     if (newNode != null)
                     {
-                        this.AddNode(newNode);
+                        // Use last instead of first in case the user mashes add a lot, the new element should go at the end.
+                        int realIndex = this.AsList().Cast<object>().Where(e => e != null).Select((e, i) => (e, i)).Last(kv => kv.e == this.AsList()[key]).i;
+
+                        this.AddNode(newNode, realIndex);
                         return newNode;
                     }
                     else

@@ -344,10 +344,19 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Adds a node, setting up the upstream.
         /// </summary>
         /// <param name="node">The node to add.</param>
-        public void AddNode(PropertyNode node)
+        /// <param name="index">The optional index to insert into.</param>
+        public void AddNode(PropertyNode node, int? index = null)
         {
             node.UpstreamNode = this;
-            this.Nodes.Add(node);
+
+            if (index == null)
+            {
+                this.Nodes.Add(node);
+            }
+            else
+            {
+                this.Nodes.Insert(index.Value, node);
+            }
         }
 
         /// <summary>
