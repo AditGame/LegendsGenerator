@@ -77,7 +77,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 if (BaseDefinition.UnsetString.Equals(key))
                 {
-                    Console.WriteLine($"You must change the name of the {BaseDefinition.UnsetString} before adding another node..");
+                    Console.WriteLine($"You must change the name of the {BaseDefinition.UnsetString} before adding another node.");
                     return;
                 }
             }

@@ -76,19 +76,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                 throw new InvalidOperationException("A null instance was created.");
             }
 
-            this.AsList().Add(def);
-            int index = this.AsList().Count - 1;
-            PropertyNode? node = this.CreateNode(index);
-            if (node != null)
-            {
-                this.Nodes.Add(node);
-            }
-            else
-            {
-                return;
-            }
-
-            this.OnPropertyChanged(nameof(this.CanDelete));
+            int index = this.AsList().Count;
+            PropertyNode? node = this.HandleSetValue(index, def);
 
             // TODO: Better way to get the definition that owns this.
             Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
@@ -97,11 +86,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                     $"Item Count {this.AsList().Count - 1}",
                     $"Item Count {this.AsList().Count}",
                     () => this.HandleSetValue(index, null),
-                    () =>
-                    {
-                        this.HandleSetValue(index, def);
-                        this.Nodes.Add(node);
-                    }));
+                    () => this.HandleSetValue(index, def, node)));
         }
 
         /// <inheritdoc/>
@@ -182,19 +167,56 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// </summary>
         /// <param name="key">The dictionary key.</param>
         /// <param name="value">The new value.</param>
-        private void HandleSetValue(int key, object? value)
+        /// <param name="node">The visual node.</param>
+        /// <returns>The created property node.</returns>
+        private PropertyNode? HandleSetValue(int key, object? value, PropertyNode? node = null)
         {
             if (value == null)
             {
-                var matchingNode = this.Nodes.First(x => x?.Name.Contains(key.ToString()) == true);
-                this.AsList()[key] = null;
-                this.Nodes.Remove(matchingNode);
-                this.OnPropertyChanged(nameof(this.CanDelete));
+                var matchingNode = this.Nodes.FirstOrDefault(x => x?.Name.Contains(key.ToString()) == true);
+                if (matchingNode != null)
+                {
+                    this.AsList()[key] = null;
+                    this.Nodes.Remove(matchingNode);
+                    this.OnPropertyChanged(nameof(this.CanDelete));
+                }
             }
             else
             {
-                this.AsList()[key] = value;
+                if (this.AsList().Count > key && this.AsList()[key] != null)
+                {
+                    this.AsList()[key] = value;
+                }
+                else
+                {
+                    if (this.AsList().Count < key)
+                    {
+                        throw new InvalidOperationException($"Tried to insert value at index {key} but list is too small at {this.AsList().Count}");
+                    }
+                    else if (this.AsList().Count == key)
+                    {
+                        this.AsList().Add(value);
+                    }
+                    else
+                    {
+                        this.AsList()[key] = value;
+                    }
+
+                    PropertyNode? newNode = node ?? this.CreateNode(key);
+                    if (newNode != null)
+                    {
+                        this.AddNode(newNode);
+                        return newNode;
+                    }
+                    else
+                    {
+                        // The key must be in the dictionary when the property node function runs, so remove it if no property node is created.
+                        this.AsList().Remove(key);
+                    }
+                }
             }
+
+            return null;
         }
 
         /// <summary>
