@@ -11,7 +11,7 @@ namespace LegendsGenerator.Contracts.Definitions
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
-    /// Base class of all definitoons.
+    /// Base class of all definitions.
     /// </summary>
     public class BaseDefinition
     {

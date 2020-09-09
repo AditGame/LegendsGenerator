@@ -9,16 +9,17 @@ namespace LegendsGenerator.Contracts
     using System.Linq;
     using System.Text;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
     /// The base implementation of any Thing.
     /// </summary>
-    public abstract class BaseThing
+    public abstract record BaseThing
     {
         /// <summary>
         /// Gets the name of the thing.
         /// </summary>
-        public abstract string ThingTypeName { get; }
+        public abstract ThingType ThingType { get; }
 
         /// <summary>
         /// Gets or sets the base definition of the thing.
@@ -36,14 +37,54 @@ namespace LegendsGenerator.Contracts
         public Guid ThingId { get; set; } = Guid.NewGuid();
 
         /// <summary>
+        /// Gets or sets the X coordinate of this thing.
+        /// </summary>
+        public int X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Y coordinate of this thing.
+        /// </summary>
+        public int Y { get; set; }
+
+        /// <summary>
         /// Gets the base Attribute on this object before Effects are applied.
         /// </summary>
-        public Dictionary<string, int> BaseAttributes { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> BaseAttributes { get; init; } = new Dictionary<string, int>();
 
         /// <summary>
         /// Gets all effects on this thing. Expired effects should be culled on Step.
         /// </summary>
-        public IList<Effect> Effects { get; } = new List<Effect>();
+        public IList<Effect> Effects { get; init; } = new List<Effect>();
+
+        /// <summary>
+        /// Creates a clone of this thing incrementing the step count by one.
+        /// </summary>
+        /// <returns>A clone of this with everything aged by one step.</returns>
+        public BaseThing CreateAgedClone()
+        {
+            // Clone the thing with an empty effect list.
+            BaseThing newThing = this with 
+            { 
+                Effects = new List<Effect>(),
+            };
+
+            foreach (Effect effect in this.Effects)
+            {
+                if (effect.Duration == -1)
+                {
+                    newThing.Effects.Add(effect with {});
+                }
+                else if (effect.Duration <= 1)
+                {
+                    newThing.Effects.Add(effect with
+                    {
+                        Duration = effect.Duration - 1,
+                    });
+                }
+            }
+
+            return newThing;
+        }
 
         /// <summary>
         /// Gets the effects which are modifying the specified value.
@@ -59,12 +100,28 @@ namespace LegendsGenerator.Contracts
         /// Calculates the effective attribute value based on the current effects.
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>
+        /// <param name="defaultValue">The default value, if the attribtue does not exist.</param>
+        /// <returns>The effective attribute value.</returns>
+        public int EffectiveAttribute(string attribute, int defaultValue)
+        {
+            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
+            {
+                return defaultValue;
+            }
+
+            return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+        }
+
+        /// <summary>
+        /// Calculates the effective attribute value based on the current effects.
+        /// </summary>
+        /// <param name="attribute">The attribute to get.</param>
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute)
         {
             if (!this.BaseAttributes.TryGetValue(attribute, out int value))
             {
-                throw new ArgumentException($"{this.ThingTypeName} Type does not have attribute {attribute}", nameof(attribute));
+                throw new ArgumentException($"{this.ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
             return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
@@ -73,11 +130,12 @@ namespace LegendsGenerator.Contracts
         /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder($"{this.ThingTypeName} {this.Name}");
+            StringBuilder sb = new StringBuilder($"{this.ThingType} {this.Name}");
+            sb.AppendLine();
 
             foreach (Effect effect in this.Effects)
             {
-                sb.AppendLine($"  {effect.Title}: {effect.Attribute} {effect.AttributeEffect}");
+                sb.AppendLine($"  {effect.Title} ({effect.Duration}): {effect.Attribute} {effect.AttributeEffect}");
             }
 
             return sb.ToString();

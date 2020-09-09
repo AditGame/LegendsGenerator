@@ -22,7 +22,7 @@
               ],
               "AffectedAttribute": "Population",
               "Magnitude": "(int)(-1 * Subject->Population * (Rand.NextDouble() * .1))",
-              "Duration": "-1",
+              "Duration": "20",
               "Title": "A marginal ammount have died.",
               "Description": "UNDEFINED_DESCRIPTION",
               "Magnitude_IsComplex": false,
@@ -32,6 +32,7 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -56,6 +57,7 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -86,7 +88,7 @@
               ],
               "AffectedAttribute": "Population",
               "Magnitude": "(int)(Subject->Population * 0.5)",
-              "Duration": "-1",
+              "Duration": "20",
               "Title": "Every woman has given birth.",
               "Description": "UNDEFINED_DESCRIPTION",
               "Magnitude_IsComplex": false,
@@ -96,6 +98,7 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -120,6 +123,7 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -134,7 +138,7 @@
               ],
               "AffectedAttribute": "Population",
               "Magnitude": "(int)(Subject->Population * 3 * 0.5)",
-              "Duration": "-1",
+              "Duration": "20",
               "Title": "Everyone has had triplets!",
               "Description": "UNDEFINED_DESCRIPTION",
               "Magnitude_IsComplex": false,
@@ -144,6 +148,7 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -158,12 +163,7 @@
         "Condition": "Subject->Population > 50000",
         "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": [
-          "UNSET",
-          "UNSET",
-          "UNSET",
-          "UNSET"
-        ]
+        "Definitions": []
       },
       "Objects": {
         "Rival": {
@@ -188,7 +188,7 @@
               ],
               "AffectedAttribute": "Population",
               "Magnitude": "(int)(-1 * Subject->Population * (Rand.NextDouble() * .1))",
-              "Duration": "-1",
+              "Duration": "20",
               "Title": "The city sent troops to {Rival.Name}.",
               "Description": "UNDEFINED_DESCRIPTION",
               "Magnitude_IsComplex": false,
@@ -202,7 +202,7 @@
               ],
               "AffectedAttribute": "Population",
               "Magnitude": "(int)(Subject->Population * (Rand.NextDouble() * .1))",
-              "Duration": "-1",
+              "Duration": "20",
               "Title": "Some troops from {Subject.Name} have arrived, but they decided to stay.",
               "Description": "UNDEFINED_DESCRIPTION",
               "Magnitude_IsComplex": false,
@@ -212,6 +212,63 @@
             }
           ],
           "Spawns": [],
+          "Destroys": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "DefinitionName": "BigCityConsumesSmall",
+      "Chance": "25",
+      "Subject": {
+        "Condition": "true",
+        "Condition_IsComplex": false,
+        "Type": "Site",
+        "Definitions": []
+      },
+      "Objects": {
+        "Eaten": {
+          "Optional": false,
+          "Distance": 1,
+          "Condition": "Subject->Population > Eaten->Population",
+          "Condition_IsComplex": false,
+          "Type": "Site",
+          "Definitions": []
+        }
+      },
+      "Description": "The city {Subject.Name} Consumes {Eaten.Name} as it is much larger.",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [
+            {
+              "AppliedTo": [
+                "Subject"
+              ],
+              "AffectedAttribute": "Population",
+              "Magnitude": "Eaten->Population",
+              "Duration": "-1",
+              "Title": "The population of {Eaten.Name} has been absorbed.",
+              "Description": "The population of {Eaten.Name} has been absorbed.",
+              "Magnitude_IsComplex": false,
+              "Duration_IsComplex": false,
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Spawns": [],
+          "Destroys": [
+            {
+              "Description": "The city {Eaten.Name} has been consumed",
+              "ThingDestroyed": "Eaten",
+              "Description_IsComplex": false
+            }
+          ],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }

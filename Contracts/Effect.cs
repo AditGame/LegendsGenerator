@@ -9,7 +9,7 @@ namespace LegendsGenerator.Contracts
     /// <summary>
     /// The effect of an Event on a Thing.
     /// </summary>
-    public class Effect
+    public record Effect
     {
         /// <summary>
         /// Gets or sets a short title of the Effect.

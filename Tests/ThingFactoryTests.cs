@@ -57,10 +57,10 @@ namespace LegendsGenerator.Tests
 
             for (int i = 0; i < 100; i++)
             {
-                Site city = factory.CreateSite(rdm, "City");
+                Site city = factory.CreateSite(rdm, 0, 0, "City");
                 Console.WriteLine($"City created: {city.EffectiveAttribute("Population")} {city.EffectiveAttribute("Evil")}");
 
-                Assert.AreEqual("Site", city.ThingTypeName);
+                Assert.AreEqual(ThingType.Site, city.ThingType);
                 Assert.AreEqual(cityDef, city.Definition);
                 int population = city.EffectiveAttribute("Population");
                 Assert.IsTrue(population <= 100000);
@@ -97,7 +97,7 @@ namespace LegendsGenerator.Tests
 
             ThingFactory factory = new ThingFactory(definitions);
 
-            factory.CreateSite(new Random(worldSeed), "City");
+            factory.CreateSite(new Random(worldSeed), 0, 0, "City");
         }
     }
 }

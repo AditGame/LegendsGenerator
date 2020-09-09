@@ -35,5 +35,22 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// </summary>
         [Compiled(typeof(string), "Subject", AsFormattedText = true)]
         public string Description { get; set; } = UnsetString;
+
+        /// <summary>
+        /// Gets or sets the type of position.
+        /// </summary>
+        public PositionType PositionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the X Position.
+        /// </summary>
+        [Compiled(typeof(int), "Subject")]
+        public string PositionX { get; set; } = UnsetString;
+
+        /// <summary>
+        /// Gets or sets the Y position.
+        /// </summary>
+        [Compiled(typeof(int), "Subject")]
+        public string PositionY { get; set; } = UnsetString;
     }
 }

@@ -41,5 +41,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the spawns of this result.
         /// </summary>
         public List<SpawnDefinition> Spawns { get; set; } = new List<SpawnDefinition>();
+
+        /// <summary>
+        /// Gets or sets the things destroyed in this result.
+        /// </summary>
+        public List<DestroyDefinition> Destroys { get; set; } = new List<DestroyDefinition>();
     }
 }

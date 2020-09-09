@@ -9,6 +9,7 @@ namespace LegendsGenerator
     using System.Linq;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
     /// Creates things.
@@ -31,14 +32,36 @@ namespace LegendsGenerator
         }
 
         /// <summary>
+        /// Creates a thing.
+        /// </summary>
+        /// <param name="rdm">The random nubmer generator.</param>
+        /// <param name="x">The X coordinate of the site.</param>
+        /// <param name="y">The Y coordinate of the site.</param>
+        /// <param name="type">The type of thing to create.</param>
+        /// <param name="definitionName">The name of the definition to create.</param>
+        /// <returns>The created thing.</returns>
+        public BaseThing CreateThing(Random rdm, int x, int y, ThingType type, string definitionName)
+        {
+            switch (type)
+            {
+                case ThingType.Site:
+                    return this.CreateSite(rdm, x, y, definitionName);
+                default:
+                    throw new InvalidOperationException($"Can not handle {type}.");
+            }
+        }
+
+        /// <summary>
         /// Creates a site.
         /// </summary>
         /// <param name="rdm">The random nubmer generator.</param>
+        /// <param name="x">The X coordinate of the site.</param>
+        /// <param name="y">The Y coordinate of the site.</param>
         /// <param name="siteDefinitionName">The name of the site's definition.</param>
         /// <returns>The site.</returns>
-        public Site CreateSite(Random rdm, string siteDefinitionName)
+        public Site CreateSite(Random rdm, int x, int y, string siteDefinitionName)
         {
-            return CreateThing<Site, SiteDefinition>(rdm, this.definitions.SiteDefinitions, siteDefinitionName);
+            return CreateThing<Site, SiteDefinition>(rdm, x, y, this.definitions.SiteDefinitions, siteDefinitionName);
         }
 
         /// <summary>
@@ -47,11 +70,15 @@ namespace LegendsGenerator
         /// <typeparam name="TThing">The type of the thing to create.</typeparam>
         /// <typeparam name="TDefinition">The type of definition.</typeparam>
         /// <param name="rdm">The random nubmer generator.</param>
+        /// <param name="x">The X position.</param>
+        /// <param name="y">The Y position.</param>
         /// <param name="definitions">The list of all definitions for this thing type.</param>
         /// <param name="thingName">The name of the thing to make.</param>
         /// <returns>The created thing.</returns>
         private static TThing CreateThing<TThing, TDefinition>(
             Random rdm,
+            int x,
+            int y,
             IReadOnlyList<TDefinition> definitions,
             string thingName)
             where TDefinition : BaseThingDefinition
@@ -80,7 +107,11 @@ namespace LegendsGenerator
             TThing thing = new TThing()
             {
                 BaseDefinition = inheritanceList.First(),
+                X = x,
+                Y = y,
             };
+
+            thing.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {

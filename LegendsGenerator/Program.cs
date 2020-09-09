@@ -7,7 +7,7 @@ namespace LegendsGenerator
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-
+    using System.Linq;
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
@@ -101,33 +101,57 @@ namespace LegendsGenerator
             definitions.Attach(processor);
 
             ThingFactory factory = new ThingFactory(definitions);
-
-            var cities = new List<Site>();
-            for (int i = 0; i < 100; i++)
-            {
-                Site cityInst = factory.CreateSite(rdm, "City");
-                cities.Add(cityInst);
-                Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
-            }
+            HistoryMachine history = new HistoryMachine(factory);
 
             World world = new World()
             {
                 WorldSeed = worldSeed,
                 StepCount = 1,
                 Events = new List<EventDefinition>(definitions.Events),
-                Sites = cities,
+                Grid = new Grid(20, 20),
             };
 
             for (int i = 0; i < 100; i++)
             {
-                HistoryMachine.Step(world);
-                world.StepCount++;
+                int x = rdm.Next(0, 19);
+                int y = rdm.Next(0, 19);
+                Site cityInst = factory.CreateSite(rdm, x, y, "City");
+                world.Grid.AddThing(cityInst);
+                Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
             }
 
-            foreach (var site in world.Sites)
+            for (int i = 0; i < 100; i++)
+            {
+                Console.WriteLine(world.StepCount.ToString());
+                world = history.Step(world);
+            }
+
+            Console.WriteLine(world.Grid.ToString());
+
+            foreach (var site in world.Grid.GetAllGridEntries().SelectMany(x => x.Square.ThingsInGrid))
             {
                 Console.WriteLine(site.ToString());
-                Console.WriteLine($"Final Population: {site.EffectiveAttribute("Population")}");
+                Console.WriteLine($"Final Population: {site.EffectiveAttribute("Population", -1)}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Final world map:");
+
+            for (int x = 0; x < world.Grid.Width; x++)
+            {
+                for (int y = 0; y < world.Grid.Height; y++)
+                {
+                    if (world.Grid.GetSquare(x, y).ThingsInGrid.Count == 0)
+                    {
+                        Console.Write("  ");
+                    }
+                    else
+                    {
+                        Console.Write($" {world.Grid.GetSquare(x, y).ThingsInGrid.Count:D1}");
+                    }
+                }
+
+                Console.WriteLine();
             }
         }
     }

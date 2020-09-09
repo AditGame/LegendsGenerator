@@ -7,11 +7,12 @@ namespace LegendsGenerator.Contracts
     using System;
 
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
-    /// TAn instance of a Site in the world.
+    /// An instance of a Site in the world.
     /// </summary>
-    public class Site : BaseThing
+    public record Site : BaseThing
     {
         /// <summary>
         /// Gets the site definition.
@@ -23,6 +24,6 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets the name of this Thing Type.
         /// </summary>
-        public override string ThingTypeName => "Site";
+        public override ThingType ThingType => ThingType.Site;
     }
 }
