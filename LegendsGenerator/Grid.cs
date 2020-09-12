@@ -54,7 +54,7 @@ namespace LegendsGenerator
         /// Gets the grid.
         /// </summary>
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional. Multidimensional is more preformant for our use case.
-        internal GridSquare[,] Squares { get; }
+        public GridSquare[,] Squares { get; }
 #pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
 
         /// <summary>

@@ -14,16 +14,46 @@ namespace LegendsGenerator
     /// <summary>
     /// An event which occurred.
     /// </summary>
-    public class OccurredEvent
+    public record OccurredEvent
     {
         /// <summary>
-        /// Gets or sets the event which occurred.
+        /// Initializes a new instance of the <see cref="OccurredEvent"/> class.
         /// </summary>
-        public EventDefinition Event { get; set; } = new EventDefinition();
+        /// <param name="description">The description of the event.</param>
+        /// <param name="eventDefiniton">The event definition.</param>
+        /// <param name="subject">The subject of the definition.</param>
+        /// <param name="objects">The objects of the evevnt.</param>
+        public OccurredEvent(string description, EventDefinition eventDefiniton, BaseThing subject, IDictionary<string, BaseThing> objects)
+        {
+            this.Description = description;
+            this.Event = eventDefiniton;
+            this.Subject = subject;
+            this.Objects = objects;
+        }
 
         /// <summary>
-        /// Gets or sets the objects which were involved in the event.
+        /// Gets the description of the event.
         /// </summary>
-        public IDictionary<string, BaseThing> Objects { get; set; } = new Dictionary<string, BaseThing>();
+        public string Description { get; init; }
+
+        /// <summary>
+        /// Gets the event which occurred.
+        /// </summary>
+        public EventDefinition Event { get; init; }
+
+        /// <summary>
+        /// Gets the subject of the event.
+        /// </summary>
+        public BaseThing Subject { get; init; }
+
+        /// <summary>
+        /// Gets the objects which were involved in the event.
+        /// </summary>
+        public IDictionary<string, BaseThing> Objects { get; init; }
+
+        /// <summary>
+        /// Gets or sets the result of the event.
+        /// </summary>
+        public EventResultDefinition? Result { get; set; }
     }
 }

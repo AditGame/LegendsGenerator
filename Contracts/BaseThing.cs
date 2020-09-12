@@ -74,7 +74,7 @@ namespace LegendsGenerator.Contracts
                 {
                     newThing.Effects.Add(effect with {});
                 }
-                else if (effect.Duration <= 1)
+                else if (effect.Duration >= 1)
                 {
                     newThing.Effects.Add(effect with
                     {
@@ -124,7 +124,15 @@ namespace LegendsGenerator.Contracts
                 throw new ArgumentException($"{this.ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
-            return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+            // TODO: Handle this scneario better.
+            try
+            {
+                return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+            }
+            catch (ArithmeticException)
+            {
+                return int.MaxValue;
+            }
         }
 
         /// <inheritdoc/>

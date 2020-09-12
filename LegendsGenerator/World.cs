@@ -6,7 +6,7 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
-
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
@@ -28,6 +28,14 @@ namespace LegendsGenerator
         /// Gets the grid of this world.
         /// </summary>
         public Grid Grid { get; init; } = new Grid(0, 0);
+
+        /// <summary>
+        /// Gets a list of all events which occurred in the previoud step.
+        /// </summary>
+        public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>()
+        {
+            new OccurredEvent("Yay", new EventDefinition(), new Site(), new Dictionary<string, BaseThing>()),
+        };
 
         /// <summary>
         /// Gets or sets the events available in this world.

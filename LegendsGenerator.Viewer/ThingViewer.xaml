@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="LegendsGenerator.Viewer.ThingViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LegendsGenerator.Viewer"
+             mc:Ignorable="d" 
+             d:DesignHeight="1000" d:DesignWidth="800">
+    <StackPanel >
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Name: "/>
+            <TextBlock Text="{Binding SelectedThing.Name}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Type: "/>
+            <TextBlock Text="{Binding SelectedThing.ThingType}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="ThingId: "/>
+            <TextBlock Text="{Binding SelectedThing.ThingId}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Definition: "/>
+            <TextBlock Text="{Binding SelectedThing.DefinitionName}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding SelectedThing.DefinitionDescription}"/>
+        </StackPanel>
+        <TextBlock  Text="Attributes" FontWeight="Bold" FontSize="16"/>
+        <ListBox ItemsSource="{Binding SelectedThing.Attributes}" HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" ToolTip="{Binding Tooltip}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Effective}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock  Text="Effects" FontWeight="Bold" FontSize="16"/>
+        <ListBox ItemsSource="{Binding SelectedThing.Effects}" HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" ToolTip="{Binding Description}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding EffectString}"/>
+                        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
+                            <TextBlock Text="Expires "/>
+                            <TextBlock Text="{Binding DurationString}"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</UserControl>

@@ -42,6 +42,7 @@ namespace LegendsGenerator
             {
                 StepCount = currWorld.StepCount + 1,
                 Grid = currWorld.Grid.CloneWithoutThings(),
+                OccurredEvents = new List<OccurredEvent>(),
             };
 #pragma warning restore SA1101 // Prefix local calls with this
 
@@ -62,12 +63,18 @@ namespace LegendsGenerator
                     IEnumerable<OccurredEvent> occurredEvents =
                         GetOccurringEvents(rdm, currWorld, (x, y), eventsBySubjectType[thing.ThingType], thing);
 
-                    BaseThing newThing = GetOrCreate(stagedThings, thing).Thing;
+                    StagedThing newThing = GetOrCreate(stagedThings, thing);
+
+                    if (newThing.Destroyed)
+                    {
+                        // Do not process events from destroyed things.
+                        continue;
+                    }
 
                     foreach (OccurredEvent occurredEvent in occurredEvents)
                     {
                         Log.Info($"Adding event {occurredEvent.Event.Description}");
-                        this.ApplyEvent(rdm, nextWorld, occurredEvent.Event, newThing, stagedThings, occurredEvent.Objects);
+                        this.ApplyEvent(rdm, nextWorld, occurredEvent, newThing.Thing, stagedThings);
                     }
                 }
             }
@@ -116,11 +123,7 @@ namespace LegendsGenerator
                         return null;
                     }
 
-                    return new OccurredEvent()
-                    {
-                        Event = e,
-                        Objects = objects,
-                    };
+                    return new OccurredEvent(e.EvalDescription(rdm, thing, objects), e, thing, objects);
                 })
                 .Where(o => o != null)
                 .Select(o => o!)
@@ -215,18 +218,17 @@ namespace LegendsGenerator
         /// </summary>
         /// <param name="rdm">The random nubmer generator for this thing.</param>
         /// <param name="world">The world.</param>
-        /// <param name="ev">The event definition.</param>
+        /// <param name="ev">The occurred event definition.</param>
         /// <param name="thing">The thing to apply the event to.</param>
         /// <param name="stagedThings">The staged things.</param>
-        /// <param name="objects">The objects of this event.</param>
-        private void ApplyEvent(Random rdm, World world, EventDefinition ev, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings, IDictionary<string, BaseThing> objects)
+        private void ApplyEvent(Random rdm, World world, OccurredEvent ev, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings)
         {
             int minChance = rdm.Next(1, 100);
-            EventResultDefinition? result = ev.Results
+            EventResultDefinition? result = ev.Event.Results
                 .Shuffle(rdm)
-                .FirstOrDefault(e => Matches(minChance, () => e.EvalChance(rdm, thing, objects), () => e.EvalCondition(rdm, thing, objects)));
+                .FirstOrDefault(e => Matches(minChance, () => e.EvalChance(rdm, thing, ev.Objects), () => e.EvalCondition(rdm, thing, ev.Objects)));
 
-            result ??= ev.Results.FirstOrDefault(r => r.Default);
+            result ??= ev.Event.Results.FirstOrDefault(r => r.Default);
 
             // If there's no result which matches, discard this event.
             if (result == null)
@@ -235,15 +237,17 @@ namespace LegendsGenerator
                 return;
             }
 
+            world.OccurredEvents.Add(ev with { Result = result });
+
             foreach (EffectDefinition effectDefinition in result.Effects)
             {
                 Effect effect = new Effect()
                 {
-                    Title = effectDefinition.EvalTitle(rdm, thing, objects),
-                    Description = effectDefinition.EvalDescription(rdm, thing, objects),
+                    Title = effectDefinition.EvalTitle(rdm, thing, ev.Objects),
+                    Description = effectDefinition.EvalDescription(rdm, thing, ev.Objects),
                     Attribute = effectDefinition.AffectedAttribute,
-                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing, objects),
-                    Duration = effectDefinition.EvalDuration(rdm, thing, objects),
+                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing, ev.Objects),
+                    Duration = effectDefinition.EvalDuration(rdm, thing, ev.Objects),
                     TookEffect = world.StepCount,
                 };
 
@@ -253,7 +257,7 @@ namespace LegendsGenerator
                     {
                         GetOrCreate(stagedThings, thing).Thing.Effects.Add(effect);
                     }
-                    else if (objects.TryGetValue(appliedTo, out BaseThing? value))
+                    else if (ev.Objects.TryGetValue(appliedTo, out BaseThing? value))
                     {
                         GetOrCreate(stagedThings, value).Thing.Effects.Add(effect);
                     }
@@ -266,8 +270,8 @@ namespace LegendsGenerator
 
             foreach (SpawnDefinition spawnDefinition in result.Spawns)
             {
-                int xPosition = spawnDefinition.EvalPositionX(rdm, thing, objects);
-                int yPosition = spawnDefinition.EvalPositionY(rdm, thing, objects);
+                int xPosition = spawnDefinition.EvalPositionX(rdm, thing, ev.Objects);
+                int yPosition = spawnDefinition.EvalPositionY(rdm, thing, ev.Objects);
 
                 if (spawnDefinition.PositionType == PositionType.RelativeAbsolute)
                 {
@@ -284,7 +288,7 @@ namespace LegendsGenerator
 
                 foreach (var overrideAttr in spawnDefinition.AttributeOverrides.Keys)
                 {
-                    spawnedThing.BaseAttributes[overrideAttr] = spawnDefinition.EvalAttributeOverrides(overrideAttr, rdm, spawnedThing, objects);
+                    spawnedThing.BaseAttributes[overrideAttr] = spawnDefinition.EvalAttributeOverrides(overrideAttr, rdm, spawnedThing, ev.Objects);
                 }
 
                 // Should never get, and always create.
@@ -299,13 +303,13 @@ namespace LegendsGenerator
                 }
                 else
                 {
-                    if (objects.TryGetValue(destroyDefinition.ThingDestroyed, out var @object))
+                    if (ev.Objects.TryGetValue(destroyDefinition.ThingDestroyed, out var @object))
                     {
                         GetOrCreate(stagedThings, @object).Destroyed = true;
                     }
                     else
                     {
-                        Log.Error($"Unable to find object {destroyDefinition.ThingDestroyed} to destroy, available objects are {string.Join(", ", objects.Keys)}.");
+                        Log.Error($"Unable to find object {destroyDefinition.ThingDestroyed} to destroy, available objects are {string.Join(", ", ev.Objects.Keys)}.");
                     }
                 }
             }

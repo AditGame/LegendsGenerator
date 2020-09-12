@@ -57,11 +57,15 @@ namespace LegendsGenerator
 
             foreach (ThingType type in Enum.GetValues(typeof(ThingType)).OfType<ThingType>())
             {
-                sb.AppendLine($"{type}:");
-
-                foreach (BaseThing thing in this.GetThings(type))
+                var matchingThings = this.GetThings(type);
+                if (matchingThings.Any())
                 {
-                    sb.AppendLine($"   {thing}");
+                    sb.AppendLine($"{type}:");
+
+                    foreach (BaseThing thing in this.GetThings(type))
+                    {
+                        sb.AppendLine($"   {thing}");
+                    }
                 }
             }
 

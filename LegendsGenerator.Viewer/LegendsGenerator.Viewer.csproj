@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\City.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LegendsGenerator\LegendsGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\City.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
