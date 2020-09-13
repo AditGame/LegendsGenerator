@@ -6,11 +6,11 @@
 
 namespace LegendsGenerator.Viewer
 {
-    using LegendsGenerator.Viewer.Views;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using LegendsGenerator.Viewer.Views;
 
     /// <summary>
     /// The context of all the data.
@@ -69,7 +69,7 @@ namespace LegendsGenerator.Viewer
                 this.ThingsInSquare.Clear();
                 if (this.selectedSquare != null)
                 {
-                    this.selectedSquare.ThingsInGrid.ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t)));
+                    this.selectedSquare.ThingsInSquare.ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t)));
 
                     if (this.ThingsInSquare.Any())
                     {

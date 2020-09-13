@@ -46,5 +46,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the things destroyed in this result.
         /// </summary>
         public List<DestroyDefinition> Destroys { get; set; } = new List<DestroyDefinition>();
+
+        /// <summary>
+        /// Gets or sets whatever moves as a result.
+        /// </summary>
+        public List<MoveDefinition> Moves { get; set; } = new List<MoveDefinition>();
     }
 }

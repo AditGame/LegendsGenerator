@@ -9,8 +9,8 @@ namespace LegendsGenerator.Compiler.CSharp
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Processes a condition into a compiled condition.
@@ -134,6 +134,7 @@ namespace LegendsGenerator.Compiler.CSharp
         {
             StringBuilder bldr = new StringBuilder();
             bldr.AppendLine("using LegendsGenerator.Contracts;");
+            bldr.AppendLine("using LegendsGenerator.Contracts.Things;");
             bldr.Append($"{typeof(T).Name} EvaluateCondition(");
             bldr.AppendJoin(", ", variables.Select(v => $"{v.Value.Name} {v.Key}"));
             bldr.Append(") {");

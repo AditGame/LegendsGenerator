@@ -42,6 +42,11 @@
                         SelectedCellsChanged="DataGrid_SelectedCellsChanged"
                         SelectionMode="Single"
                         SelectionUnit="Cell">
+                        <DataGrid.Resources>
+                            <DataTemplate x:Key="DataTemplate">
+                                <Image Source="{StaticResource CityIcon}"/>
+                            </DataTemplate>
+                        </DataGrid.Resources>
                     </DataGrid>
                 </ScrollViewer>
             </DataGridCell>

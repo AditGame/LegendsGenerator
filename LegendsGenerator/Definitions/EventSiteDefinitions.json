@@ -33,6 +33,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -58,6 +59,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -99,6 +101,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -124,6 +127,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -149,6 +153,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -213,6 +218,7 @@
           ],
           "Spawns": [],
           "Destroys": [],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -269,6 +275,7 @@
               "Description_IsComplex": false
             }
           ],
+          "Moves": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -277,5 +284,6 @@
       "Description_IsComplex": false
     }
   ],
-  "Sites": []
+  "Sites": [],
+  "NotablePeople": []
 }

@@ -10,8 +10,7 @@ namespace LegendsGenerator
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
-
-    using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// THe grid of the world.
@@ -54,7 +53,9 @@ namespace LegendsGenerator
         /// Gets the grid.
         /// </summary>
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional. Multidimensional is more preformant for our use case.
+#pragma warning disable CA1819 // Properties should not return arrays
         public GridSquare[,] Squares { get; }
+#pragma warning restore CA1819 // Properties should not return arrays
 #pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace LegendsGenerator
         /// <param name="thing">The thing to add.</param>
         public void AddThing(BaseThing thing)
         {
-            this.GetSquare(thing.X, thing.Y).ThingsInGrid.Add(thing);
+            this.GetSquare(thing.X, thing.Y).ThingsInSquare.Add(thing);
         }
 
         /// <summary>

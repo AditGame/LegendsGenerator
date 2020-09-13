@@ -29,8 +29,8 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <returns>A lsit of all nodes on the definition.</returns>
         public static IList<PropertyNode> ParseToNodes(Type type, object? definition)
         {
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var options = properties.Where(p => p.Name.Contains("_")).ToLookup(p => p.Name.Split("_").First());
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance);
+            ILookup<string, PropertyInfo> options = properties.Where(p => p.Name.Contains("_")).ToLookup(p => p.Name.Split("_").First());
 
             List<PropertyNode> nodes = new List<PropertyNode>();
             foreach (var property in properties.Where(p => !p.Name.Contains("_")))
@@ -57,6 +57,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             MethodInfo? getParameters = thing?.GetType().GetMethod($"GetParameters{property.Name}");
 
             CompiledAttribute? compiled = property.GetCustomAttribute<CompiledAttribute>();
+            HideInEditorAttribute? hideInEditor = property.GetCustomAttribute<HideInEditorAttribute>();
             ElementInfo info = new ElementInfo(
                 name: property.Name.Split("_").Last(),
                 description: DescriptionProvider.GetDescription(property),
@@ -65,7 +66,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                 getValue: prop => property.GetValue(thing),
                 setValue: (prop, value) => property.SetValue(thing, value),
                 getCompiledParameters: getParameters != null ? prop => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<PropertyNode, IList<string>>?)null,
-                compiled: compiled)
+                compiled: compiled,
+                hiddenInEditorCondition: (hideInEditor == null || thing == null) ? null : (thing, hideInEditor.Condition))
             {
                 ControlsDefinitionName = property.GetCustomAttribute<ControlsDefinitionNameAttribute>() != null,
             };

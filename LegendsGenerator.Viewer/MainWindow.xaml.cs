@@ -13,9 +13,9 @@ namespace LegendsGenerator.Viewer
     using System.Windows.Controls;
     using Gu.Wpf.DataGrid2D;
     using LegendsGenerator.Compiler.CSharp;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
     using LegendsGenerator.Viewer.Views;
 
     /// <summary>
@@ -82,7 +82,6 @@ namespace LegendsGenerator.Viewer
         /// <param name="e">The args.</param>
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            
         }
 
         /// <summary>
@@ -92,7 +91,6 @@ namespace LegendsGenerator.Viewer
         /// <param name="e">The args.</param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-           
         }
 
         /// <summary>

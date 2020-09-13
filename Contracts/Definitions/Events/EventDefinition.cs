@@ -55,6 +55,17 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         public string Chance { get; set; } = "100";
 
         /// <summary>
+        /// Gets or sets a value indicating whether this event can trigger while the Thing is moving.
+        /// </summary>
+        public bool CanTriggerWhileMoving { get; set; }
+
+        /// <summary>
+        /// Gets or sets the affect this event has on movement.
+        /// </summary>
+        [HideInEditorAttribute("value.CanTriggerWhileMoving != true")]
+        public AffectsMovement AffectOnMovement { get; set; }
+
+        /// <summary>
         /// Gets or sets the subject of this event.
         /// </summary>
         public SubjectDefinition Subject { get; set; } = new SubjectDefinition();

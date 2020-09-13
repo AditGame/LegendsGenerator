@@ -29,6 +29,7 @@ namespace LegendsGenerator.Contracts.Definitions
         {
             this.Events = definitions.Events.ToList();
             this.Sites = definitions.SiteDefinitions.ToList();
+            this.NotablePeople = definitions.NotablePersonDefinitions.ToList();
         }
 
         /// <summary>
@@ -40,6 +41,7 @@ namespace LegendsGenerator.Contracts.Definitions
             ILookup<System.Type, BaseDefinition>? byType = definitions.ToLookup(d => d.GetType());
             this.Events = byType[typeof(EventDefinition)].OfType<EventDefinition>().ToList();
             this.Sites = byType[typeof(SiteDefinition)].OfType<SiteDefinition>().ToList();
+            this.NotablePeople = byType[typeof(NotablePersonDefinition)].OfType<NotablePersonDefinition>().ToList();
         }
 
         /// <summary>
@@ -53,6 +55,11 @@ namespace LegendsGenerator.Contracts.Definitions
         public List<SiteDefinition> Sites { get; set; } = new List<SiteDefinition>();
 
         /// <summary>
+        /// Gets or sets the list of notable person definitions.
+        /// </summary>
+        public List<NotablePersonDefinition> NotablePeople { get; set; } = new List<NotablePersonDefinition>();
+
+        /// <summary>
         /// Gets all definitions in this file.
         /// </summary>
         /// <returns>All defintions.</returns>
@@ -61,6 +68,7 @@ namespace LegendsGenerator.Contracts.Definitions
             List<BaseDefinition> defs = new List<BaseDefinition>();
             defs.AddRange(this.Events.OfType<BaseDefinition>());
             defs.AddRange(this.Sites.OfType<BaseDefinition>());
+            defs.AddRange(this.NotablePeople.OfType<BaseDefinition>());
             return defs;
         }
     }

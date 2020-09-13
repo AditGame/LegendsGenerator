@@ -12,6 +12,7 @@ namespace LegendsGenerator.Viewer.Views
     using System.Text;
     using System.Threading.Tasks;
     using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The attribute view.

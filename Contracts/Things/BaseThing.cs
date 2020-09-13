@@ -2,12 +2,13 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator.Contracts
+namespace LegendsGenerator.Contracts.Things
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
@@ -63,16 +64,16 @@ namespace LegendsGenerator.Contracts
         public BaseThing CreateAgedClone()
         {
             // Clone the thing with an empty effect list.
-            BaseThing newThing = this with 
-            { 
+            BaseThing newThing = this with
+            {
                 Effects = new List<Effect>(),
             };
 
-            foreach (Effect effect in this.Effects)
+            foreach (Effect effect in Effects)
             {
                 if (effect.Duration == -1)
                 {
-                    newThing.Effects.Add(effect with {});
+                    newThing.Effects.Add(effect with { });
                 }
                 else if (effect.Duration >= 1)
                 {
@@ -93,7 +94,7 @@ namespace LegendsGenerator.Contracts
         /// <returns>The list of all effects which are modifying this specified attrbute.</returns>
         public IEnumerable<Effect> GetEffectsModifying(string attribute)
         {
-            return this.Effects.Where(a => a.Attribute.Equals(attribute));
+            return Effects.Where(a => a.Attribute.Equals(attribute));
         }
 
         /// <summary>
@@ -104,12 +105,12 @@ namespace LegendsGenerator.Contracts
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute, int defaultValue)
         {
-            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
+            if (!BaseAttributes.TryGetValue(attribute, out int value))
             {
                 return defaultValue;
             }
 
-            return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+            return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
         }
 
         /// <summary>
@@ -119,15 +120,15 @@ namespace LegendsGenerator.Contracts
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute)
         {
-            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
+            if (!BaseAttributes.TryGetValue(attribute, out int value))
             {
-                throw new ArgumentException($"{this.ThingType} Type does not have attribute {attribute}", nameof(attribute));
+                throw new ArgumentException($"{ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
             // TODO: Handle this scneario better.
             try
             {
-                return value + this.GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+                return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
             }
             catch (ArithmeticException)
             {
@@ -138,10 +139,10 @@ namespace LegendsGenerator.Contracts
         /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder($"{this.ThingType} {this.Name}");
+            StringBuilder sb = new StringBuilder($"{ThingType} {Name}");
             sb.AppendLine();
 
-            foreach (Effect effect in this.Effects)
+            foreach (Effect effect in Effects)
             {
                 sb.AppendLine($"  {effect.Title} ({effect.Duration}): {effect.Attribute} {effect.AttributeEffect}");
             }

@@ -9,9 +9,8 @@ namespace LegendsGenerator.Compiler.CSharp
     using System.Linq;
 
     using CSScriptLib;
-
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Processes conditions.

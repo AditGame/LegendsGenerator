@@ -6,14 +6,19 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The contents of everything in the world.
     /// </summary>
     public record World
     {
+        /// <summary>
+        /// A cache of the results of seearching for things by guid.
+        /// </summary>
+        private IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
+
         /// <summary>
         /// Gets the worldseed. This should be randomly picked at the start and not changed.
         /// </summary>
@@ -34,12 +39,44 @@ namespace LegendsGenerator
         /// </summary>
         public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>()
         {
-            new OccurredEvent("Yay", new EventDefinition(), new Site(), new Dictionary<string, BaseThing>()),
         };
 
         /// <summary>
         /// Gets or sets the events available in this world.
         /// </summary>
         public IList<EventDefinition> Events { get; set; } = new List<EventDefinition>();
+
+        /// <summary>
+        /// Gets a thing in the world.
+        /// </summary>
+        /// <param name="thingId">The thing ID.</param>
+        /// <returns>The thing.</returns>
+        /// <exception cref="KeyNotFoundException">The specified thing id does not exist in the world.</exception>
+        public BaseThing GetThing(Guid thingId)
+        {
+            if (this.searchByGuidHash.TryGetValue(thingId, out BaseThing? result))
+            {
+                return result;
+            }
+
+            // Re-search the grid for things. This is good in case things got added to the grid in the meantime somehow.
+            this.searchByGuidHash.Clear();
+            foreach (var (_, _, square) in this.Grid.GetAllGridEntries())
+            {
+                foreach (BaseThing thing in square.ThingsInSquare)
+                {
+                    this.searchByGuidHash[thing.ThingId] = thing;
+                }
+            }
+
+            if (this.searchByGuidHash.TryGetValue(thingId, out result))
+            {
+                return result;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Thing with ID {thingId} does not exist in this world.");
+            }
+        }
     }
 }

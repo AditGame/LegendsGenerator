@@ -1,0 +1,153 @@
+{
+  "Events": [
+    {
+      "Chance": "10",
+      "Subject": {
+        "Condition": "true",
+        "Condition_IsComplex": false,
+        "Type": "Site",
+        "Definitions": [
+          "Population Center"
+        ]
+      },
+      "Objects": {},
+      "Description": "A settler has been rallied at {Subject.Name}",
+      "Results": [
+        {
+          "Default": true,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [
+            {
+              "DefinitionNameToSpawn": "Settler",
+              "Type": "NotablePerson",
+              "AttributeOverrides": {},
+              "Description": "A settler has been created.",
+              "PositionType": "Absolute",
+              "PositionX": "Subject.X",
+              "PositionY": "Subject.Y",
+              "Description_IsComplex": false,
+              "PositionX_IsComplex": false,
+              "PositionY_IsComplex": false,
+              "AttributeOverrides_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "DefinitionName": "Settler moved",
+      "Chance": "100",
+      "Subject": {
+        "Condition": "true",
+        "Condition_IsComplex": false,
+        "Type": "NotablePerson",
+        "Definitions": [
+          "Settler"
+        ]
+      },
+      "Objects": {},
+      "Description": "The settler {Subject.Name} is moving to a new location.",
+      "Results": [
+        {
+          "Default": true,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Destroys": [],
+          "Moves": [
+            {
+              "ThingToMove": "Subject",
+              "MoveType": 2,
+              "CoordToMoveToX": "Subject.X + Rand.Next(-1, 1)",
+              "CoordToMoveToY": "Subject.Y + Rand.Next(-1, 1)",
+              "CoordToMoveToX_IsComplex": false,
+              "CoordToMoveToY_IsComplex": false
+            }
+          ],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "DefinitionName": "Settler Settled",
+      "Chance": "10",
+      "Subject": {
+        "Condition": "true",
+        "Condition_IsComplex": false,
+        "Type": "NotablePerson",
+        "Definitions": [
+          "Settler"
+        ]
+      },
+      "Objects": {},
+      "Description": "UNSET",
+      "Results": [
+        {
+          "Default": true,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [
+            {
+              "DefinitionNameToSpawn": "Town",
+              "Type": "Site",
+              "AttributeOverrides": {},
+              "Description": "A town has been formed",
+              "PositionType": "RelativeAbsolute",
+              "PositionX": "0",
+              "PositionY": "0",
+              "Description_IsComplex": false,
+              "PositionX_IsComplex": false,
+              "PositionY_IsComplex": false,
+              "AttributeOverrides_IsComplex": false
+            }
+          ],
+          "Destroys": [
+            {
+              "Description": "The settler is destroyed in the process.",
+              "ThingDestroyed": "Subject",
+              "Description_IsComplex": false
+            }
+          ],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    }
+  ],
+  "Sites": [],
+  "NotablePeople": [
+    {
+      "Flies": "false",
+      "LandSpeed": "1",
+      "WaterSpeed": "0",
+      "Flies_IsComplex": false,
+      "LandSpeed_IsComplex": false,
+      "WaterSpeed_IsComplex": false,
+      "Name": "Settler",
+      "Description": "In search of new lands to colonize",
+      "MaxEvents": "1",
+      "InheritsFrom": "Person",
+      "DefaultAttributes": {},
+      "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    }
+  ]
+}

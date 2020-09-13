@@ -1,0 +1,23 @@
+{
+  "Events": [],
+  "Sites": [],
+  "NotablePeople": [
+    {
+      "Flies": "false",
+      "LandSpeed": "1",
+      "WaterSpeed": "0",
+      "Flies_IsComplex": false,
+      "LandSpeed_IsComplex": false,
+      "WaterSpeed_IsComplex": false,
+      "Name": "Bureaucrat",
+      "Description": "Travels between towns and tries to improve relations",
+      "MaxEvents": "1",
+      "InheritsFrom": "Person",
+      "DefaultAttributes": {},
+      "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    }
+  ]
+}

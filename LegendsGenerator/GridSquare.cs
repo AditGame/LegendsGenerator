@@ -12,6 +12,7 @@ namespace LegendsGenerator
     using System.Text;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// A single square of the grid.
@@ -21,7 +22,7 @@ namespace LegendsGenerator
         /// <summary>
         /// Gets the things in this grid square.
         /// </summary>
-        public IList<BaseThing> ThingsInGrid { get; } = new List<BaseThing>();
+        public IList<BaseThing> ThingsInSquare { get; } = new List<BaseThing>();
 
         /// <summary>
         /// Gets or sets the terrain of this square.
@@ -47,7 +48,7 @@ namespace LegendsGenerator
         /// <returns>All thing matching type.</returns>
         public IEnumerable<BaseThing> GetThings(ThingType type)
         {
-            return this.ThingsInGrid.Where(x => x.ThingType == type);
+            return this.ThingsInSquare.Where(x => x.ThingType == type);
         }
 
         /// <inheritdoc/>
@@ -55,17 +56,12 @@ namespace LegendsGenerator
         {
             StringBuilder sb = new StringBuilder();
 
+            // Do by type so it's sorted.
             foreach (ThingType type in Enum.GetValues(typeof(ThingType)).OfType<ThingType>())
             {
-                var matchingThings = this.GetThings(type);
-                if (matchingThings.Any())
+                foreach (BaseThing thing in this.GetThings(type))
                 {
-                    sb.AppendLine($"{type}:");
-
-                    foreach (BaseThing thing in this.GetThings(type))
-                    {
-                        sb.AppendLine($"   {thing}");
-                    }
+                    sb.AppendLine($"{thing.BaseDefinition.Name} {thing.Name}");
                 }
             }
 

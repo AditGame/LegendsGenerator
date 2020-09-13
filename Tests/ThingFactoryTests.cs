@@ -8,9 +8,9 @@ namespace LegendsGenerator.Tests
     using System.Collections.Generic;
 
     using LegendsGenerator.Compiler.CSharp;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

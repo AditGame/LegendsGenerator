@@ -7,9 +7,8 @@
 namespace LegendsGenerator
 {
     using System.Collections.Generic;
-
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// An event which occurred.

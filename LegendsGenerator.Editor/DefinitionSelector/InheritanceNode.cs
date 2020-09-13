@@ -246,6 +246,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
             IList<InheritanceNode> nodes = new List<InheritanceNode>();
             nodes.Add(new SectionInheritanceNode(typeof(EventDefinition), "Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))));
             nodes.Add(new SectionInheritanceNode(typeof(SiteDefinition), "Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))));
+            nodes.Add(new SectionInheritanceNode(typeof(NotablePersonDefinition), "NotablePersons", Parse(definitions.Where(d => d.BaseDefinition is NotablePersonDefinition))));
             return nodes;
         }
 

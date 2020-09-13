@@ -10,8 +10,8 @@ namespace LegendsGenerator.Tests
     using System.Linq;
 
     using LegendsGenerator.Compiler.CSharp;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

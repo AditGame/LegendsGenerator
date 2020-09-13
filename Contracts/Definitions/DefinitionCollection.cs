@@ -20,12 +20,15 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         /// <param name="events">The list of parsed event definitions.</param>
         /// <param name="sites">The list of parsed site definitions.</param>
+        /// <param name="notablePeople">The notible person definitions.</param>
         public DefinitionCollection(
             IList<EventDefinition> events,
-            IList<SiteDefinition> sites)
+            IList<SiteDefinition> sites,
+            IList<NotablePersonDefinition> notablePeople)
         {
             this.Events = events.ToList();
             this.SiteDefinitions = sites.ToList();
+            this.NotablePersonDefinitions = notablePeople.ToList();
         }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace LegendsGenerator.Contracts.Definitions
             ILookup<System.Type, BaseDefinition>? byType = definitions.ToLookup(d => d.GetType());
             this.Events = byType[typeof(EventDefinition)].OfType<EventDefinition>().ToList();
             this.SiteDefinitions = byType[typeof(SiteDefinition)].OfType<SiteDefinition>().ToList();
+            this.NotablePersonDefinitions = byType[typeof(NotablePersonDefinition)].OfType<NotablePersonDefinition>().ToList();
         }
 
         /// <summary>
@@ -50,6 +54,11 @@ namespace LegendsGenerator.Contracts.Definitions
         public IReadOnlyList<SiteDefinition> SiteDefinitions { get; }
 
         /// <summary>
+        /// Gets the list of all notable person definitions.
+        /// </summary>
+        public IReadOnlyList<NotablePersonDefinition> NotablePersonDefinitions { get; }
+
+        /// <summary>
         /// Gets the list of all definitions.
         /// </summary>
         public IReadOnlyList<BaseDefinition> AllDefinitions
@@ -59,6 +68,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 List<BaseDefinition> defs = new List<BaseDefinition>();
                 defs.AddRange(this.Events.OfType<BaseDefinition>());
                 defs.AddRange(this.SiteDefinitions.OfType<BaseDefinition>());
+                defs.AddRange(this.NotablePersonDefinitions.OfType<BaseDefinition>());
                 return defs;
             }
         }

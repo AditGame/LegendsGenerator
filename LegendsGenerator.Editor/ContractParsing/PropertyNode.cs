@@ -12,7 +12,6 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Windows;
     using System.Windows.Media;
 
@@ -34,6 +33,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// The function which changes the name.
         /// </summary>
         private Action<PropertyNode, string>? changeName;
+
+        /// <summary>
+        /// The function to decide if this is hidden in the editor.
+        /// </summary>
+        private Func<bool> hiddenInEditor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNode"/> class.
@@ -59,6 +63,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.NameCreatesVariableName = property.NameCreatesVariableName;
             this.ControlsDefinitionName = property.ControlsDefinitionName;
             this.ContentsType = property.PropertyType;
+            this.hiddenInEditor = property.HiddenInEditor;
 
             if (!readOnly)
             {
@@ -244,9 +249,13 @@ namespace LegendsGenerator.Editor.ContractParsing
             get
             {
                 List<ValidationIssue> failures = new List<ValidationIssue>();
-                failures.AddRange(this.GetLevelIssues());
-                this.Options.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
-                this.Nodes.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
+                if (this.IsVisible)
+                {
+                    failures.AddRange(this.GetLevelIssues());
+                    this.Options.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
+                    this.Nodes.ToList().ForEach(node => failures.AddRange(node.ValidationFailures.Select(v => v.Clone(node.Name))));
+                }
+
                 return failures;
             }
         }
@@ -276,6 +285,11 @@ namespace LegendsGenerator.Editor.ContractParsing
                 }
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this node is visible.
+        /// </summary>
+        public bool IsVisible => !this.hiddenInEditor();
 
         /// <summary>
         /// Gets a value indicating whether creating can be done on this node.
@@ -412,6 +426,19 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <summary>
+        /// Notifies this node and all decendant nodes that hidden may have changed.
+        /// </summary>
+        public void NotifyHiddenMayHaveChanged()
+        {
+            foreach (PropertyNode node in this.Nodes)
+            {
+                node.NotifyHiddenMayHaveChanged();
+            }
+
+            this.OnPropertyChanged(nameof(this.IsVisible));
+        }
+
+        /// <summary>
         /// Converts an action to be an object action.
         /// </summary>
         /// <typeparam name="T">The typical input type.</typeparam>
@@ -482,10 +509,19 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            // If the vlidation changed, than the text color changed as well.
+            // If the validation changed, than the text color changed as well.
             if (propertyName.Equals(nameof(this.ValidationFailures)))
             {
                 this.OnPropertyChanged(nameof(this.GetTextColor));
+            }
+
+            // If property change will cause the whole tree to recalc if IsHidden is different.
+            if (!propertyName.Equals(nameof(this.IsVisible)))
+            {
+                foreach (PropertyNode node in Context.Instance?.SelectedDefinition?.Nodes ?? new ObservableCollection<PropertyNode>())
+                {
+                    node.NotifyHiddenMayHaveChanged();
+                }
             }
         }
 

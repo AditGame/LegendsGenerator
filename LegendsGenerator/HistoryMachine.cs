@@ -10,6 +10,7 @@ namespace LegendsGenerator
 
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Iterates the world state.
@@ -54,22 +55,27 @@ namespace LegendsGenerator
             // Iterate through every gridsquare to create the new world.
             foreach (var (x, y, square) in currWorld.Grid.GetAllGridEntries())
             {
-                foreach (BaseThing thing in square.ThingsInGrid)
+                foreach (BaseThing thing in square.ThingsInSquare)
                 {
                     Log.Info($"Processing {thing.ThingType} {thing.Name}");
-
-                    Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, thing.ThingId);
-
-                    IEnumerable<OccurredEvent> occurredEvents =
-                        GetOccurringEvents(rdm, currWorld, (x, y), eventsBySubjectType[thing.ThingType], thing);
 
                     StagedThing newThing = GetOrCreate(stagedThings, thing);
 
                     if (newThing.Destroyed)
                     {
                         // Do not process events from destroyed things.
+                        Log.Info($"Skipping as this thing is destroyed.");
                         continue;
                     }
+
+                    Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, thing.ThingId);
+
+                    if (!eventsBySubjectType.TryGetValue(thing.ThingType, out var availableEvents))
+                    {
+                        continue;
+                    }
+
+                    IEnumerable<OccurredEvent> occurredEvents = GetOccurringEvents(rdm, currWorld, (x, y), availableEvents, thing);
 
                     foreach (OccurredEvent occurredEvent in occurredEvents)
                     {
@@ -105,9 +111,12 @@ namespace LegendsGenerator
         {
             int maxEvents = thing.BaseDefinition.EvalMaxEvents(rdm, thing);
 
+            bool isMoving = (thing is BaseMovingThing movingThing) && movingThing.IsMoving;
+
             int minChance = rdm.Next(1, 100);
             return applicableEvents
                 .Shuffle(rdm)
+                .Where(e => !isMoving || e.CanTriggerWhileMoving)
                 .Where(e => e.Subject.EvalCondition(rdm, thing))
                 .Select(e =>
                 {
@@ -223,6 +232,23 @@ namespace LegendsGenerator
         /// <param name="stagedThings">The staged things.</param>
         private void ApplyEvent(Random rdm, World world, OccurredEvent ev, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings)
         {
+            BaseThing? GetThing(string name)
+            {
+                if (name.Equals("Subject"))
+                {
+                    return thing;
+                }
+                else if (ev.Objects.TryGetValue(name, out var @object))
+                {
+                    return @object;
+                }
+                else
+                {
+                    Log.Error($"Unable to find object {name}, available objects are Subject, {string.Join(", ", ev.Objects.Keys)}.");
+                    return null;
+                }
+            }
+
             int minChance = rdm.Next(1, 100);
             EventResultDefinition? result = ev.Event.Results
                 .Shuffle(rdm)
@@ -237,7 +263,9 @@ namespace LegendsGenerator
                 return;
             }
 
+#pragma warning disable SA1101 // Prefix local calls with this. False positive due to C#9 feature.
             world.OccurredEvents.Add(ev with { Result = result });
+#pragma warning restore SA1101 // Prefix local calls with this
 
             foreach (EffectDefinition effectDefinition in result.Effects)
             {
@@ -253,17 +281,10 @@ namespace LegendsGenerator
 
                 foreach (var appliedTo in effectDefinition.AppliedTo)
                 {
-                    if (appliedTo.Equals("Subject"))
+                    BaseThing? appliedToThing = GetThing(appliedTo);
+                    if (appliedToThing != null)
                     {
-                        GetOrCreate(stagedThings, thing).Thing.Effects.Add(effect);
-                    }
-                    else if (ev.Objects.TryGetValue(appliedTo, out BaseThing? value))
-                    {
-                        GetOrCreate(stagedThings, value).Thing.Effects.Add(effect);
-                    }
-                    else
-                    {
-                        Log.Error($"Enable to apply effect to unknown Object {appliedTo}.");
+                        GetOrCreate(stagedThings, appliedToThing).Thing.Effects.Add(effect);
                     }
                 }
             }
@@ -297,20 +318,65 @@ namespace LegendsGenerator
 
             foreach (DestroyDefinition destroyDefinition in result.Destroys)
             {
-                if (destroyDefinition.ThingDestroyed.Equals("Subject"))
+                BaseThing? destroyed = GetThing(destroyDefinition.ThingDestroyed);
+                if (destroyed != null)
                 {
-                    GetOrCreate(stagedThings, thing).Destroyed = true;
+                    GetOrCreate(stagedThings, destroyed).Destroyed = true;
                 }
-                else
+            }
+
+            foreach (MoveDefinition moveDefinition in result.Moves)
+            {
+                BaseThing? thingToMove = GetThing(moveDefinition.ThingToMove);
+                if (thingToMove == null)
                 {
-                    if (ev.Objects.TryGetValue(destroyDefinition.ThingDestroyed, out var @object))
-                    {
-                        GetOrCreate(stagedThings, @object).Destroyed = true;
-                    }
-                    else
-                    {
-                        Log.Error($"Unable to find object {destroyDefinition.ThingDestroyed} to destroy, available objects are {string.Join(", ", ev.Objects.Keys)}.");
-                    }
+                    continue;
+                }
+
+                if (thingToMove is not BaseMovingThing movingThing)
+                {
+                    Log.Error($"Tried to move {moveDefinition.ThingToMove} ({thingToMove.ThingId}) but it not the type of thing to be able to move.");
+                    continue;
+                }
+
+                movingThing.MoveType = moveDefinition.MoveType;
+
+                switch (moveDefinition.MoveType)
+                {
+                    case MoveType.ToCoords:
+                        if (moveDefinition.CoordToMoveToX == null)
+                        {
+                            Log.Error("Movetype is ToCoords, but CoordToMoveToX is null.");
+                            continue;
+                        }
+
+                        if (moveDefinition.CoordToMoveToY == null)
+                        {
+                            Log.Error("Movetype is ToCoords, but CoordToMoveToY is null.");
+                            continue;
+                        }
+
+                        movingThing.MoveToCoordX = moveDefinition.EvalCoordToMoveToX(rdm, thing, ev.Objects);
+                        movingThing.MoveToCoordY = moveDefinition.EvalCoordToMoveToY(rdm, thing, ev.Objects);
+                        break;
+                    case MoveType.ToThing:
+                        if (moveDefinition.ThingToMoveTo == null)
+                        {
+                            Log.Error("Movetype is ToThing, but ThingToMoveTo is null.");
+                            continue;
+                        }
+
+                        BaseThing? thingToMoveTo = GetThing(moveDefinition.ThingToMoveTo);
+                        if (thingToMoveTo == null)
+                        {
+                            continue;
+                        }
+
+                        movingThing.MoveToThing = thingToMoveTo.ThingId;
+                        break;
+                    default:
+                        Log.Error("Invalid move type");
+                        break;
                 }
             }
         }

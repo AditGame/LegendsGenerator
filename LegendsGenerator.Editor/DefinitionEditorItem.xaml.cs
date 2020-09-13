@@ -70,13 +70,8 @@ namespace LegendsGenerator.Editor
 
             node.HandleCreate(sender, e);
 
-            if (node is PropertyNode propNode)
-            {
-                if (propNode.UpstreamNode?.Content is BaseDefinition def)
-                {
-                    def.Reattach();
-                }
-            }
+            // Reattach all nodes so things work.
+            Context.Instance?.Attach();
         }
 
         /// <summary>
@@ -103,13 +98,8 @@ namespace LegendsGenerator.Editor
 
             node.HandleDelete(sender, e);
 
-            if (node is PropertyNode propNode)
-            {
-                if (propNode.UpstreamNode?.Content is BaseDefinition def)
-                {
-                    def.Reattach();
-                }
-            }
+            // Reattach all nodes so things work.
+            Context.Instance?.Attach();
         }
 
         /// <summary>

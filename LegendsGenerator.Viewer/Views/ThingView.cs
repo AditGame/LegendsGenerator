@@ -11,9 +11,8 @@ namespace LegendsGenerator.Viewer.Views
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// A view into a thing.

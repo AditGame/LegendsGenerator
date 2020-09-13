@@ -7,9 +7,9 @@ namespace LegendsGenerator
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Creates things.
@@ -46,6 +46,8 @@ namespace LegendsGenerator
             {
                 case ThingType.Site:
                     return this.CreateSite(rdm, x, y, definitionName);
+                case ThingType.NotablePerson:
+                    return this.CreateNotablePerson(rdm, x, y, definitionName);
                 default:
                     throw new InvalidOperationException($"Can not handle {type}.");
             }
@@ -54,14 +56,31 @@ namespace LegendsGenerator
         /// <summary>
         /// Creates a site.
         /// </summary>
-        /// <param name="rdm">The random nubmer generator.</param>
+        /// <param name="rdm">The random number generator.</param>
         /// <param name="x">The X coordinate of the site.</param>
         /// <param name="y">The Y coordinate of the site.</param>
         /// <param name="siteDefinitionName">The name of the site's definition.</param>
         /// <returns>The site.</returns>
         public Site CreateSite(Random rdm, int x, int y, string siteDefinitionName)
         {
-            return CreateThing<Site, SiteDefinition>(rdm, x, y, this.definitions.SiteDefinitions, siteDefinitionName);
+            Site site = CreateThing<Site, SiteDefinition>(rdm, x, y, this.definitions.SiteDefinitions, siteDefinitionName);
+            site.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
+            return site;
+        }
+
+        /// <summary>
+        /// Creates a notable person.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        /// <param name="x">The X coordinate of the person.</param>
+        /// <param name="y">The Y coordinate of the person.</param>
+        /// <param name="personDefinitionName">The name of the person's definition.</param>
+        /// <returns>The notable person.</returns>
+        public NotablePerson CreateNotablePerson(Random rdm, int x, int y, string personDefinitionName)
+        {
+            NotablePerson person = CreateThing<NotablePerson, NotablePersonDefinition>(rdm, x, y, this.definitions.NotablePersonDefinitions, personDefinitionName);
+            person.Name = new RandomNameGeneratorLibrary.PersonNameGenerator(rdm).GenerateRandomFirstAndLastName();
+            return person;
         }
 
         /// <summary>
@@ -110,8 +129,6 @@ namespace LegendsGenerator
                 X = x,
                 Y = y,
             };
-
-            thing.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {

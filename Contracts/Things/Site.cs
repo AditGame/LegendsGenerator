@@ -2,7 +2,7 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator.Contracts
+namespace LegendsGenerator.Contracts.Things
 {
     using System;
 
@@ -18,7 +18,7 @@ namespace LegendsGenerator.Contracts
         /// Gets the site definition.
         /// </summary>
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-        public SiteDefinition Definition => this.BaseDefinition as SiteDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
+        public SiteDefinition Definition => BaseDefinition as SiteDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>

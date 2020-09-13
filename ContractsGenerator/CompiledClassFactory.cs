@@ -27,6 +27,7 @@ namespace CompiledDefinitionSourceGenerator
             "LegendsGenerator.Contracts.Compiler",
             "LegendsGenerator.Contracts.Definitions",
             "LegendsGenerator.Contracts.Definitions.Events",
+            "LegendsGenerator.Contracts.Things",
         };
 
         /// <summary>

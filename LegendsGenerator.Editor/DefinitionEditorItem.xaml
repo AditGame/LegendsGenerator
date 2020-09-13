@@ -12,7 +12,7 @@
         <Image x:Key="AddImage" Source="Resources/Add_grey_8x_16x.png" />
         <Image x:Key="RemoveImage" Source="Resources/Remove_8x_16x.png" />
     </UserControl.Resources>
-    <Label>
+    <Label Visibility="{Binding IsVisible, Converter={StaticResource VisibleIfTrueConverter}}">
         <StackPanel Orientation="Horizontal">
             <StackPanel.ToolTip>
                 <StackPanel>

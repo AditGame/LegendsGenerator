@@ -9,9 +9,9 @@ namespace LegendsGenerator
     using System.Diagnostics;
     using System.Linq;
     using LegendsGenerator.Compiler.CSharp;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Main entry point.
@@ -128,7 +128,7 @@ namespace LegendsGenerator
 
             Console.WriteLine(world.Grid.ToString());
 
-            foreach (var site in world.Grid.GetAllGridEntries().SelectMany(x => x.Square.ThingsInGrid))
+            foreach (var site in world.Grid.GetAllGridEntries().SelectMany(x => x.Square.ThingsInSquare))
             {
                 Console.WriteLine(site.ToString());
                 Console.WriteLine($"Final Population: {site.EffectiveAttribute("Population", -1)}");
@@ -141,13 +141,13 @@ namespace LegendsGenerator
             {
                 for (int y = 0; y < world.Grid.Height; y++)
                 {
-                    if (world.Grid.GetSquare(x, y).ThingsInGrid.Count == 0)
+                    if (world.Grid.GetSquare(x, y).ThingsInSquare.Count == 0)
                     {
                         Console.Write("  ");
                     }
                     else
                     {
-                        Console.Write($" {world.Grid.GetSquare(x, y).ThingsInGrid.Count:D1}");
+                        Console.Write($" {world.Grid.GetSquare(x, y).ThingsInSquare.Count:D1}");
                     }
                 }
 

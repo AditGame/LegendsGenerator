@@ -1,0 +1,25 @@
+{
+  "Events": [],
+  "Sites": [],
+  "NotablePeople": [
+    {
+      "Flies": "false",
+      "LandSpeed": "1",
+      "WaterSpeed": "0",
+      "Flies_IsComplex": false,
+      "LandSpeed_IsComplex": false,
+      "WaterSpeed_IsComplex": false,
+      "Name": "Person",
+      "Description": "A dude",
+      "MaxEvents": "1",
+      "DefaultAttributes": {
+        "Empathy": "Rand.Next(0, 5000)",
+        "Linguistic": "Rand.Next(0, 5000)"
+      },
+      "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    }
+  ]
+}
