@@ -41,9 +41,11 @@ namespace LegendsGenerator.Tests
             };
             cityDef.DefaultAttributes["Population"] = "Rand.Next(20000, 100000)";
 
-            IList<SiteDefinition> sites = new List<SiteDefinition>();
-            sites.Add(popCenter);
-            sites.Add(cityDef);
+            IList<SiteDefinition> sites = new List<SiteDefinition>
+            {
+                popCenter,
+                cityDef,
+            };
 
             var definitions = new DefinitionCollection(sites);
 
@@ -86,14 +88,14 @@ namespace LegendsGenerator.Tests
             };
             cityDef.DefaultAttributes["Population"] = "rand.Next(20000, 100000)";
 
-            IList<SiteDefinition> sites = new List<SiteDefinition>();
-            sites.Add(cityDef);
+            IList<SiteDefinition> sites = new List<SiteDefinition>
+            {
+                cityDef,
+            };
 
             var definitions = new DefinitionCollection(sites);
 
             int worldSeed = 915434125;
-
-            ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
 
             ThingFactory factory = new ThingFactory(definitions);
 

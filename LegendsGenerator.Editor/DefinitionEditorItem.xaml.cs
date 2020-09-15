@@ -53,16 +53,12 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The arguments.</param>
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            Button? element = sender as Button;
-
-            if (element == null)
+            if (sender is not Button element)
             {
                 return;
             }
 
-            ICreateDelete? node = element.DataContext as ICreateDelete;
-
-            if (node == null)
+            if (element.DataContext is not ICreateDelete node)
             {
                 throw new InvalidOperationException(
                     $"Datacontext must be of type ICreateDelete, is {element.DataContext.GetType().Name}");
@@ -81,16 +77,12 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The arguments.</param>
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            Button? element = sender as Button;
-
-            if (element == null)
+            if (sender is not Button element)
             {
                 return;
             }
 
-            ICreateDelete? node = element.DataContext as ICreateDelete;
-
-            if (node == null)
+            if (element.DataContext is not ICreateDelete node)
             {
                 throw new InvalidOperationException(
                     $"Datacontext must be of type IDeletable, is {element.DataContext.GetType().Name}");
@@ -109,14 +101,13 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The args.</param>
         private void PassFocusToTreeItem(object sender, RoutedEventArgs e)
         {
-            DependencyObject? dep = sender as DependencyObject;
-            if (dep == null)
+            if (sender is not DependencyObject dep)
             {
                 return;
             }
 
             DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
-            while (!(obj is TreeViewItem))
+            while (obj is not TreeViewItem)
             {
                 obj = System.Windows.Media.VisualTreeHelper.GetParent(obj);
             }

@@ -156,7 +156,7 @@ namespace LegendsGenerator.Editor
             this.InheritanceGraph.Clear();
 
             DefinitionCollection? definitions =
-                DefinitionSerializer.DeserializeFromDirectory(path);
+                DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
 
             foreach (var def in definitions.AllDefinitions)
             {

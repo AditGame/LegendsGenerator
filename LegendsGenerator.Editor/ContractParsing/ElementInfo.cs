@@ -23,7 +23,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The delegate to decide if this should be hidden in the editor.
         /// </summary>
-        private MethodDelegate<bool>? hiddenInEditorDelegate;
+        private readonly MethodDelegate<bool>? hiddenInEditorDelegate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementInfo"/> class.
@@ -54,7 +54,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.Nullable = nullable;
             this.GetValue = getValue;
             this.SetValue = setValue;
-            this.GetCompiledParameters = getCompiledParameters != null ? getCompiledParameters : prop => Array.Empty<string>();
+            this.GetCompiledParameters = getCompiledParameters ?? (prop => Array.Empty<string>());
             this.Compiled = compiled;
 
             if (hiddenInEditorCondition != null)

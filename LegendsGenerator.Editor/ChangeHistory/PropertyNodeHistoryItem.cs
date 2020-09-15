@@ -16,17 +16,17 @@ namespace LegendsGenerator.Editor.ChangeHistory
         /// <summary>
         /// The property node.
         /// </summary>
-        private PropertyNode node;
+        private readonly PropertyNode node;
 
         /// <summary>
         /// The previous value.
         /// </summary>
-        private object? previousValue;
+        private readonly object? previousValue;
 
         /// <summary>
         /// The next value.
         /// </summary>
-        private object? nextValue;
+        private readonly object? nextValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNodeHistoryItem"/> class.

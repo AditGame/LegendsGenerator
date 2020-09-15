@@ -21,12 +21,12 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The cache of documentation files.
         /// </summary>
-        private static IDictionary<string, XmlDocument> docCache = new Dictionary<string, XmlDocument>();
+        private static readonly IDictionary<string, XmlDocument> DocCache = new Dictionary<string, XmlDocument>();
 
         /// <summary>
         /// The cache of descriptions.
         /// </summary>
-        private static IDictionary<string, string?> descriptionCache = new Dictionary<string, string?>();
+        private static readonly IDictionary<string, string?> DescriptionCache = new Dictionary<string, string?>();
 
         /// <summary>
         /// Gets the descritpion, if it exists, for the specified property.
@@ -37,7 +37,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             string fullName = $"{property.DeclaringType?.FullName}.{property.Name}";
 
-            if (descriptionCache.TryGetValue(fullName, out string? description))
+            if (DescriptionCache.TryGetValue(fullName, out string? description))
             {
                 return description ?? string.Empty;
             }
@@ -52,7 +52,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 description = GetFromDocumentationFile(fullName, property);
             }
 
-            descriptionCache[fullName] = description;
+            DescriptionCache[fullName] = description;
             return description ?? string.Empty;
         }
 
@@ -80,13 +80,13 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             string docLocation = Path.ChangeExtension(assemblyLocation, "xml");
 
-            if (!docCache.TryGetValue(docLocation, out XmlDocument? document))
+            if (!DocCache.TryGetValue(docLocation, out XmlDocument? document))
             {
                 try
                 {
                     document = new XmlDocument();
                     document.Load(docLocation);
-                    docCache[docLocation] = document;
+                    DocCache[docLocation] = document;
                 }
 #pragma warning disable CA1031 // Do not catch general exception types. Want to be general to catch non-failing errors.
                 catch (Exception ex)
@@ -118,18 +118,18 @@ namespace LegendsGenerator.Editor.ContractParsing
             string summaryWithoutStart = summary;
             if (summary.StartsWith(BoolDoc, StringComparison.OrdinalIgnoreCase))
             {
-                summaryWithoutStart = summary.Substring(BoolDoc.Length).Trim();
+                summaryWithoutStart = summary[BoolDoc.Length..].Trim();
             }
             else if (summary.StartsWith(ReadWriteDoc, StringComparison.OrdinalIgnoreCase))
             {
-                summaryWithoutStart = summary.Substring(ReadWriteDoc.Length).Trim();
+                summaryWithoutStart = summary[ReadWriteDoc.Length..].Trim();
             }
             else if (summary.StartsWith(ReadDoc, StringComparison.OrdinalIgnoreCase))
             {
-                summaryWithoutStart = summary.Substring(ReadDoc.Length).Trim();
+                summaryWithoutStart = summary[ReadDoc.Length..].Trim();
             }
 
-            return char.ToUpper(summaryWithoutStart[0]) + summaryWithoutStart.Substring(1);
+            return char.ToUpper(summaryWithoutStart[0]) + summaryWithoutStart[1..];
         }
     }
 }

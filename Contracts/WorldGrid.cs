@@ -1,28 +1,28 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="Grid.cs" company="Tom Luppi">
+// <copyright file="WorldGrid.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace LegendsGenerator
+namespace LegendsGenerator.Contracts
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Text;
+
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
-    /// THe grid of the world.
+    /// The grid of the world.
     /// </summary>
-    public class Grid
+    public class WorldGrid
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Grid"/> class.
+        /// Initializes a new instance of the <see cref="WorldGrid"/> class.
         /// </summary>
         /// <param name="width">The max width.</param>
         /// <param name="height">The max height.</param>
-        public Grid(int width, int height)
+        public WorldGrid(int width, int height)
         {
             this.Width = width;
             this.Height = height;
@@ -62,9 +62,9 @@ namespace LegendsGenerator
         /// Clones this grid, without any Things.
         /// </summary>
         /// <returns>A matching grid, devoid of life.</returns>
-        public Grid CloneWithoutThings()
+        public WorldGrid CloneWithoutThings()
         {
-            Grid clone = new Grid(this.Width, this.Height);
+            WorldGrid clone = new WorldGrid(this.Width, this.Height);
 
             for (int x = 0; x < this.Width; x++)
             {
@@ -107,6 +107,11 @@ namespace LegendsGenerator
         /// <param name="thing">The thing to add.</param>
         public void AddThing(BaseThing thing)
         {
+            if (thing is null)
+            {
+                throw new ArgumentNullException(nameof(thing));
+            }
+
             this.GetSquare(thing.X, thing.Y).ThingsInSquare.Add(thing);
         }
 

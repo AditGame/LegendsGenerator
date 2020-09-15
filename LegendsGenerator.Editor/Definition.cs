@@ -74,7 +74,7 @@ namespace LegendsGenerator.Editor
             /// <summary>
             /// The action to run.
             /// </summary>
-            private Action act;
+            private readonly Action act;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ActionCommand"/> class.

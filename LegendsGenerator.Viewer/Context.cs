@@ -10,6 +10,7 @@ namespace LegendsGenerator.Viewer
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Viewer.Views;
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="history">The history machine.</param>
         /// <param name="initialWorld">The initial world state.</param>
-        public Context(HistoryMachine history, World initialWorld)
+        public Context(HistoryGenerator history, World initialWorld)
         {
             this.History = history;
             this.WorldSteps[0] = initialWorld;
@@ -54,7 +55,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the history.
         /// </summary>
-        public HistoryMachine History { get; }
+        public HistoryGenerator History { get; }
 
         /// <summary>
         /// Gets or sets the selected square on the map.

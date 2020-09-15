@@ -27,17 +27,17 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// If this compiled func is formatted text.
         /// </summary>
-        private bool asFormattedText;
+        private readonly bool asFormattedText;
 
         /// <summary>
         /// A function which gets if this is compiled text.
         /// </summary>
-        private Func<bool> isComplexFunc;
+        private readonly Func<bool> isComplexFunc;
 
         /// <summary>
         /// A function which gets the parameters for the compiled conditions.
         /// </summary>
-        private Func<PropertyNode, IList<string>> getParametersFunc;
+        private readonly Func<PropertyNode, IList<string>> getParametersFunc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledPropertyNode"/> class.

@@ -130,7 +130,7 @@ namespace LegendsGenerator.Contracts.Things
             {
                 return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
             }
-            catch (ArithmeticException)
+            catch (OverflowException)
             {
                 return int.MaxValue;
             }

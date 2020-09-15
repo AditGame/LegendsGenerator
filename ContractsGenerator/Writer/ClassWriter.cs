@@ -17,12 +17,12 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         /// <summary>
         /// The number of spaces in a tab.
         /// </summary>
-        private int tabSpaces = 4;
+        private readonly int tabSpaces = 4;
 
         /// <summary>
         /// The string builder to write to.
         /// </summary>
-        private StringBuilder sb = new StringBuilder();
+        private readonly StringBuilder sb = new StringBuilder();
 
         /// <summary>
         /// The current tab level.

@@ -13,6 +13,7 @@ namespace LegendsGenerator.Viewer
     using System.Windows.Controls;
     using Gu.Wpf.DataGrid2D;
     using LegendsGenerator.Compiler.CSharp;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
@@ -26,7 +27,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// The context of this world.
         /// </summary>
-        private Context context;
+        private readonly Context context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -44,25 +45,22 @@ namespace LegendsGenerator.Viewer
         /// <returns>THe context object.</returns>
         public static Context InitContext()
         {
-            var definitions = DefinitionSerializer.DeserializeFromDirectory("Definitions");
-
             int worldSeed = 915434125;
-            Random rdm = new Random(worldSeed);
 
             ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
-            definitions.Attach(processor);
-
+            DefinitionCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
-            HistoryMachine history = new HistoryMachine(factory);
+
+            HistoryGenerator history = new HistoryGenerator(factory, definitions);
 
             World world = new World()
             {
                 WorldSeed = worldSeed,
                 StepCount = 1,
-                Events = new List<EventDefinition>(definitions.Events),
-                Grid = new LegendsGenerator.Grid(20, 20),
+                Grid = new WorldGrid(20, 20),
             };
 
+            Random rdm = new Random(worldSeed);
             for (int i = 0; i < 100; i++)
             {
                 int x = rdm.Next(0, 19);

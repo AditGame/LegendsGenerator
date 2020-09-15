@@ -21,17 +21,17 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <summary>
         /// The compiled condition.
         /// </summary>
-        private MethodDelegate<T> compiledCondition;
+        private readonly MethodDelegate<T> compiledCondition;
 
         /// <summary>
         /// The names of the variables.
         /// </summary>
-        private IList<string> variableNames;
+        private readonly IList<string> variableNames;
 
         /// <summary>
         /// The list of variables that should be exposed to all conditions.
         /// </summary>
-        private IDictionary<string, object> globalVariables = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> globalVariables = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledCondition{T}"/> class.

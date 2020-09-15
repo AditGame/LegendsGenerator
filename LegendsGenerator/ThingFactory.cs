@@ -19,7 +19,7 @@ namespace LegendsGenerator
         /// <summary>
         /// The definitions.
         /// </summary>
-        private DefinitionCollection definitions;
+        private readonly DefinitionCollection definitions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingFactory"/> class.
@@ -42,15 +42,12 @@ namespace LegendsGenerator
         /// <returns>The created thing.</returns>
         public BaseThing CreateThing(Random rdm, int x, int y, ThingType type, string definitionName)
         {
-            switch (type)
+            return type switch
             {
-                case ThingType.Site:
-                    return this.CreateSite(rdm, x, y, definitionName);
-                case ThingType.NotablePerson:
-                    return this.CreateNotablePerson(rdm, x, y, definitionName);
-                default:
-                    throw new InvalidOperationException($"Can not handle {type}.");
-            }
+                ThingType.Site => this.CreateSite(rdm, x, y, definitionName),
+                ThingType.NotablePerson => this.CreateNotablePerson(rdm, x, y, definitionName),
+                _ => throw new InvalidOperationException($"Can not handle {type}."),
+            };
         }
 
         /// <summary>

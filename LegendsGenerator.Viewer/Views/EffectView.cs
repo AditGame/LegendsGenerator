@@ -21,7 +21,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// The underlying effect.
         /// </summary>
-        private Effect effect;
+        private readonly Effect effect;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectView"/> class.

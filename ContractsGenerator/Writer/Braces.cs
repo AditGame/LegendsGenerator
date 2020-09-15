@@ -12,14 +12,14 @@ namespace LegendsGenerator.ContractsGenerator.Writer
     public sealed class Braces : IDisposable
     {
         /// <summary>
+        /// The class writer.
+        /// </summary>
+        private readonly ClassWriter writer;
+
+        /// <summary>
         /// If disposed already, true.
         /// </summary>
         private bool disposedValue;
-
-        /// <summary>
-        /// The class writer.
-        /// </summary>
-        private ClassWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Braces"/> class.

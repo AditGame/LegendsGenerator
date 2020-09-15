@@ -20,7 +20,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// <summary>
         /// The type to create under this node.
         /// </summary>
-        private Type? type;
+        private readonly Type? type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SectionInheritanceNode"/> class.
@@ -60,8 +60,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                 throw new InvalidOperationException("Cannot create on this instance as Type was not specified.");
             }
 
-            BaseDefinition? newObj = Activator.CreateInstance(this.type) as BaseDefinition;
-            if (newObj == null)
+            if (Activator.CreateInstance(this.type) is not BaseDefinition newObj)
             {
                 throw new InvalidOperationException("Activator returned a null instance.");
             }

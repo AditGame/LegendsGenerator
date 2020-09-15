@@ -13,7 +13,7 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Text.Encodings.Web;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-
+    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
@@ -49,9 +49,10 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Deserializes all definitions and events from the specified directory.
         /// </summary>
+        /// <param name="compiler">The condition compiler to use.</param>
         /// <param name="path">The path to the directory.</param>
         /// <returns>A tuple of definitions and events from the directory.</returns>
-        public static DefinitionCollection DeserializeFromDirectory(string path)
+        public static DefinitionCollection DeserializeFromDirectory(IConditionCompiler compiler, string path)
         {
             List<BaseDefinition> defs = new List<BaseDefinition>();
             foreach (string file in Directory.EnumerateFiles(path, "*.json", SearchOption.AllDirectories))
@@ -73,7 +74,9 @@ namespace LegendsGenerator.Contracts.Definitions
                 }
             }
 
-            return new DefinitionCollection(defs);
+            var definitions = new DefinitionCollection(defs);
+            definitions.Attach(compiler);
+            return definitions;
         }
 
         /// <summary>

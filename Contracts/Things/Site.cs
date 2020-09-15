@@ -17,9 +17,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets the site definition.
         /// </summary>
-#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
         public SiteDefinition Definition => BaseDefinition as SiteDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
-#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         /// <summary>
         /// Gets the name of this Thing Type.

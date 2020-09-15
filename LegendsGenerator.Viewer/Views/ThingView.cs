@@ -11,6 +11,7 @@ namespace LegendsGenerator.Viewer.Views
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
 
@@ -22,7 +23,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// The underlying thing.
         /// </summary>
-        private BaseThing thing;
+        private readonly BaseThing thing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingView"/> class.
@@ -92,15 +93,12 @@ namespace LegendsGenerator.Viewer.Views
                     return "Nothing";
                 }
 
-                switch (movingThing.MoveType)
+                return movingThing.MoveType switch
                 {
-                    case Contracts.MoveType.ToCoords:
-                        return $"({movingThing.MoveToCoordX}, {movingThing.MoveToCoordY})";
-                    case Contracts.MoveType.ToThing:
-                        return movingThing.MoveToThing?.ToString() ?? "NullGuid";
-                    default:
-                        return "Unknown";
-                }
+                    MoveType.ToCoords => $"({movingThing.MoveToCoordX}, {movingThing.MoveToCoordY})",
+                    MoveType.ToThing => movingThing.MoveToThing?.ToString() ?? "NullGuid",
+                    _ => "Unknown",
+                };
             }
         }
     }

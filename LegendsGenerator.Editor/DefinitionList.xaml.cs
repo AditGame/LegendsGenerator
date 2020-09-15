@@ -32,16 +32,12 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The arguments.</param>
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            InheritanceNode? item = e.NewValue as InheritanceNode;
-
-            if (item == null)
+            if (e.NewValue is not InheritanceNode item)
             {
                 return;
             }
 
-            Context? context = this.DataContext as Context;
-
-            if (context == null)
+            if (this.DataContext is not Context context)
             {
                 throw new InvalidOperationException("DataContext must be Context.");
             }

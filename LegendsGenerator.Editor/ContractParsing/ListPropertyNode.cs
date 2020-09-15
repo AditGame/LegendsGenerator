@@ -23,17 +23,17 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The underlying element info.
         /// </summary>
-        private ElementInfo info;
+        private readonly ElementInfo info;
 
         /// <summary>
         /// The underlying object.
         /// </summary>
-        private object? underlyingObject;
+        private readonly object? underlyingObject;
 
         /// <summary>
         /// The object type represented in this list.
         /// </summary>
-        private Type objectType;
+        private readonly Type objectType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListPropertyNode"/> class.
@@ -259,8 +259,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <returns>The IList.</returns>
         private IList AsList()
         {
-            IList? list = this.Content as IList;
-            if (list == null)
+            if (this.Content is not IList list)
             {
                 throw new InvalidOperationException($"Content type must be list, was {this.Content?.GetType().Name ?? "Null"}");
             }

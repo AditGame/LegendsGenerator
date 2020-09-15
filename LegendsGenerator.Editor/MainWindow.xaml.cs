@@ -20,7 +20,7 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// The context with all the data in it.
         /// </summary>
-        private Context context;
+        private readonly Context context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.

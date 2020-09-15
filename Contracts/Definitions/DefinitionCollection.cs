@@ -74,6 +74,23 @@ namespace LegendsGenerator.Contracts.Definitions
         }
 
         /// <summary>
+        /// Creates a new collection by combining this collection with additional collection.
+        /// </summary>
+        /// <param name="additionalCollections">Collections to combine with this collection.</param>
+        /// <returns>A combination of the two collections.</returns>
+        public DefinitionCollection Combine(params DefinitionCollection[] additionalCollections)
+        {
+            IEnumerable<BaseDefinition> combinedDefinitions = this.AllDefinitions;
+
+            foreach (DefinitionCollection collection in additionalCollections)
+            {
+                combinedDefinitions = combinedDefinitions.Concat(collection.AllDefinitions);
+            }
+
+            return new DefinitionCollection(combinedDefinitions);
+        }
+
+        /// <summary>
         /// Attaches the compiler to all definitions.
         /// </summary>
         /// <param name="compiler">The csmpiler.</param>

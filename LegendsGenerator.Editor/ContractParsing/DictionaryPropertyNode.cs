@@ -23,17 +23,17 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The type of the dictionary value.
         /// </summary>
-        private Type valueType;
+        private readonly Type valueType;
 
         /// <summary>
         /// The element info.
         /// </summary>
-        private ElementInfo info;
+        private readonly ElementInfo info;
 
         /// <summary>
         /// The thing.
         /// </summary>
-        private object? thing;
+        private readonly object? thing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryPropertyNode"/> class.
@@ -141,9 +141,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <returns>The contents, as dictionary.</returns>
         private IDictionary AsDictionary()
         {
-            IDictionary? dictionary = this.Content as IDictionary;
-
-            if (dictionary == null)
+            if (this.Content is not IDictionary dictionary)
             {
                 throw new InvalidOperationException($"Content type must be Dictionary, was {this.Content?.GetType().Name ?? "Null"}");
             }

@@ -3,6 +3,11 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
+    <Authors>Thomas Luppi</Authors>
+    <Product>LegendsGenerator</Product>
+    <PackageProjectUrl>https://github.com/AditGame/LegendsGenerator/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AditGame/LegendsGenerator.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
 </Project>

@@ -25,19 +25,19 @@ namespace LegendsGenerator.Editor.ContractParsing
     public abstract class PropertyNode : INotifyPropertyChanged, ICreateDelete
     {
         /// <summary>
-        /// The underlying string field.
-        /// </summary>
-        private string name;
-
-        /// <summary>
         /// The function which changes the name.
         /// </summary>
-        private Action<PropertyNode, string>? changeName;
+        private readonly Action<PropertyNode, string>? changeName;
 
         /// <summary>
         /// The function to decide if this is hidden in the editor.
         /// </summary>
-        private Func<bool> hiddenInEditor;
+        private readonly Func<bool> hiddenInEditor;
+
+        /// <summary>
+        /// The underlying string field.
+        /// </summary>
+        private string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNode"/> class.

@@ -21,7 +21,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The enum type.
         /// </summary>
-        private Type type;
+        private readonly Type type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnumPropertyNode"/> class.

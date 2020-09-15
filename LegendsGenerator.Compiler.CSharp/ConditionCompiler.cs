@@ -31,7 +31,7 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <summary>
         /// The list of variables that should be exposed to all conditions.
         /// </summary>
-        private IDictionary<string, object> globalVariables = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> globalVariables = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionCompiler"/> class.

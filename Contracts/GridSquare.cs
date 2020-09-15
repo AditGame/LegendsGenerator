@@ -4,7 +4,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace LegendsGenerator
+namespace LegendsGenerator.Contracts
 {
     using System;
     using System.Collections.Generic;

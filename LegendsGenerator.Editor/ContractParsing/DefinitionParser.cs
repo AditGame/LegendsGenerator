@@ -84,7 +84,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <returns>The node if it can be converted, otherwise null.</returns>
         public static PropertyNode? ToNode(object? thing, ElementInfo info, ILookup<string, PropertyInfo>? optionsLookup = null)
         {
-            optionsLookup = optionsLookup ?? Array.Empty<PropertyInfo>().ToLookup(p => p.Name);
+            optionsLookup ??= Array.Empty<PropertyInfo>().ToLookup(p => p.Name);
             IEnumerable<PropertyInfo> options = optionsLookup[info.Name];
 
             if (info.PropertyType == typeof(string))

@@ -37,9 +37,7 @@ namespace CompiledDefinitionSourceGenerator
                 SemanticModel? semanticModel = compilation.GetSemanticModel(classSyntax.SyntaxTree);
                 ISymbol? type = semanticModel.GetDeclaredSymbol(classSyntax);
 
-                INamedTypeSymbol? symbol = type as INamedTypeSymbol;
-
-                if (symbol != null && symbol.Derives("BaseDefinition"))
+                if (type is INamedTypeSymbol symbol && symbol.Derives("BaseDefinition"))
                 {
                     ClassInfo classInfo = new ClassInfo(symbol);
                     string code = CompiledClassFactory.Generate(classInfo);

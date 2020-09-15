@@ -16,12 +16,12 @@ namespace LegendsGenerator.Editor.ChangeHistory
         /// <summary>
         /// The undo action.
         /// </summary>
-        private Action undo;
+        private readonly Action undo;
 
         /// <summary>
         /// The redo action.
         /// </summary>
-        private Action redo;
+        private readonly Action redo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionHistoryItem"/> class.

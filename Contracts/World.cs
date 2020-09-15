@@ -2,11 +2,10 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator
+namespace LegendsGenerator.Contracts
 {
     using System;
     using System.Collections.Generic;
-    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
@@ -17,7 +16,7 @@ namespace LegendsGenerator
         /// <summary>
         /// A cache of the results of seearching for things by guid.
         /// </summary>
-        private IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
+        private readonly IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
 
         /// <summary>
         /// Gets the worldseed. This should be randomly picked at the start and not changed.
@@ -32,19 +31,12 @@ namespace LegendsGenerator
         /// <summary>
         /// Gets the grid of this world.
         /// </summary>
-        public Grid Grid { get; init; } = new Grid(0, 0);
+        public WorldGrid Grid { get; init; } = new WorldGrid(0, 0);
 
         /// <summary>
         /// Gets a list of all events which occurred in the previoud step.
         /// </summary>
-        public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>()
-        {
-        };
-
-        /// <summary>
-        /// Gets or sets the events available in this world.
-        /// </summary>
-        public IList<EventDefinition> Events { get; set; } = new List<EventDefinition>();
+        public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>();
 
         /// <summary>
         /// Gets a thing in the world.

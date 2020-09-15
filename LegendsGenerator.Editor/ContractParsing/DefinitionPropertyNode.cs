@@ -20,7 +20,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// The type to create when added.
         /// </summary>
-        private Type type;
+        private readonly Type type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefinitionPropertyNode"/> class.

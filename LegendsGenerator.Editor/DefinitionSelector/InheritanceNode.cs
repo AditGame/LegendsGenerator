@@ -243,11 +243,12 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// <returns>The parsed headers.</returns>
         public static IEnumerable<InheritanceNode> ParseWithHeaders(IEnumerable<Definition> definitions)
         {
-            IList<InheritanceNode> nodes = new List<InheritanceNode>();
-            nodes.Add(new SectionInheritanceNode(typeof(EventDefinition), "Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))));
-            nodes.Add(new SectionInheritanceNode(typeof(SiteDefinition), "Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))));
-            nodes.Add(new SectionInheritanceNode(typeof(NotablePersonDefinition), "NotablePersons", Parse(definitions.Where(d => d.BaseDefinition is NotablePersonDefinition))));
-            return nodes;
+            return new List<InheritanceNode>
+            {
+                new SectionInheritanceNode(typeof(EventDefinition), "Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))),
+                new SectionInheritanceNode(typeof(SiteDefinition), "Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))),
+                new SectionInheritanceNode(typeof(NotablePersonDefinition), "NotablePersons", Parse(definitions.Where(d => d.BaseDefinition is NotablePersonDefinition))),
+            };
         }
 
         /// <summary>
@@ -277,12 +278,13 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                 }
             }
 
-            IList<InheritanceNode> nodes = new List<InheritanceNode>();
-
-            nodes.Add(new SectionInheritanceNode(null, OrphanNodeName, orphans, inheritanceList)
+            IList<InheritanceNode> nodes = new List<InheritanceNode>
             {
-                HideIfEmpty = true,
-            });
+                new SectionInheritanceNode(null, OrphanNodeName, orphans, inheritanceList)
+                {
+                    HideIfEmpty = true,
+                },
+            };
 
             foreach (Definition nonThing in nonThingDefs)
             {

@@ -34,16 +34,12 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The arguments.</param>
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            PropertyNode? item = e.NewValue as PropertyNode;
-
-            if (item == null)
+            if (e.NewValue is not PropertyNode item)
             {
                 return;
             }
 
-            Context? context = this.DataContext as Context;
-
-            if (context == null)
+            if (this.DataContext is not Context context)
             {
                 throw new InvalidOperationException("DataContext must be Context.");
             }
@@ -58,14 +54,13 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The args.</param>
         private void PassFocusToTreeItem(object sender, RoutedEventArgs e)
         {
-            DependencyObject? dep = sender as DependencyObject;
-            if (dep == null)
+            if (sender is not DependencyObject dep)
             {
                 return;
             }
 
             DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
-            while (!(obj is TreeViewItem))
+            while (obj is not TreeViewItem)
             {
                 obj = System.Windows.Media.VisualTreeHelper.GetParent(obj);
             }
@@ -81,14 +76,13 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The args.</param>
         private void Undo(object sender, RoutedEventArgs e)
         {
-            DependencyObject? dep = sender as DependencyObject;
-            if (dep == null)
+            if (sender is not DependencyObject dep)
             {
                 return;
             }
 
             DependencyObject obj = System.Windows.Media.VisualTreeHelper.GetParent(dep);
-            while (!(obj is TreeViewItem))
+            while (obj is not TreeViewItem)
             {
                 obj = System.Windows.Media.VisualTreeHelper.GetParent(obj);
             }

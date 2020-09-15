@@ -23,12 +23,12 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets the condition compiler
         /// </summary>
-        protected IConditionCompiler? Compiler { get; private set; } = null;
+        protected IConditionCompiler? Compiler { get; private set; }
 
         /// <summary>
         /// Gets the definition which holds this definition.
         /// </summary>
-        protected BaseDefinition? UpsteamDefinition { get; private set; } = null;
+        protected BaseDefinition? UpsteamDefinition { get; private set; }
 
         /// <summary>
         /// Reattaches all the definitions, in case new definitions were added as downstream dependencies.

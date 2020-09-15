@@ -5,6 +5,8 @@
     
     <!-- Source generators and analyzers don't work together well, disable for now. -->
     <DisableAnalyzers>true</DisableAnalyzers>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Contracts for input/output to the LegendsGenerator process.</Description>
   </PropertyGroup>
 
   <ItemGroup>

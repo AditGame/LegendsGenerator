@@ -1,4 +1,4 @@
-﻿// <copyright file="HistoryMachine.cs" company="Tom Luppi">
+﻿// <copyright file="HistoryGenerator.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
@@ -9,25 +9,56 @@ namespace LegendsGenerator
     using System.Linq;
 
     using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Iterates the world state.
     /// </summary>
-    public class HistoryMachine
+    public class HistoryGenerator
     {
         /// <summary>
         /// The thing factory.
         /// </summary>
-        private ThingFactory thingFactory;
+        private readonly ThingFactory thingFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryMachine"/> class.
+        /// The collection of definitions.
         /// </summary>
-        /// <param name="thingFactory">The factory which creates new Things.</param>
-        public HistoryMachine(ThingFactory thingFactory)
+        private readonly DefinitionCollection definitions;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
+        /// </summary>
+        /// <param name="compiler">THe condition compiler to use.</param>
+        /// <param name="definitionDirectory">A directory full of definition json files.</param>
+        /// <param name="additionalDefinitionDirectories">Optional additional directories to get definition json files from.</param>
+        public HistoryGenerator(IConditionCompiler compiler, string definitionDirectory, params string[] additionalDefinitionDirectories)
+            : this(DefinitionSerializer.DeserializeFromDirectory(compiler, definitionDirectory)
+                  .Combine(additionalDefinitionDirectories.Select(d => DefinitionSerializer.DeserializeFromDirectory(compiler, d)).ToArray()))
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
+        /// </summary>
+        /// <param name="definitions">The definitions collection to use.</param>
+        public HistoryGenerator(DefinitionCollection definitions)
+        {
+            this.definitions = definitions;
+            this.thingFactory = new ThingFactory(definitions);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
+        /// </summary>
+        /// <param name="thingFactory">The thing factory to use.</param>
+        /// <param name="definitions">The definitions collection to use.</param>
+        public HistoryGenerator(ThingFactory thingFactory, DefinitionCollection definitions)
+        {
+            this.definitions = definitions;
             this.thingFactory = thingFactory;
         }
 
@@ -38,6 +69,11 @@ namespace LegendsGenerator
         /// <returns>The next world definition.</returns>
         public World Step(World currWorld)
         {
+            if (currWorld is null)
+            {
+                throw new ArgumentNullException(nameof(currWorld));
+            }
+
 #pragma warning disable SA1101 // Prefix local calls with this. Stylecop has not been updated with support for Records.
             World nextWorld = currWorld with
             {
@@ -48,7 +84,7 @@ namespace LegendsGenerator
 #pragma warning restore SA1101 // Prefix local calls with this
 
             IDictionary<ThingType, List<EventDefinition>> eventsBySubjectType =
-                currWorld.Events.GroupBy(ev => ev.Subject.Type).ToDictionary(kv => kv.Key, kv => kv.ToList());
+                this.definitions.Events.GroupBy(ev => ev.Subject.Type).ToDictionary(kv => kv.Key, kv => kv.ToList());
 
             IDictionary<Guid, StagedThing> stagedThings = new Dictionary<Guid, StagedThing>();
 
