@@ -87,7 +87,9 @@ namespace LegendsGenerator.Editor
             }
 
             /// <inheritdoc/>
-            public event EventHandler CanExecuteChanged;
+#pragma warning disable CS0067 // Remove unused members.
+            public event EventHandler? CanExecuteChanged;
+#pragma warning restore CS0067 // Remove unsued members.
 
             /// <inheritdoc/>
             public bool CanExecute(object? parameter)

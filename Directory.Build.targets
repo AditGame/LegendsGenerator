@@ -6,12 +6,12 @@
     <!-- Stylecop and FxCop -->
     <ItemGroup Condition=" $(DisableAnalyzers) != 'true'">
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-            <Version>3.0.0</Version>
+            <Version>3.3.0</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="StyleCop.Analyzers">
-            <Version>1.2.0-beta.164</Version>
+            <Version>1.2.0-beta.205</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

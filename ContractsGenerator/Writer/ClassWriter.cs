@@ -27,7 +27,7 @@ namespace LegendsGenerator.ContractsGenerator.Writer
         /// <summary>
         /// The current tab level.
         /// </summary>
-        private int tabLevel = 0;
+        private int tabLevel;
 
         /// <summary>
         /// If this is te first element in the file.

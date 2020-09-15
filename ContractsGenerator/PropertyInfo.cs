@@ -26,10 +26,10 @@ namespace CompiledDefinitionSourceGenerator
                 .SelectMany(a => a.ConstructorArguments);
 
             this.ReturnType = attributeConstructorArguments
-                .First(x => x.Type.Name == "Type").Value?.ToString() ?? "void";
+                .First(x => x.Type?.Name == "Type").Value?.ToString() ?? "void";
 
             this.Variables = attributeConstructorArguments
-                .First(x => x.Type.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase)).Values
+                .First(x => x.Type?.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase) == true).Values
                 .Select(x => x.Value?.ToString() ?? "void")
                 .ToList();
 
