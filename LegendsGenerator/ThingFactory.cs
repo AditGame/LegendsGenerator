@@ -150,6 +150,8 @@ namespace LegendsGenerator
                 }
             }
 
+            thing.BaseDefinition.InheritedDefinitionNames = inheritanceList.Select(x => x.Name).ToList();
+
             return thing;
         }
     }

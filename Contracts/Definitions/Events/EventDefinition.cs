@@ -62,7 +62,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the affect this event has on movement.
         /// </summary>
-        [HideInEditorAttribute("value.CanTriggerWhileMoving != true")]
+        [HideInEditor("value.CanTriggerWhileMoving != true")]
         public AffectsMovement AffectOnMovement { get; set; }
 
         /// <summary>

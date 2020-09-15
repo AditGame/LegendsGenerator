@@ -27,6 +27,14 @@ namespace LegendsGenerator.Contracts.Definitions
         }
 
         /// <summary>
+        /// Gets or sets the full list of all inherited definition names (including the top level).
+        /// </summary>
+        /// <remarks>This is filled during the thing creation process. It should be cleaned up in the future.</remarks>
+        [JsonIgnore]
+        [EditorIgnore]
+        public IList<string> InheritedDefinitionNames { get; set; } = new List<string>();
+
+        /// <summary>
         /// Gets or sets the name of the thing, such as Scholar.
         /// </summary>
         [ControlsDefinitionName]

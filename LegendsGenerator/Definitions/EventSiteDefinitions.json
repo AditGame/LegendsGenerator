@@ -2,6 +2,8 @@
   "Events": [
     {
       "Chance": "50",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "Subject->Population > 50000",
         "Condition_IsComplex": false,
@@ -70,6 +72,8 @@
     {
       "DefinitionName": "Site_PeopleBorn",
       "Chance": "25",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
         "Condition_IsComplex": false,
@@ -164,6 +168,8 @@
     {
       "DefinitionName": "Site_WarWereDeclared",
       "Chance": "50",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "Subject->Population > 50000",
         "Condition_IsComplex": false,
@@ -229,6 +235,8 @@
     {
       "DefinitionName": "BigCityConsumesSmall",
       "Chance": "25",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
         "Condition_IsComplex": false,

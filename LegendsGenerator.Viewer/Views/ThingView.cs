@@ -74,5 +74,34 @@ namespace LegendsGenerator.Viewer.Views
         /// </summary>
         public IList<AttributeView> Attributes =>
             this.thing.BaseAttributes.Keys.Select(x => new AttributeView(this.thing, x)).ToList();
+
+        /// <summary>
+        /// Gets a value indicating whether this thing is moving.
+        /// </summary>
+        public bool IsMoving => (this.thing as BaseMovingThing)?.IsMoving == true;
+
+        /// <summary>
+        /// Gets a string representing what this is moving towards.
+        /// </summary>
+        public string MovingTowards
+        {
+            get
+            {
+                if (!this.IsMoving || this.thing is not BaseMovingThing movingThing)
+                {
+                    return "Nothing";
+                }
+
+                switch (movingThing.MoveType)
+                {
+                    case Contracts.MoveType.ToCoords:
+                        return $"({movingThing.MoveToCoordX}, {movingThing.MoveToCoordY})";
+                    case Contracts.MoveType.ToThing:
+                        return movingThing.MoveToThing?.ToString() ?? "NullGuid";
+                    default:
+                        return "Unknown";
+                }
+            }
+        }
     }
 }

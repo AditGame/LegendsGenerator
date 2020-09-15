@@ -26,6 +26,10 @@
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding SelectedThing.DefinitionDescription}"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Visibility="{Binding SelectedThing.IsMoving, Converter={StaticResource VisibleIfTrueConverter}}">
+            <TextBlock Text="Moving towards "/>
+            <TextBlock Text="{Binding SelectedThing.MovingTowards}"/>
+        </StackPanel>
         <TextBlock  Text="Attributes" FontWeight="Bold" FontSize="16"/>
         <ListBox ItemsSource="{Binding SelectedThing.Attributes}" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>

@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
+    using LegendsGenerator.Contracts.Definitions;
     using System;
 
     /// <summary>
@@ -11,6 +12,12 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseMovingThing : BaseThing
     {
+        /// <summary>
+        /// Gets the definition as a moving thing definition.
+        /// </summary>
+        public BaseMovingThingDefinition MovingThingDefinition => 
+            this.BaseDefinition as BaseMovingThingDefinition ?? throw new InvalidOperationException("Unable to cast definition to MovingThing definition.");
+
         /// <summary>
         /// Gets or sets the type of movement expected.
         /// </summary>
@@ -35,5 +42,16 @@ namespace LegendsGenerator.Contracts.Things
         /// Gets a value indicating whether this thing is moving towards something.
         /// </summary>
         public bool IsMoving => this.MoveType != MoveType.Unknown;
+
+        /// <summary>
+        /// Completes the movement and nulls out all values.
+        /// </summary>
+        public void CompleteMovement()
+        {
+            this.MoveType = MoveType.Unknown;
+            this.MoveToThing = null;
+            this.MoveToCoordX = null;
+            this.MoveToCoordY = null;
+        }
     }
 }

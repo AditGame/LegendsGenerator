@@ -52,7 +52,7 @@ namespace LegendsGenerator
         /// <param name="thingId">The thing ID.</param>
         /// <returns>The thing.</returns>
         /// <exception cref="KeyNotFoundException">The specified thing id does not exist in the world.</exception>
-        public BaseThing GetThing(Guid thingId)
+        public BaseThing FindThing(Guid thingId)
         {
             if (this.searchByGuidHash.TryGetValue(thingId, out BaseThing? result))
             {

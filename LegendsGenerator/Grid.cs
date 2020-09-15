@@ -85,7 +85,7 @@ namespace LegendsGenerator
         /// <returns>The matching thing.</returns>
         public GridSquare GetSquare(int width, int height)
         {
-            this.DebugThrowIfOutOfRange(width, height);
+            this.ConstrainToGrid(ref width, ref height);
             return this.Squares[width, height];
         }
 
@@ -97,7 +97,7 @@ namespace LegendsGenerator
         /// <param name="grid">THe grid to set.</param>
         public void SetSquare(int width, int height, GridSquare grid)
         {
-            this.DebugThrowIfOutOfRange(width, height);
+            this.ConstrainToGrid(ref width, ref height);
             this.Squares[width, height] = grid;
         }
 
@@ -159,23 +159,29 @@ namespace LegendsGenerator
         }
 
         /// <summary>
-        /// Throws if the provided coordinates are out of range.
+        /// Ensures the provided coords are within range.
         /// </summary>
         /// <param name="width">The X coordiante to check.</param>
         /// <param name="height">The Y coordinate to check.</param>
-        private void DebugThrowIfOutOfRange(int width, int height)
+        private void ConstrainToGrid(ref int width, ref int height)
         {
-#if DEBUG
             if (width >= this.Width)
             {
-                throw new IndexOutOfRangeException($"Attempted to access square with width {width} but grid has width {this.Width}");
+                width = this.Width - 1;
+            }
+            else if (width < 0)
+            {
+                width = 0;
             }
 
             if (height >= this.Height)
             {
-                throw new IndexOutOfRangeException($"Attempted to access square with height {height} but grid has height {this.Height}");
+                height = this.Height - 1;
             }
-#endif
+            else if (height < 0)
+            {
+                height = 0;
+            }
         }
     }
 }

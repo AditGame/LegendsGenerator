@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="HistoryPane.xaml.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Editor.ChangeHistory
 {
+    using System.Windows.Controls;
+
     /// <summary>
-    /// Interaction logic for HistoryPane.xaml
+    /// Interaction logic for HistoryPane.xaml.
     /// </summary>
     public partial class HistoryPane : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryPane"/> class.
+        /// </summary>
         public HistoryPane()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

@@ -82,6 +82,8 @@ namespace LegendsGenerator
                         Log.Info($"Adding event {occurredEvent.Event.Description}");
                         this.ApplyEvent(rdm, nextWorld, occurredEvent, newThing.Thing, stagedThings);
                     }
+
+                    ProcessMovement(rdm, nextWorld, newThing.Thing, stagedThings);
                 }
             }
 
@@ -117,6 +119,7 @@ namespace LegendsGenerator
             return applicableEvents
                 .Shuffle(rdm)
                 .Where(e => !isMoving || e.CanTriggerWhileMoving)
+                .Where(e => !e.Subject.Definitions.Any() || e.Subject.Definitions.Any(d => thing.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
                 .Where(e => e.Subject.EvalCondition(rdm, thing))
                 .Select(e =>
                 {
@@ -182,7 +185,9 @@ namespace LegendsGenerator
                 foreach (var (x, y, square) in squaresInRange)
                 {
                     matchingThing =
-                        square.GetThings(@object.Value.Type).FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
+                        square.GetThings(@object.Value.Type)
+                        .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
+                        .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
 
                     // Break from the loop once a matching thing is found in ANY square.
                     if (matchingThing != null)
@@ -223,6 +228,66 @@ namespace LegendsGenerator
         }
 
         /// <summary>
+        /// Processes movement for this thing.
+        /// </summary>
+        /// <param name="rdm">The random nubmer generator for this thing.</param>
+        /// <param name="world">The world.</param>
+        /// <param name="thing">The thing to apply the event to.</param>
+        /// <param name="stagedThings">The staged things.</param>
+        private static void ProcessMovement(Random rdm, World world, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings)
+        {
+            // Handle movement
+            BaseMovingThing? newMovingThing = GetOrCreate(stagedThings, thing)?.Thing as BaseMovingThing;
+            if (newMovingThing != null && newMovingThing.IsMoving)
+            {
+                int destinationX;
+                int destinationY;
+                switch (newMovingThing.MoveType)
+                {
+                    case MoveType.ToCoords:
+                        destinationX = newMovingThing.MoveToCoordX ?? throw new InvalidOperationException("Object is moving towards a coord but MoveToCoordX is null.");
+                        destinationY = newMovingThing.MoveToCoordY ?? throw new InvalidOperationException("Object is moving towards a coord but MoveToCoordY is null.");
+                        break;
+                    case MoveType.ToThing:
+                        BaseThing thingToMoveTo =
+                            world.FindThing(newMovingThing.MoveToThing ?? throw new InvalidOperationException("Object is moving towards a thing but MoveToThing is null."));
+                        destinationX = thingToMoveTo.X;
+                        destinationY = thingToMoveTo.Y;
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported movetype {newMovingThing.ThingType}");
+                }
+
+                // Really cheap straight-line function to the goal.
+                int maxMove = newMovingThing.MovingThingDefinition.EvalLandSpeed(rdm, thing);
+                for (int i = 0; i < maxMove; i++)
+                {
+                    int xDif = destinationX - thing.X;
+                    int yDif = destinationY - thing.Y;
+
+                    if (xDif == 0 && yDif == 0)
+                    {
+                        break;
+                    }
+                    else if (Math.Abs(yDif) > Math.Abs(xDif))
+                    {
+                        thing.Y += yDif < 0 ? -1 : 1;
+                    }
+                    else
+                    {
+                        thing.X += xDif < 0 ? -1 : 1;
+                    }
+                }
+
+                if (thing.X == destinationX && thing.Y == destinationY)
+                {
+                    Log.Info($"{thing.BaseDefinition.Name} {thing.Name} has completed its movement.");
+                    newMovingThing.CompleteMovement();
+                }
+            }
+        }
+
+        /// <summary>
         /// Applies the result of an event on a Thing.
         /// </summary>
         /// <param name="rdm">The random nubmer generator for this thing.</param>
@@ -236,11 +301,11 @@ namespace LegendsGenerator
             {
                 if (name.Equals("Subject"))
                 {
-                    return thing;
+                    return GetOrCreate(stagedThings, thing).Thing;
                 }
                 else if (ev.Objects.TryGetValue(name, out var @object))
                 {
-                    return @object;
+                    return GetOrCreate(stagedThings, @object).Thing;
                 }
                 else
                 {
@@ -297,7 +362,7 @@ namespace LegendsGenerator
                 if (spawnDefinition.PositionType == PositionType.RelativeAbsolute)
                 {
                     xPosition += thing.X;
-                    xPosition += thing.Y;
+                    yPosition += thing.Y;
                 }
 
                 BaseThing spawnedThing = this.thingFactory.CreateThing(

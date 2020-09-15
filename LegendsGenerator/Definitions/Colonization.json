@@ -2,6 +2,8 @@
   "Events": [
     {
       "Chance": "10",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
         "Condition_IsComplex": false,
@@ -45,6 +47,8 @@
     {
       "DefinitionName": "Settler moved",
       "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
         "Condition_IsComplex": false,
@@ -67,8 +71,9 @@
             {
               "ThingToMove": "Subject",
               "MoveType": 2,
-              "CoordToMoveToX": "Subject.X + Rand.Next(-1, 1)",
-              "CoordToMoveToY": "Subject.Y + Rand.Next(-1, 1)",
+              "ThingToMoveTo": "UNSET",
+              "CoordToMoveToX": "Rand.Next(0, 20)",
+              "CoordToMoveToY": "Rand.Next(0, 20)",
               "CoordToMoveToX_IsComplex": false,
               "CoordToMoveToY_IsComplex": false
             }
@@ -83,6 +88,8 @@
     {
       "DefinitionName": "Settler Settled",
       "Chance": "10",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
         "Condition_IsComplex": false,
@@ -92,7 +99,7 @@
         ]
       },
       "Objects": {},
-      "Description": "UNSET",
+      "Description": "Settler {Subject.Name} has created a town",
       "Results": [
         {
           "Default": true,

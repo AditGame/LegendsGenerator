@@ -294,12 +294,12 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 allParameters.Add(new ParamDef(
-                    "IDictionary<string, BaseThing>",
+                    "IDictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                     "additionalParameters",
                     $"Additional parameters as defined by AdditionalParametersForClass and AdditionalParametersFor{info.Name} methods, or the upstream additional parameters."));
             }
@@ -321,7 +321,7 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine();
 
             sb.AddDictionary(
-                "Dictionary<string, BaseThing>",
+                "Dictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                 "param",
                 info.Variables.ToDictionary(x => x, x => x));
 
@@ -360,12 +360,12 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
                 allParameters.Add(new ParamDef(
-                    "IDictionary<string, BaseThing>",
+                    "IDictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                     "additionalParameters",
                     $"Additional parameters as defined by AdditionalParametersForClass and AdditionalParametersFor{info.Name} methods, or the upstream additional parameters."));
             }
@@ -387,7 +387,7 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine();
 
             sb.AddDictionary(
-                "Dictionary<string, BaseThing>",
+                "Dictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                 "param",
                 info.Variables.ToDictionary(x => x, x => x));
 
