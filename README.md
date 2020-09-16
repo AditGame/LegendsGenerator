@@ -10,7 +10,7 @@ Don't rely on literally anything staying static here until we hit version 1.0.
 
 The legends generator uses an initial state of the world to advance the history of the world, returning a copy of the world advanced by one Step.
 
-![Overview of History Generator](Docs\Overview.png)
+![Overview of History Generator](Docs/Overview.png)
 
 ## Definitions
 
