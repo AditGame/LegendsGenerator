@@ -19,8 +19,8 @@ The legends generator uses an initial state of the world to advance the history 
 * Grid: The world is subdivided into a grid of squares. Each square is the smallest subdivision of position. Typically this is 1 mile.
 * Square: A single X/Y on the grid, the smallest subvision of space.
 * Thing: A thing is anything (square of land, building, lake, person, notable crocodile, army divison) which occurs on the map.
-* Attribute: Each Thing has a list of attributes, which are string:int pairs. These attributes are free form and are used to define what the thing is. Typically attributes are modified by Effects which chagne the attribute value in a timed perspective, however direct modification of the attribute is certainly possible. THese are typically thigns like health, strength, population.
-* Aspect: 🚧 Each thing has a list of aspects, which are string:string pairs. These aspects define what the thing is, an are set instead of modified. These are things like race, 
+* Attribute: Each Thing has a list of attributes, which are string:int pairs. These attributes are free form and are used to define what the thing is. Typically attributes are modified by Effects which chagne the attribute value in a timed perspective, however direct modification of the attribute is certainly possible. These are typically thigns like health, strength, population.
+* Aspect: 🚧 Each thing has a list of aspects, which are string:string pairs. These aspects define what the thing is, an are set instead of modified. These are things like race or gender.
 * Event: Events describe change in the world. Each event has a subject, 0-to-n objects, and effects. Events are randomly generated during the Step generation process and applied to the Things on the map.
 * Forced Event: 🚧 These events are injected into the world state for the next generation process to evalulate, preferring them over all other possible events ensuring they occur. These are used to model player interractions into the world so their effects occur naturally on the world stage.
 * Effect: An effect of an event describes the change in the world. They modify an attribute/aspect, create/destroy/change a Thing, start movement, or a variety of other things. Any effect can do any number of things, an event can thus have massive effects on multiple things on the map.
@@ -79,3 +79,12 @@ World world2 = history.Step(world);
 // Iterate again, to step 3
 World world3 = history.Step(world2);
 ```
+
+## Intended use
+
+* Create a initial world, like Civilization. Throw some settlers on a map.
+* Run the process several hundred times to create a world with an interesting backstory
+* Drop a player in the world. Use the World data to fill the world with people, places, and things.
+* If the player does something notable, like kill a notable person or burn down a town, create a Forced Event.
+* Periodically run the HistoryGenerator to advance the world stage, preferabily at a point when the game is otherwise paused (palyer is asleep, perhaps).
+* Modify the world based on the new world state.

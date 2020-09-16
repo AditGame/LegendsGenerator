@@ -1,6 +1,6 @@
 # Legends Generator Contracts Source Generator
 
-Auto-magically generates boilerplate for the COntracts assembly. In particular, handles Conditioned inputs from the JSON files to allow easy and safe execution.
+Auto-magically generates boilerplate for the Contracts assembly. In particular, handles Conditioned inputs from the JSON files to allow easy and safe execution.
 
 ## Getting started
 

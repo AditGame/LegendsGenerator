@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76CD15AA-7157-448F-9E15-1323ECF6486E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Contracts", "Contracts\LegendsGenerator.Contracts.csproj", "{45C36D82-D2FE-4395-A4C3-3B8A1CE45C5E}"
@@ -20,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Editor", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Compiler.CSharp", "LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj", "{B3BF60FB-D0A1-4C10-9947-E6A2FD604D6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegendsGenerator.Viewer", "LegendsGenerator.Viewer\LegendsGenerator.Viewer.csproj", "{4DC30CD8-F933-45B2-8E67-0877BFF5F5D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LegendsGenerator.Viewer", "LegendsGenerator.Viewer\LegendsGenerator.Viewer.csproj", "{4DC30CD8-F933-45B2-8E67-0877BFF5F5D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
