@@ -2,6 +2,8 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
+using System;
+
 namespace LegendsGenerator.Contracts.Definitions
 {
     /// <summary>

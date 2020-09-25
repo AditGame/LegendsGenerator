@@ -1,40 +1,20 @@
-﻿// <copyright file="EffectDefinition.cs" company="Tom Luppi">
+﻿// <copyright file="BaseEffectDefinition.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator.Contracts.Definitions.Events
+namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using System.Collections.Generic;
 
     using LegendsGenerator.Contracts.Compiler;
 
-    /// <summary>
-    /// The effect definition.
-    /// </summary>
     [UsesAdditionalParametersForHoldingClass]
-    public partial class EffectDefinition : BaseDefinition
+    public partial class BaseEffectDefinition : BaseDefinition
     {
         /// <summary>
         /// Gets or sets the members this effect effects.
         /// </summary>
         public List<string> AppliedTo { get; set; } = new List<string>() { "Subject" };
-
-        /// <summary>
-        /// Gets or sets the attribute effected by this.
-        /// </summary>
-        public string AffectedAttribute { get; set; } = UnsetString;
-
-        /// <summary>
-        /// Gets or sets the magnitude of the change.
-        /// </summary>
-        [Compiled(typeof(int), "Subject")]
-        public string Magnitude { get; set; } = UnsetString;
-
-        /// <summary>
-        /// Gets or sets the duration of the change.
-        /// </summary>
-        [Compiled(typeof(int), "Subject")]
-        public string Duration { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the title of the effect.

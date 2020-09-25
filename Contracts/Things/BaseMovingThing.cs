@@ -4,8 +4,8 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
-    using LegendsGenerator.Contracts.Definitions;
     using System;
+    using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>
     /// A thing which can move on the world map.
@@ -39,6 +39,11 @@ namespace LegendsGenerator.Contracts.Things
         public int? MoveToCoordY { get; set; }
 
         /// <summary>
+        /// Gets or sets the amount of residual movement from the last movement.
+        /// </summary>
+        public float ResidualMovement { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether this thing is moving towards something.
         /// </summary>
         public bool IsMoving => this.MoveType != MoveType.Unknown;
@@ -52,6 +57,7 @@ namespace LegendsGenerator.Contracts.Things
             this.MoveToThing = null;
             this.MoveToCoordX = null;
             this.MoveToCoordY = null;
+            this.ResidualMovement = 0;
         }
     }
 }

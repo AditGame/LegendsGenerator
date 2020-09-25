@@ -10,11 +10,21 @@ namespace LegendsGenerator.Contracts.Things
     /// <summary>
     /// Represents a notable person.
     /// </summary>
-    public record NotablePerson : BaseMovingThing
+    public record NotablePerson : BaseMovingThing, ICanEnterSites
     {
         /// <summary>
         /// Gets the name of this Thing Type.
         /// </summary>
         public override ThingType ThingType => ThingType.NotablePerson;
+
+        /// <summary>
+        /// Gets or sets the thing this notable person is in.
+        /// </summary>
+        public Guid? InSiteId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the thing this thing leads.
+        /// </summary>
+        public Guid? LeadsId { get; set; }
     }
 }

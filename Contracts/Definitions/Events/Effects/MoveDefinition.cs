@@ -2,7 +2,7 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-namespace LegendsGenerator.Contracts.Definitions.Events
+namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Validation;
@@ -11,13 +11,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     /// Definition of something moving to something else.
     /// </summary>
     [UsesAdditionalParametersForHoldingClass]
-    public partial class MoveDefinition : BaseDefinition
+    public partial class MoveDefinition : BaseEffectDefinition
     {
-        /// <summary>
-        /// Gets or sets the thing which will be doing te moving.
-        /// </summary>
-        public string ThingToMove { get; set; } = "Subject";
-
         /// <summary>
         /// Gets or sets the type of movement.
         /// </summary>

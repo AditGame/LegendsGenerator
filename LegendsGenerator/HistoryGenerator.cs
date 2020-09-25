@@ -12,6 +12,7 @@ namespace LegendsGenerator
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Definitions.Events.Effects;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
@@ -91,7 +92,7 @@ namespace LegendsGenerator
             // Iterate through every gridsquare to create the new world.
             foreach (var (x, y, square) in currWorld.Grid.GetAllGridEntries())
             {
-                foreach (BaseThing thing in square.ThingsInSquare)
+                foreach (BaseThing thing in square.GetThings())
                 {
                     Log.Info($"Processing {thing.ThingType} {thing.Name}");
 
@@ -204,7 +205,7 @@ namespace LegendsGenerator
         /// <param name="coordinates">The coordinates of the center of the event.</param>
         /// <param name="eventDef">The event definition of the event.</param>
         /// <param name="subject">The subject of the event.</param>
-        /// <returns>The dictionary of objects, or null if the objects coudl not be found.</returns>
+        /// <returns>The dictionary of objects, or null if the objects could not be found.</returns>
         private static IDictionary<string, BaseThing>? GetMatchingObjects(
             Random rdm,
             World world,
@@ -249,7 +250,7 @@ namespace LegendsGenerator
         /// <summary>
         /// Gets or creates a staged thing change.
         /// </summary>
-        /// <param name="dictionary">THe dictonary of staged things.</param>
+        /// <param name="dictionary">THe dictionary of staged things.</param>
         /// <param name="currWorldThing">The thing in the current world.</param>
         /// <returns>The staged thing.</returns>
         private static StagedThing GetOrCreate(IDictionary<Guid, StagedThing> dictionary, BaseThing currWorldThing)
@@ -266,7 +267,7 @@ namespace LegendsGenerator
         /// <summary>
         /// Processes movement for this thing.
         /// </summary>
-        /// <param name="rdm">The random nubmer generator for this thing.</param>
+        /// <param name="rdm">The random number generator for this thing.</param>
         /// <param name="world">The world.</param>
         /// <param name="thing">The thing to apply the event to.</param>
         /// <param name="stagedThings">The staged things.</param>
@@ -276,50 +277,9 @@ namespace LegendsGenerator
             BaseMovingThing? newMovingThing = GetOrCreate(stagedThings, thing)?.Thing as BaseMovingThing;
             if (newMovingThing != null && newMovingThing.IsMoving)
             {
-                int destinationX;
-                int destinationY;
-                switch (newMovingThing.MoveType)
-                {
-                    case MoveType.ToCoords:
-                        destinationX = newMovingThing.MoveToCoordX ?? throw new InvalidOperationException("Object is moving towards a coord but MoveToCoordX is null.");
-                        destinationY = newMovingThing.MoveToCoordY ?? throw new InvalidOperationException("Object is moving towards a coord but MoveToCoordY is null.");
-                        break;
-                    case MoveType.ToThing:
-                        BaseThing thingToMoveTo =
-                            world.FindThing(newMovingThing.MoveToThing ?? throw new InvalidOperationException("Object is moving towards a thing but MoveToThing is null."));
-                        destinationX = thingToMoveTo.X;
-                        destinationY = thingToMoveTo.Y;
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unsupported movetype {newMovingThing.ThingType}");
-                }
-
-                // Really cheap straight-line function to the goal.
-                int maxMove = newMovingThing.MovingThingDefinition.EvalLandSpeed(rdm, thing);
-                for (int i = 0; i < maxMove; i++)
-                {
-                    int xDif = destinationX - thing.X;
-                    int yDif = destinationY - thing.Y;
-
-                    if (xDif == 0 && yDif == 0)
-                    {
-                        break;
-                    }
-                    else if (Math.Abs(yDif) > Math.Abs(xDif))
-                    {
-                        thing.Y += yDif < 0 ? -1 : 1;
-                    }
-                    else
-                    {
-                        thing.X += xDif < 0 ? -1 : 1;
-                    }
-                }
-
-                if (thing.X == destinationX && thing.Y == destinationY)
-                {
-                    Log.Info($"{thing.BaseDefinition.Name} {thing.Name} has completed its movement.");
-                    newMovingThing.CompleteMovement();
-                }
+                MovementHandler handler = new MovementHandler(rdm, newMovingThing, world);
+                handler.ProcessMovement(rdm, world);
+                handler.ApplyMovement(newMovingThing);
             }
         }
 
@@ -368,7 +328,7 @@ namespace LegendsGenerator
             world.OccurredEvents.Add(ev with { Result = result });
 #pragma warning restore SA1101 // Prefix local calls with this
 
-            foreach (EffectDefinition effectDefinition in result.Effects)
+            foreach (AttributeEffectDefinition effectDefinition in result.Effects)
             {
                 Effect effect = new Effect()
                 {
@@ -419,65 +379,71 @@ namespace LegendsGenerator
 
             foreach (DestroyDefinition destroyDefinition in result.Destroys)
             {
-                BaseThing? destroyed = GetThing(destroyDefinition.ThingDestroyed);
-                if (destroyed != null)
+                foreach (string affected in destroyDefinition.AppliedTo)
                 {
-                    GetOrCreate(stagedThings, destroyed).Destroyed = true;
+                    BaseThing? destroyed = GetThing(affected);
+                    if (destroyed != null)
+                    {
+                        GetOrCreate(stagedThings, destroyed).Destroyed = true;
+                    }
                 }
             }
 
             foreach (MoveDefinition moveDefinition in result.Moves)
             {
-                BaseThing? thingToMove = GetThing(moveDefinition.ThingToMove);
-                if (thingToMove == null)
+                foreach (string applied in moveDefinition.AppliedTo)
                 {
-                    continue;
-                }
+                    BaseThing? thingToMove = GetThing(applied);
+                    if (thingToMove == null)
+                    {
+                        continue;
+                    }
 
-                if (thingToMove is not BaseMovingThing movingThing)
-                {
-                    Log.Error($"Tried to move {moveDefinition.ThingToMove} ({thingToMove.ThingId}) but it not the type of thing to be able to move.");
-                    continue;
-                }
+                    if (thingToMove is not BaseMovingThing movingThing)
+                    {
+                        Log.Error($"Tried to move {applied} ({thingToMove.ThingId}) but it not the type of thing to be able to move.");
+                        continue;
+                    }
 
-                movingThing.MoveType = moveDefinition.MoveType;
+                    movingThing.MoveType = moveDefinition.MoveType;
 
-                switch (moveDefinition.MoveType)
-                {
-                    case MoveType.ToCoords:
-                        if (moveDefinition.CoordToMoveToX == null)
-                        {
-                            Log.Error("Movetype is ToCoords, but CoordToMoveToX is null.");
-                            continue;
-                        }
+                    switch (moveDefinition.MoveType)
+                    {
+                        case MoveType.ToCoords:
+                            if (moveDefinition.CoordToMoveToX == null)
+                            {
+                                Log.Error("Movetype is ToCoords, but CoordToMoveToX is null.");
+                                continue;
+                            }
 
-                        if (moveDefinition.CoordToMoveToY == null)
-                        {
-                            Log.Error("Movetype is ToCoords, but CoordToMoveToY is null.");
-                            continue;
-                        }
+                            if (moveDefinition.CoordToMoveToY == null)
+                            {
+                                Log.Error("Movetype is ToCoords, but CoordToMoveToY is null.");
+                                continue;
+                            }
 
-                        movingThing.MoveToCoordX = moveDefinition.EvalCoordToMoveToX(rdm, thing, ev.Objects);
-                        movingThing.MoveToCoordY = moveDefinition.EvalCoordToMoveToY(rdm, thing, ev.Objects);
-                        break;
-                    case MoveType.ToThing:
-                        if (moveDefinition.ThingToMoveTo == null)
-                        {
-                            Log.Error("Movetype is ToThing, but ThingToMoveTo is null.");
-                            continue;
-                        }
+                            movingThing.MoveToCoordX = moveDefinition.EvalCoordToMoveToX(rdm, thing, ev.Objects);
+                            movingThing.MoveToCoordY = moveDefinition.EvalCoordToMoveToY(rdm, thing, ev.Objects);
+                            break;
+                        case MoveType.ToThing:
+                            if (moveDefinition.ThingToMoveTo == null)
+                            {
+                                Log.Error("Movetype is ToThing, but ThingToMoveTo is null.");
+                                continue;
+                            }
 
-                        BaseThing? thingToMoveTo = GetThing(moveDefinition.ThingToMoveTo);
-                        if (thingToMoveTo == null)
-                        {
-                            continue;
-                        }
+                            BaseThing? thingToMoveTo = GetThing(moveDefinition.ThingToMoveTo);
+                            if (thingToMoveTo == null)
+                            {
+                                continue;
+                            }
 
-                        movingThing.MoveToThing = thingToMoveTo.ThingId;
-                        break;
-                    default:
-                        Log.Error("Invalid move type");
-                        break;
+                            movingThing.MoveToThing = thingToMoveTo.ThingId;
+                            break;
+                        default:
+                            Log.Error("Invalid move type");
+                            break;
+                    }
                 }
             }
         }

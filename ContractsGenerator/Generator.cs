@@ -18,14 +18,14 @@ namespace CompiledDefinitionSourceGenerator
     public class Generator : ISourceGenerator
     {
         /// <inheritdoc/>
-        public void Initialize(InitializationContext context)
+        public void Initialize(GeneratorInitializationContext context)
         {
             // Debugger.Launch();
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
         /// <inheritdoc/>
-        public void Execute(SourceGeneratorContext context)
+        public void Execute(GeneratorExecutionContext context)
         {
             SyntaxReceiver receiver =
                 context.SyntaxReceiver as SyntaxReceiver ??

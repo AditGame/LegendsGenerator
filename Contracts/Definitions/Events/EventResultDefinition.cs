@@ -8,6 +8,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using System.Collections.Generic;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions.Events.Effects;
 
     /// <summary>
     /// The result of an event occurring.
@@ -35,7 +36,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the effects of this result.
         /// </summary>
-        public List<EffectDefinition> Effects { get; set; } = new List<EffectDefinition>();
+        public List<AttributeEffectDefinition> Effects { get; set; } = new List<AttributeEffectDefinition>();
 
         /// <summary>
         /// Gets or sets the spawns of this result.

@@ -112,7 +112,7 @@ namespace LegendsGenerator.Contracts
                 throw new ArgumentNullException(nameof(thing));
             }
 
-            this.GetSquare(thing.X, thing.Y).ThingsInSquare.Add(thing);
+            this.GetSquare(thing.X, thing.Y).AddThing(thing);
         }
 
         /// <summary>

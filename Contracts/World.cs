@@ -55,7 +55,7 @@ namespace LegendsGenerator.Contracts
             this.searchByGuidHash.Clear();
             foreach (var (_, _, square) in this.Grid.GetAllGridEntries())
             {
-                foreach (BaseThing thing in square.ThingsInSquare)
+                foreach (BaseThing thing in square.GetThings())
                 {
                     this.searchByGuidHash[thing.ThingId] = thing;
                 }

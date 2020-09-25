@@ -32,5 +32,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// A unit (grouping of things).
         /// </summary>
         Unit,
+
+        /// <summary>
+        /// A square on the world map.
+        /// </summary>
+        WorldSquare,
     }
 }

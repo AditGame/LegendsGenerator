@@ -20,13 +20,13 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets an int which represents the speed of this unit in squares, when walking on land.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(float), "Subject")]
         public string LandSpeed { get; set; } = "1";
 
         /// <summary>
         /// Gets or sets an int which represents the speed of this unit in squares, when moving through water.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(float), "Subject")]
         public string WaterSpeed { get; set; } = "0";
     }
 }
