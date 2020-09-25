@@ -6,6 +6,7 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using LegendsGenerator.Contracts;
@@ -63,6 +64,13 @@ namespace LegendsGenerator
             this.thingFactory = thingFactory;
         }
 
+#if DEBUG
+        /// <summary>
+        /// Gets or sets the thing ID to open the debugger at.
+        /// </summary>
+        public Guid? OpenDebuggerAtThing { get; set; }
+#endif
+
         /// <summary>
         /// Advances the history of the world by one step.
         /// </summary>
@@ -95,6 +103,20 @@ namespace LegendsGenerator
                 foreach (BaseThing thing in square.GetThings())
                 {
                     Log.Info($"Processing {thing.ThingType} {thing.Name}");
+#if DEBUG
+                    // Allows easy debugging if a thing isn't working as expected.
+                    if (this.OpenDebuggerAtThing == thing.ThingId)
+                    {
+                        if (Debugger.IsAttached)
+                        {
+                            Debugger.Break();
+                        }
+                        else
+                        {
+                            Debugger.Launch();
+                        }
+                    }
+#endif
 
                     StagedThing newThing = GetOrCreate(stagedThings, thing);
 

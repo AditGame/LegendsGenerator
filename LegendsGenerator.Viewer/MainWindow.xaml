@@ -61,28 +61,15 @@
               />
             <DataGridCell Grid.Column="2">
                 <TabControl TabStripPlacement="Bottom">
+                    <TabItem Header="Thing Info">
+                        <local:ThingViewer />
+                    </TabItem>
                     <TabItem Header="World Events">
                         <ListBox ItemsSource="{Binding OccurredEvents}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Description}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </TabItem>
-                    <TabItem Header="Thing Info">
-                        <local:ThingViewer />
-                    </TabItem>
-                    <TabItem Header="On this square">
-                        <ListBox ItemsSource="{Binding ThingsInSquare}" SelectionChanged="Thing_Selected">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding ThingType}" />
-                                        <TextBlock Text=": " />
-                                        <TextBlock Text="{Binding Name}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

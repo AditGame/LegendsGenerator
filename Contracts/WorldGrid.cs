@@ -34,7 +34,7 @@ namespace LegendsGenerator.Contracts
             {
                 for (int y = 0; y < this.Height; y++)
                 {
-                    this.Squares[x, y] = new GridSquare();
+                    this.Squares[x, y] = new GridSquare(x, y);
                 }
             }
         }

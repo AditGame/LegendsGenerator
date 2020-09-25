@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
@@ -14,12 +15,12 @@ namespace LegendsGenerator.Contracts
     public record World
     {
         /// <summary>
-        /// A cache of the results of seearching for things by guid.
+        /// A cache of the results of searching for things by GUID.
         /// </summary>
         private readonly IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
 
         /// <summary>
-        /// Gets the worldseed. This should be randomly picked at the start and not changed.
+        /// Gets the world seed. This should be randomly picked at the start and not changed.
         /// </summary>
         public int WorldSeed { get; init; } = new Random().Next();
 
@@ -34,7 +35,7 @@ namespace LegendsGenerator.Contracts
         public WorldGrid Grid { get; init; } = new WorldGrid(0, 0);
 
         /// <summary>
-        /// Gets a list of all events which occurred in the previoud step.
+        /// Gets a list of all events which occurred in the previous step.
         /// </summary>
         public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>();
 
@@ -42,13 +43,13 @@ namespace LegendsGenerator.Contracts
         /// Gets a thing in the world.
         /// </summary>
         /// <param name="thingId">The thing ID.</param>
-        /// <returns>The thing.</returns>
-        /// <exception cref="KeyNotFoundException">The specified thing id does not exist in the world.</exception>
-        public BaseThing FindThing(Guid thingId)
+        /// <param name="result">The thing, if found.</param>
+        /// <returns>True if the thing exists in the world, false otherwise.</returns>
+        public bool TryFindThing(Guid thingId, [NotNullWhen(true)] out BaseThing? result)
         {
-            if (this.searchByGuidHash.TryGetValue(thingId, out BaseThing? result))
+            if (this.searchByGuidHash.TryGetValue(thingId, out result))
             {
-                return result;
+                return true;
             }
 
             // Re-search the grid for things. This is good in case things got added to the grid in the meantime somehow.
@@ -62,6 +63,25 @@ namespace LegendsGenerator.Contracts
             }
 
             if (this.searchByGuidHash.TryGetValue(thingId, out result))
+            {
+                return true;
+            }
+            else
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a thing in the world.
+        /// </summary>
+        /// <param name="thingId">The thing ID.</param>
+        /// <returns>The thing.</returns>
+        /// <exception cref="KeyNotFoundException">The specified thing id does not exist in the world.</exception>
+        public BaseThing FindThing(Guid thingId)
+        {
+            if (this.TryFindThing(thingId, out BaseThing? result))
             {
                 return result;
             }

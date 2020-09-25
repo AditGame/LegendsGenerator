@@ -157,7 +157,7 @@ namespace LegendsGenerator
                 float movementCost = square.SquareDefinition?.Definition.EvalMovementCost(rdm, square.SquareDefinition) ?? 1;
                 bool isWater = square.SquareDefinition?.Definition.IsWater ?? false;
 
-                if (this.CanMove(movementCost, isWater))
+                if (!this.CanMove(movementCost, isWater))
                 {
                     // Costs too much to enter this square.
                     break;

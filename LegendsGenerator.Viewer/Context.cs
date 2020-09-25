@@ -6,11 +6,13 @@
 
 namespace LegendsGenerator.Viewer
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
     using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Things;
     using LegendsGenerator.Viewer.Views;
 
     /// <summary>
@@ -18,6 +20,11 @@ namespace LegendsGenerator.Viewer
     /// </summary>
     public class Context : INotifyPropertyChanged
     {
+        /// <summary>
+        /// The last created Context instance.
+        /// </summary>
+        private static Context instance;
+
         /// <summary>
         /// The backing field for current step.
         /// </summary>
@@ -34,6 +41,16 @@ namespace LegendsGenerator.Viewer
         private ThingView? selectedThing;
 
         /// <summary>
+        /// The backing field for FollowThing.
+        /// </summary>
+        private bool followThing;
+
+        /// <summary>
+        /// The backing field for DebugAtThingId.
+        /// </summary>
+        private Guid? debugAtThingId;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
         /// <param name="history">The history machine.</param>
@@ -42,10 +59,16 @@ namespace LegendsGenerator.Viewer
         {
             this.History = history;
             this.WorldSteps[0] = initialWorld;
+            instance = this;
         }
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Gets the last created instance of this class.
+        /// </summary>
+        public static Context Instance => instance;
 
         /// <summary>
         /// Gets the steps of the world.
@@ -70,7 +93,7 @@ namespace LegendsGenerator.Viewer
                 this.ThingsInSquare.Clear();
                 if (this.selectedSquare != null)
                 {
-                    this.selectedSquare.ThingsInSquare.ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t)));
+                    this.selectedSquare.GetThings().ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t)));
 
                     if (this.ThingsInSquare.Any())
                     {
@@ -93,6 +116,7 @@ namespace LegendsGenerator.Viewer
             {
                 this.selectedThing = value;
                 this.OnPropertyChanged(nameof(this.SelectedThing));
+                this.OnPropertyChanged(nameof(this.DebugAtSelectedThing));
             }
         }
 
@@ -123,8 +147,40 @@ namespace LegendsGenerator.Viewer
                 this.OccurredEvents.Clear();
                 this.CurrentWorld.OccurredEvents.ToList().ForEach(this.OccurredEvents.Add);
 
+                Guid? selectedThingId = this.SelectedThing?.ThingId;
+
                 this.OnPropertyChanged(nameof(this.CurrentStep));
                 this.OnPropertyChanged(nameof(this.CurrentWorld));
+
+                // This has to occur after the above notifications, as those change around the squares.
+                if (this.FollowThing && selectedThingId.HasValue && this.CurrentWorld.TryFindThing(selectedThingId.Value, out BaseThing? result))
+                {
+                    // If FollowThing is set, follow the thing as it moves.
+                    this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(result.X, result.Y);
+                    this.SelectedThing = new ThingView(result);
+                }
+                else if (this.SelectedSquare != null)
+                {
+                    // Keep the current grid in focus otherwise.
+                    this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(this.SelectedSquare.X, this.SelectedSquare.Y);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the currently selected thing will retain focus as history progresses.
+        /// </summary>
+        public bool FollowThing
+        {
+            get
+            {
+                return this.followThing;
+            }
+
+            set
+            {
+                this.followThing = value;
+                this.OnPropertyChanged(nameof(this.FollowThing));
             }
         }
 
@@ -147,6 +203,69 @@ namespace LegendsGenerator.Viewer
             get
             {
                 return this.WorldSteps.Count - 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets the thing ID to pause debugging at.
+        /// </summary>
+        public Guid? DebugAtThingId
+        {
+            get
+            {
+                return this.debugAtThingId;
+            }
+
+            private set
+            {
+                this.debugAtThingId = value;
+                this.OnPropertyChanged(nameof(this.DebugAtSelectedThing));
+                this.OnPropertyChanged(nameof(this.DebugAtThingId));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether debugging is available (Only available for debug builds).
+        /// </summary>
+#pragma warning disable CA1822 // Mark members as static. Oddity to conform to binding.
+        public bool CanDebugAtThing
+#pragma warning restore CA1822 // Mark members as static
+        {
+            get
+            {
+#if DEBUG
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the currently selected thing should cause the debugger to start.
+        /// </summary>
+        public bool DebugAtSelectedThing
+        {
+            get
+            {
+                if (this.SelectedThing == null)
+                {
+                    return false;
+                }
+
+                return this.DebugAtThingId == this.SelectedThing.ThingId;
+            }
+
+            set
+            {
+                if (this.SelectedThing != null && value == true)
+                {
+                    this.DebugAtThingId = this.SelectedThing.ThingId;
+                }
+                else
+                {
+                    this.DebugAtThingId = null;
+                }
             }
         }
 
@@ -180,6 +299,40 @@ namespace LegendsGenerator.Viewer
         }
 
         /// <summary>
+        /// Moves the selected thing to the next thing in the square.
+        /// </summary>
+        public void NextThingInSquare()
+        {
+            if (this.SelectedSquare == null || this.SelectedThing == null)
+            {
+                // No op if nothing is selected.
+                return;
+            }
+
+            var things = this.ThingsInSquare.ToList();
+            int indexOfCurrentThing = things.FindIndex(t => t.Equals(this.SelectedThing));
+            var newIndex = (indexOfCurrentThing != things.Count - 1) ? indexOfCurrentThing + 1 : 0;
+            this.SelectedThing = things[newIndex];
+        }
+
+        /// <summary>
+        /// Moves the selected thing to the previous thing in the square.
+        /// </summary>
+        public void PreviousThingInSquare()
+        {
+            if (this.SelectedSquare == null || this.SelectedThing == null)
+            {
+                // No op if nothing is selected.
+                return;
+            }
+
+            var things = this.ThingsInSquare.ToList();
+            int indexOfCurrentThing = things.FindIndex(t => t.Equals(this.SelectedThing));
+            var newIndex = (indexOfCurrentThing != 0) ? indexOfCurrentThing - 1 : things.Count - 1;
+            this.SelectedThing = things[newIndex];
+        }
+
+        /// <summary>
         /// Fires property changed events.
         /// </summary>
         /// <param name="propertyName">True when property changed.</param>
@@ -198,6 +351,10 @@ namespace LegendsGenerator.Viewer
             {
                 this.BackfillToStep(toStep - 1);
             }
+
+#if DEBUG
+            this.History.OpenDebuggerAtThing = this.DebugAtThingId;
+#endif
 
             this.WorldSteps[toStep] = this.History.Step(this.WorldSteps[toStep - 1]);
         }

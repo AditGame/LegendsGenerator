@@ -101,5 +101,22 @@ namespace LegendsGenerator.Viewer.Views
                 };
             }
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            if (obj is not ThingView view)
+            {
+                return false;
+            }
+
+            return this.ThingId == view.ThingId;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.ThingId.GetHashCode();
+        }
     }
 }

@@ -18,6 +18,12 @@ namespace LegendsGenerator.Contracts
     /// </summary>
     public class GridSquare
     {
+        public GridSquare(int x, int y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+
         /// <summary>
         /// Gets the things in this grid square.
         /// </summary>
@@ -29,12 +35,22 @@ namespace LegendsGenerator.Contracts
         public WorldSquare? SquareDefinition { get; set; }
 
         /// <summary>
+        /// The X coord of this square.
+        /// </summary>
+        public int X { get; }
+
+        /// <summary>
+        /// The Y coord of this square.
+        /// </summary>
+        public int Y { get; }
+
+        /// <summary>
         /// Clones this instance without things.
         /// </summary>
         /// <returns>This, except without things.</returns>
         public GridSquare CloneWithoutThings()
         {
-            return new GridSquare()
+            return new GridSquare(this.X, this.Y)
             {
             };
         }
