@@ -45,6 +45,7 @@ namespace LegendsGenerator.Editor
 
             if (result == true)
             {
+                this.context.OpenedDirectory = dialog.SelectedPath;
                 this.context.SetDefinitions(dialog.SelectedPath);
             }
 

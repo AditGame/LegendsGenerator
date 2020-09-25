@@ -7,19 +7,26 @@
              xmlns:selector="clr-namespace:LegendsGenerator.Editor.DefinitionSelector"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TreeView x:Name="TreeView"
-              ItemsSource="{Binding InheritanceGraph}"
-              SelectedItemChanged="TreeView_SelectedItemChanged">
-        <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type selector:InheritanceNode}" ItemsSource="{Binding Nodes}" >
-                <local:DefinitionEditorItem />
-            </HierarchicalDataTemplate>
-        </TreeView.Resources>
-        <TreeView.ItemContainerStyle>
-            <Style TargetType="{x:Type TreeViewItem}">
-                <Setter Property="IsExpanded" Value="True" />
-                <Setter Property="Visibility" Value="{Binding Visible, Converter={StaticResource VisibleIfTrueConverter}}"/>
-            </Style>
-        </TreeView.ItemContainerStyle>
-    </TreeView>
+    <DockPanel>
+        <ComboBox 
+            DockPanel.Dock="Top"
+            SelectedValue="{Binding DefinitionFileFilter}"
+            ItemsSource="{Binding OpenedFilesSelector}" />
+        <TreeView x:Name="TreeView"
+                  DockPanel.Dock="Bottom"
+                  ItemsSource="{Binding InheritanceGraph}"
+                  SelectedItemChanged="TreeView_SelectedItemChanged">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type selector:InheritanceNode}" ItemsSource="{Binding Nodes}" >
+                    <local:DefinitionEditorItem />
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True" />
+                    <Setter Property="Visibility" Value="{Binding Visible, Converter={StaticResource VisibleIfTrueConverter}}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+    </DockPanel>
 </UserControl>

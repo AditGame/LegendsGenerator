@@ -10,9 +10,12 @@ namespace LegendsGenerator.Editor
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
+    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Editor.ContractParsing;
     using LegendsGenerator.Editor.DefinitionSelector;
 
@@ -22,6 +25,11 @@ namespace LegendsGenerator.Editor
     public class Context : INotifyPropertyChanged
     {
         /// <summary>
+        /// The string for all definition files.
+        /// </summary>
+        private const string AllDefinitionFiles = "<All>";
+
+        /// <summary>
         /// The currently selected definition.
         /// </summary>
         private Definition? selectedDefinition;
@@ -30,6 +38,16 @@ namespace LegendsGenerator.Editor
         /// The currently selected definition node.
         /// </summary>
         private PropertyNode? selectedNode;
+
+        /// <summary>
+        /// The currently opened directory.
+        /// </summary>
+        private string? openedDirectory;
+
+        /// <summary>
+        /// The filter on the definition file.
+        /// </summary>
+        private string? definitionFileFilter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
@@ -54,6 +72,11 @@ namespace LegendsGenerator.Editor
         public ObservableCollection<Definition> Definitions { get; } = new ObservableCollection<Definition>();
 
         /// <summary>
+        /// Gets the list of all definitions.
+        /// </summary>
+        public ObservableCollection<Definition> FilteredDefinitions { get; } = new ObservableCollection<Definition>();
+
+        /// <summary>
         /// Gets the inheritance graph.
         /// </summary>
         public ObservableCollection<InheritanceNode> InheritanceGraph { get; } = new ObservableCollection<InheritanceNode>();
@@ -62,6 +85,11 @@ namespace LegendsGenerator.Editor
         /// Gets the condition compiler.
         /// </summary>
         public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler(new Dictionary<string, object>());
+
+        /// <summary>
+        /// Gets the list of all opened files.
+        /// </summary>
+        public ObservableCollection<string> OpenedFilesSelector { get; } = new ObservableCollection<string>();
 
         /// <summary>
         /// Gets or sets the selected definition.
@@ -88,6 +116,61 @@ namespace LegendsGenerator.Editor
             {
                 this.selectedNode = value;
                 this.OnPropertyChanged(nameof(this.SelectedNode));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected definition node.
+        /// </summary>
+        public string? OpenedDirectory
+        {
+            get => this.openedDirectory;
+
+            set
+            {
+                this.openedDirectory = value;
+                this.OnPropertyChanged(nameof(this.OpenedDirectory));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected definition node.
+        /// </summary>
+        public string? DefinitionFileFilter
+        {
+            get => this.definitionFileFilter;
+
+            set
+            {
+                this.FilteredDefinitions.Clear();
+                this.definitionFileFilter = value;
+
+                if (value == AllDefinitionFiles)
+                {
+                    value = null;
+                }
+
+                if (value != null)
+                {
+                    string fullPath = $"{this.OpenedDirectory}\\{value}.json";
+                    foreach (var def in this.Definitions)
+                    {
+                        if (this.MatchesFileFilter(def))
+                        {
+                            this.FilteredDefinitions.Add(def);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var def in this.Definitions)
+                    {
+                        this.FilteredDefinitions.Add(def);
+                    }
+                }
+
+                this.RegenerateInheritanceGraph();
+                this.OnPropertyChanged(nameof(this.DefinitionFileFilter));
             }
         }
 
@@ -154,6 +237,7 @@ namespace LegendsGenerator.Editor
         {
             this.Definitions.Clear();
             this.InheritanceGraph.Clear();
+            this.OpenedFilesSelector.Clear();
 
             DefinitionCollection? definitions =
                 DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
@@ -162,6 +246,19 @@ namespace LegendsGenerator.Editor
             {
                 this.Definitions.Add(new Definition(def));
             }
+
+            if (this.OpenedDirectory != null)
+            {
+                this.OpenedFilesSelector.Add(AllDefinitionFiles);
+
+                foreach (string sourceName in definitions.AllDefinitions.OfType<ITopLevelDefinition>().Select(x => x.SourceFile).Distinct())
+                {
+                    this.OpenedFilesSelector.Add(Path.ChangeExtension(Path.GetRelativePath(this.OpenedDirectory, sourceName), null));
+                }
+            }
+
+            // This will fill the filtered list with entries.
+            this.DefinitionFileFilter = null;
 
             Instance = this;
 
@@ -189,6 +286,11 @@ namespace LegendsGenerator.Editor
         {
             this.Definitions.Add(definition);
             definition.BaseDefinition.Attach(this.Compiler);
+
+            if (this.MatchesFileFilter(definition))
+            {
+                this.FilteredDefinitions.Add(definition);
+            }
         }
 
         /// <summary>
@@ -198,6 +300,7 @@ namespace LegendsGenerator.Editor
         public void RemoveDefinition(Definition definition)
         {
             this.Definitions.Remove(definition);
+            this.FilteredDefinitions.Remove(definition);
 
             if (this.SelectedDefinition == definition)
             {
@@ -213,7 +316,7 @@ namespace LegendsGenerator.Editor
         {
             this.InheritanceGraph.Clear();
 
-            foreach (InheritanceNode entry in InheritanceNode.ParseWithHeaders(this.Definitions))
+            foreach (InheritanceNode entry in InheritanceNode.ParseWithHeaders(this.FilteredDefinitions, this.Definitions))
             {
                 this.InheritanceGraph.Add(entry);
                 this.AttachPropertyChanged(entry);
@@ -279,6 +382,17 @@ namespace LegendsGenerator.Editor
             {
                 FixInheritanceNode(node);
             }
+        }
+
+        /// <summary>
+        /// Checks if the provided definition matches the file filter.
+        /// </summary>
+        /// <param name="def">The definition.</param>
+        /// <returns>True if the definition matches.</returns>
+        private bool MatchesFileFilter(Definition def)
+        {
+            string fullPath = $"{this.OpenedDirectory}\\{this.DefinitionFileFilter}.json";
+            return def.BaseDefinition is ITopLevelDefinition topLevelDef && topLevelDef.SourceFile.Equals(fullPath);
         }
     }
 }

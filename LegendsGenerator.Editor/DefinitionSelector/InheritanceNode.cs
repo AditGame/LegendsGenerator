@@ -11,7 +11,6 @@ namespace LegendsGenerator.Editor.DefinitionSelector
     using System.ComponentModel;
     using System.Linq;
     using System.Windows;
-
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Editor.ContractParsing;
@@ -240,14 +239,30 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// Parses te definition list, creating headers per type.
         /// </summary>
         /// <param name="definitions">The definitions.</param>
+        /// <param name="inactiveDefinitions">The list of inactive dimensions, used only for resolving inheritance.</param>
         /// <returns>The parsed headers.</returns>
-        public static IEnumerable<InheritanceNode> ParseWithHeaders(IEnumerable<Definition> definitions)
+        public static IEnumerable<InheritanceNode> ParseWithHeaders(IEnumerable<Definition> definitions, IEnumerable<Definition> inactiveDefinitions)
         {
             return new List<InheritanceNode>
             {
-                new SectionInheritanceNode(typeof(EventDefinition), "Events", Parse(definitions.Where(d => d.BaseDefinition is EventDefinition))),
-                new SectionInheritanceNode(typeof(SiteDefinition), "Sites", Parse(definitions.Where(d => d.BaseDefinition is SiteDefinition))),
-                new SectionInheritanceNode(typeof(NotablePersonDefinition), "NotablePersons", Parse(definitions.Where(d => d.BaseDefinition is NotablePersonDefinition))),
+                new SectionInheritanceNode(
+                    typeof(EventDefinition),
+                    "Events",
+                    Parse(
+                        definitions.Where(d => d.BaseDefinition is EventDefinition),
+                        inactiveDefinitions.Where(d => d.BaseDefinition is EventDefinition))),
+                new SectionInheritanceNode(
+                    typeof(SiteDefinition),
+                    "Sites",
+                    Parse(
+                        definitions.Where(d => d.BaseDefinition is SiteDefinition),
+                        inactiveDefinitions.Where(d => d.BaseDefinition is SiteDefinition))),
+                new SectionInheritanceNode(
+                    typeof(NotablePersonDefinition),
+                    "NotablePersons",
+                    Parse(
+                        definitions.Where(d => d.BaseDefinition is NotablePersonDefinition),
+                        inactiveDefinitions.Where(d => d.BaseDefinition is NotablePersonDefinition))),
             };
         }
 
@@ -255,10 +270,12 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// Parses a list of definitions into an inheritance list.
         /// </summary>
         /// <param name="definitions">The Definitons.</param>
+        /// <param name="inactiveDefinitions">The list of inactive dimensions, used only for resolving inheritance.</param>
         /// <returns>The list of inheritance nodes.</returns>
-        public static IEnumerable<InheritanceNode> Parse(IEnumerable<Definition> definitions)
+        public static IEnumerable<InheritanceNode> Parse(IEnumerable<Definition> definitions, IEnumerable<Definition> inactiveDefinitions)
         {
-            IEnumerable<Definition> thingDefs = definitions.Where(d => d.BaseDefinition is BaseThingDefinition);
+            IList<Definition> thingDefs = definitions.Where(d => d.BaseDefinition is BaseThingDefinition).ToList();
+            IEnumerable<Definition> inactiveThingDefs = inactiveDefinitions.Where(d => d.BaseDefinition is BaseThingDefinition);
             ILookup<string?, Definition> inheritanceList =
                 thingDefs.ToLookup(s => (s.BaseDefinition as BaseThingDefinition)!.InheritsFrom);
 
@@ -274,9 +291,21 @@ namespace LegendsGenerator.Editor.DefinitionSelector
 
                 if (!thingDefs.Any(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key)))
                 {
-                    orphans.AddRange(item);
+                    var matchingInactiveEntry = inactiveThingDefs.FirstOrDefault(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key));
+                    if (matchingInactiveEntry == null)
+                    {
+                        orphans.AddRange(item);
+                    }
+                    else
+                    {
+                        thingDefs.Add(matchingInactiveEntry);
+                    }
                 }
             }
+
+            // Regenerate as it may be changed in the previous process.
+            inheritanceList =
+               thingDefs.ToLookup(s => (s.BaseDefinition as BaseThingDefinition)!.InheritsFrom);
 
             IList<InheritanceNode> nodes = new List<InheritanceNode>
             {
