@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj" />
+    <ProjectReference Include="..\LegendsGenerator.WorldGen\LegendsGenerator.WorldGen.csproj" />
     <ProjectReference Include="..\LegendsGenerator\LegendsGenerator.csproj" />
   </ItemGroup>
 

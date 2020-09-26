@@ -59,8 +59,17 @@ namespace LegendsGenerator.Editor
         /// <param name="e">The args.</param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            DefinitionSerializer.ReserializeToFiles(
-                new DefinitionCollection(this.context.Definitions.Select(x => x.BaseDefinition)));
+            try
+            {
+                DefinitionSerializer.ReserializeToFiles(
+                    new DefinitionCollection(this.context.Definitions.Select(x => x.BaseDefinition)));
+            }
+#pragma warning disable CA1031 // Do not catch general exception types. Inteional to ensure data is not lost.
+            catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

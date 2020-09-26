@@ -6,7 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
@@ -27,9 +27,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="definitions">The list of definitions.</param>
         public DefinitionFile(DefinitionCollection definitions)
         {
-            this.Events = definitions.Events.ToList();
-            this.Sites = definitions.SiteDefinitions.ToList();
-            this.NotablePeople = definitions.NotablePersonDefinitions.ToList();
+            this.AllDefinitions = definitions.AllDefinitions.ToList();
         }
 
         /// <summary>
@@ -38,38 +36,82 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="definitions">The list of definitions.</param>
         public DefinitionFile(IEnumerable<BaseDefinition> definitions)
         {
-            ILookup<System.Type, BaseDefinition>? byType = definitions.ToLookup(d => d.GetType());
-            this.Events = byType[typeof(EventDefinition)].OfType<EventDefinition>().ToList();
-            this.Sites = byType[typeof(SiteDefinition)].OfType<SiteDefinition>().ToList();
-            this.NotablePeople = byType[typeof(NotablePersonDefinition)].OfType<NotablePersonDefinition>().ToList();
+            this.AllDefinitions = definitions.ToList();
         }
+
+        /// <summary>
+        /// Gets or sets all definitions in this object.
+        /// </summary>
+        [JsonIgnore]
+        public List<BaseDefinition> AllDefinitions { get; set; } = new List<BaseDefinition>();
 
         /// <summary>
         /// Gets or sets the list of all events.
         /// </summary>
-        public List<EventDefinition> Events { get; set; } = new List<EventDefinition>();
+        public List<EventDefinition> Events
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<EventDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(EventDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
+            
 
         /// <summary>
         /// Gets or sets the list of site definitions.
         /// </summary>
-        public List<SiteDefinition> Sites { get; set; } = new List<SiteDefinition>();
+        public List<SiteDefinition> Sites
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<SiteDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(SiteDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the list of notable person definitions.
         /// </summary>
-        public List<NotablePersonDefinition> NotablePeople { get; set; } = new List<NotablePersonDefinition>();
+        public List<NotablePersonDefinition> NotablePeople
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<NotablePersonDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(NotablePersonDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
 
         /// <summary>
-        /// Gets all definitions in this file.
+        /// Gets or sets the list of notable person definitions.
         /// </summary>
-        /// <returns>All defintions.</returns>
-        public IEnumerable<BaseDefinition> AllDefinitions()
+        public List<WorldSquareDefinition> WorldSquares
         {
-            List<BaseDefinition> defs = new List<BaseDefinition>();
-            defs.AddRange(this.Events.OfType<BaseDefinition>());
-            defs.AddRange(this.Sites.OfType<BaseDefinition>());
-            defs.AddRange(this.NotablePeople.OfType<BaseDefinition>());
-            return defs;
+            get
+            {
+                return this.AllDefinitions.OfType<WorldSquareDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(WorldSquareDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
         }
     }
 }

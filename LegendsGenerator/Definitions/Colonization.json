@@ -25,14 +25,19 @@
               "DefinitionNameToSpawn": "Settler",
               "Type": "NotablePerson",
               "AttributeOverrides": {},
-              "Description": "A settler has been created.",
               "PositionType": "Absolute",
               "PositionX": "Subject.X",
               "PositionY": "Subject.Y",
-              "Description_IsComplex": false,
               "PositionX_IsComplex": false,
               "PositionY_IsComplex": false,
-              "AttributeOverrides_IsComplex": false
+              "AttributeOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "A settler has been created.",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
             }
           ],
           "Destroys": [],
@@ -69,13 +74,19 @@
           "Destroys": [],
           "Moves": [
             {
-              "ThingToMove": "Subject",
               "MoveType": 2,
               "ThingToMoveTo": "UNSET",
               "CoordToMoveToX": "Rand.Next(0, 20)",
               "CoordToMoveToY": "Rand.Next(0, 20)",
               "CoordToMoveToX_IsComplex": false,
-              "CoordToMoveToY_IsComplex": false
+              "CoordToMoveToY_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
             }
           ],
           "Chance_IsComplex": false,
@@ -111,20 +122,29 @@
               "DefinitionNameToSpawn": "Town",
               "Type": "Site",
               "AttributeOverrides": {},
-              "Description": "A town has been formed",
               "PositionType": "RelativeAbsolute",
               "PositionX": "0",
               "PositionY": "0",
-              "Description_IsComplex": false,
               "PositionX_IsComplex": false,
               "PositionY_IsComplex": false,
-              "AttributeOverrides_IsComplex": false
+              "AttributeOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "A town has been formed",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
             }
           ],
           "Destroys": [
             {
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
               "Description": "The settler is destroyed in the process.",
-              "ThingDestroyed": "Subject",
+              "Title_IsComplex": false,
               "Description_IsComplex": false
             }
           ],
@@ -156,5 +176,6 @@
       "DefaultAttributes_IsComplex": false,
       "DefaultAspects_IsComplex": false
     }
-  ]
+  ],
+  "WorldSquares": []
 }

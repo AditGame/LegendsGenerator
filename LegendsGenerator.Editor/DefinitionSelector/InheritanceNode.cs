@@ -243,33 +243,27 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// <returns>The parsed headers.</returns>
         public static IEnumerable<InheritanceNode> ParseWithHeaders(IEnumerable<Definition> definitions, IEnumerable<Definition> inactiveDefinitions)
         {
-            return new List<InheritanceNode>
+            return new[]
             {
-                new SectionInheritanceNode(
-                    typeof(EventDefinition),
-                    "Events",
+                new { name = "Events", type = typeof(EventDefinition) },
+                new { name = "Sites", type = typeof(SiteDefinition) },
+                new { name = "NotablePersons", type = typeof(NotablePersonDefinition) },
+                new { name = "WorldSquares", type = typeof(WorldSquareDefinition) },
+            }.Select(e =>
+            {
+                return new SectionInheritanceNode(
+                    e.type,
+                    e.name,
                     Parse(
-                        definitions.Where(d => d.BaseDefinition is EventDefinition),
-                        inactiveDefinitions.Where(d => d.BaseDefinition is EventDefinition))),
-                new SectionInheritanceNode(
-                    typeof(SiteDefinition),
-                    "Sites",
-                    Parse(
-                        definitions.Where(d => d.BaseDefinition is SiteDefinition),
-                        inactiveDefinitions.Where(d => d.BaseDefinition is SiteDefinition))),
-                new SectionInheritanceNode(
-                    typeof(NotablePersonDefinition),
-                    "NotablePersons",
-                    Parse(
-                        definitions.Where(d => d.BaseDefinition is NotablePersonDefinition),
-                        inactiveDefinitions.Where(d => d.BaseDefinition is NotablePersonDefinition))),
-            };
+                        definitions.Where(d => d.BaseDefinition.GetType() == e.type ),
+                        inactiveDefinitions.Where(d => d.BaseDefinition.GetType() == e.type)));
+            });
         }
 
         /// <summary>
         /// Parses a list of definitions into an inheritance list.
         /// </summary>
-        /// <param name="definitions">The Definitons.</param>
+        /// <param name="definitions">The definitions.</param>
         /// <param name="inactiveDefinitions">The list of inactive dimensions, used only for resolving inheritance.</param>
         /// <returns>The list of inheritance nodes.</returns>
         public static IEnumerable<InheritanceNode> Parse(IEnumerable<Definition> definitions, IEnumerable<Definition> inactiveDefinitions)

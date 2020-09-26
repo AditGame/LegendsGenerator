@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Generates an initial world for LegendsGenerator.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\LegendsGenerator.Contracts.csproj" />
+    <ProjectReference Include="..\LegendsGenerator.Compiler.CSharp\LegendsGenerator.Compiler.CSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimplexNoise" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>

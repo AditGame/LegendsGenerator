@@ -62,7 +62,7 @@ namespace LegendsGenerator.Contracts.Definitions
 
                 if (deserializedFile != null)
                 {
-                    foreach (BaseDefinition eve in deserializedFile.AllDefinitions())
+                    foreach (BaseDefinition eve in deserializedFile.AllDefinitions)
                     {
                         if (eve is ITopLevelDefinition toplevel)
                         {

@@ -53,18 +53,18 @@ namespace LegendsGenerator.Viewer
 
             HistoryGenerator history = new HistoryGenerator(factory, definitions);
 
-            World world = new World()
-            {
-                WorldSeed = worldSeed,
-                StepCount = 1,
-                Grid = new WorldGrid(20, 20),
-            };
+            WorldGen.WorldGenerator worldGen = new WorldGen.WorldGenerator(worldSeed, definitions);
+            int width = 200;
+            int height = 200;
+            worldGen.GenerateWorld(width, height);
+
+            World world = worldGen.GeneratedWorld;
 
             Random rdm = new Random(worldSeed);
             for (int i = 0; i < 100; i++)
             {
-                int x = rdm.Next(0, 19);
-                int y = rdm.Next(0, 19);
+                int x = rdm.Next(0, width - 1);
+                int y = rdm.Next(0, height - 1);
                 Site cityInst = factory.CreateSite(rdm, x, y, "City");
                 world.Grid.AddThing(cityInst);
                 Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");

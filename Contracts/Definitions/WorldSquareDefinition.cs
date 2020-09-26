@@ -27,5 +27,17 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets a value indicating whether this world square is considered water, mostly for movement purposes.
         /// </summary>
         public bool IsWater { get; set; }
+
+        public int MinElevation { get; set; }
+
+        public int MaxElevation { get; set; }
+
+        public int MinRainfall { get; set; }
+
+        public int MaxRainfall { get; set; }
+
+        public int MinDrainage { get; set; }
+
+        public int MaxDrainage { get; set; }
     }
 }
