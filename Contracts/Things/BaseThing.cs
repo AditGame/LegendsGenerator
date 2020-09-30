@@ -125,7 +125,7 @@ namespace LegendsGenerator.Contracts.Things
                 throw new ArgumentException($"{ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
-            // TODO: Handle this scneario better.
+            // TODO: Handle this scenario better.
             try
             {
                 return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);

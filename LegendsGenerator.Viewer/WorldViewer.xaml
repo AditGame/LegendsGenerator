@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="LegendsGenerator.Viewer.WorldViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LegendsGenerator.Viewer"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Canvas x:Name="TheWorld" Background="DarkGreen" Width="{Binding ViewerWidth}" Height="{Binding ViewerHeight}">
+        <ItemsControl ItemsSource="{Binding Squares}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="{Binding BackgroundColor}" Width="20" Height="20" PreviewMouseDown="TextBlock_PreviewMouseDown">
+                        <TextBlock Text="" PreviewMouseDown="TextBlock_PreviewMouseDown" Background="{Binding Foreground}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding ViewerX}" />
+                    <Setter Property="Canvas.Top" Value="{Binding ViewerY}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Lines}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding ViewerStart.X}" Y1="{Binding ViewerStart.Y}"
+                      X2="{Binding ViewerEnd.X}" Y2="{Binding ViewerEnd.Y}"
+                      Stroke="DarkGray" StrokeThickness="3"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Canvas>
+</UserControl>

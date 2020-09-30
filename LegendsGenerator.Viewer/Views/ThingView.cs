@@ -29,9 +29,15 @@ namespace LegendsGenerator.Viewer.Views
         /// Initializes a new instance of the <see cref="ThingView"/> class.
         /// </summary>
         /// <param name="thing">The thing to view.</param>
-        public ThingView(BaseThing thing)
+        /// <param name="world">The world.</param>
+        public ThingView(BaseThing thing, World world)
         {
             this.thing = thing;
+
+            if (this.thing is BaseMovingThing moving && moving.IsMoving)
+            {
+                (this.MovingTowardsX, this.MovingTowardsY) = moving.GetDestination(world);
+            }
         }
 
         /// <summary>
@@ -99,6 +105,33 @@ namespace LegendsGenerator.Viewer.Views
                     MoveType.ToThing => movingThing.MoveToThing?.ToString() ?? "NullGuid",
                     _ => "Unknown",
                 };
+            }
+        }
+
+        /// <summary>
+        /// Gets the X coord of the square this is moving towards.
+        /// </summary>
+        public int? MovingTowardsX { get; }
+
+        /// <summary>
+        /// Gets the Y coords of the square this is moving towards.
+        /// </summary>
+        public int? MovingTowardsY { get; }
+
+        /// <summary>
+        /// Gets the lines relevant to this Thing.
+        /// </summary>
+        public List<LineView> ReleventLines
+        {
+            get
+            {
+                List<LineView> lines = new List<LineView>();
+                if (this.MovingTowardsX != null && this.MovingTowardsY != null)
+                {
+                    lines.Add(new LineView(this.thing.X, this.thing.Y, this.MovingTowardsX.Value, this.MovingTowardsY.Value));
+                }
+
+                return lines;
             }
         }
 

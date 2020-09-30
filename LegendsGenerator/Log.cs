@@ -14,7 +14,7 @@ namespace LegendsGenerator
         /// <summary>
         /// Gets the trace source.
         /// </summary>
-        public static TraceSource Ts { get; } = new TraceSource("LegendsGenerator", SourceLevels.All);
+        public static TraceSource Ts { get; } = new TraceSource("LegendsGenerator", SourceLevels.Warning);
 
         /// <summary>
         /// Logs information.

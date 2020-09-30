@@ -23,7 +23,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// The last created Context instance.
         /// </summary>
-        private static Context instance;
+        private static Context? instance;
 
         /// <summary>
         /// The backing field for current step.
@@ -39,6 +39,11 @@ namespace LegendsGenerator.Viewer
         /// The backing field for selected thing.
         /// </summary>
         private ThingView? selectedThing;
+
+        /// <summary>
+        /// The backing field for all the squares.
+        /// </summary>
+        private List<SquareView> squares = new List<SquareView>();
 
         /// <summary>
         /// The backing field for FollowThing.
@@ -59,6 +64,7 @@ namespace LegendsGenerator.Viewer
         {
             this.History = history;
             this.WorldSteps[0] = initialWorld;
+            this.CurrentStep = 0;
             instance = this;
         }
 
@@ -68,7 +74,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the last created instance of this class.
         /// </summary>
-        public static Context Instance => instance;
+        public static Context Instance => instance ?? throw new InvalidOperationException("Can not get Context instance before it's created.");
 
         /// <summary>
         /// Gets the steps of the world.
@@ -93,7 +99,7 @@ namespace LegendsGenerator.Viewer
                 this.ThingsInSquare.Clear();
                 if (this.selectedSquare != null)
                 {
-                    this.selectedSquare.GetThings().ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t)));
+                    this.selectedSquare.GetThings().ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t, this.CurrentWorld)));
 
                     if (this.ThingsInSquare.Any())
                     {
@@ -115,7 +121,9 @@ namespace LegendsGenerator.Viewer
             set
             {
                 this.selectedThing = value;
+
                 this.OnPropertyChanged(nameof(this.SelectedThing));
+                this.OnPropertyChanged(nameof(this.Lines));
                 this.OnPropertyChanged(nameof(this.DebugAtSelectedThing));
             }
         }
@@ -149,6 +157,8 @@ namespace LegendsGenerator.Viewer
 
                 Guid? selectedThingId = this.SelectedThing?.ThingId;
 
+                this.Squares = this.CurrentWorld.Grid.GetAllGridEntries().Select(x => new SquareView(x.Square)).ToList();
+
                 this.OnPropertyChanged(nameof(this.CurrentStep));
                 this.OnPropertyChanged(nameof(this.CurrentWorld));
 
@@ -157,7 +167,7 @@ namespace LegendsGenerator.Viewer
                 {
                     // If FollowThing is set, follow the thing as it moves.
                     this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(result.X, result.Y);
-                    this.SelectedThing = new ThingView(result);
+                    this.SelectedThing = new ThingView(result, this.CurrentWorld);
                 }
                 else if (this.SelectedSquare != null)
                 {
@@ -278,6 +288,51 @@ namespace LegendsGenerator.Viewer
         /// Gets the list of things in an event.
         /// </summary>
         public ObservableCollection<ThingView> ThingsInSquare { get; } = new ObservableCollection<ThingView>();
+
+        /// <summary>
+        /// Gets or sets all squares currently visible.
+        /// </summary>
+        public List<SquareView> Squares
+        {
+            get
+            {
+                return this.squares;
+            }
+
+            set
+            {
+                this.squares = value;
+                this.OnPropertyChanged(nameof(this.Squares));
+            }
+        }
+
+        /// <summary>
+        /// Gets all lines currently visible.
+        /// </summary>
+        public List<LineView> Lines
+        {
+            get
+            {
+                List<LineView> lines = new List<LineView>();
+
+                if (this.SelectedThing != null)
+                {
+                    lines.AddRange(this.SelectedThing.ReleventLines);
+                }
+
+                return lines;
+            }
+        }
+
+        /// <summary>
+        /// Gets the width of the viewer.
+        /// </summary>
+        public int ViewerWidth => this.CurrentWorld.Grid.Width * 20;
+
+        /// <summary>
+        /// Gets the height of the viewer.
+        /// </summary>
+        public int ViewerHeight => this.CurrentWorld.Grid.Height * 20;
 
         /// <summary>
         /// Advances the world state to the next step.

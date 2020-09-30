@@ -37,17 +37,7 @@
             <DataGridCell Grid.Column="0"
                           Grid.RowSpan="2">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <DataGrid HeadersVisibility="None"
-                        dataGrid2D:ItemsSource.Array2D="{Binding CurrentWorld.Grid.Squares}"
-                        SelectedCellsChanged="DataGrid_SelectedCellsChanged"
-                        SelectionMode="Single"
-                        SelectionUnit="Cell">
-                        <DataGrid.Resources>
-                            <DataTemplate x:Key="DataTemplate">
-                                <Image Source="{StaticResource CityIcon}"/>
-                            </DataTemplate>
-                        </DataGrid.Resources>
-                    </DataGrid>
+                    <local:WorldViewer />
                 </ScrollViewer>
             </DataGridCell>
             <GridSplitter 

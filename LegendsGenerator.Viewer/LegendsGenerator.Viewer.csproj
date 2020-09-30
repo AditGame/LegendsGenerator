@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <None Remove="Resources\City.png" />
+    <None Remove="Resources\Settler.png" />
+    <None Remove="Resources\Town.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,9 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\City.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="Resources\City.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Settler.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Town.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

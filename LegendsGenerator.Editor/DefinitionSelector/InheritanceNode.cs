@@ -255,7 +255,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                     e.type,
                     e.name,
                     Parse(
-                        definitions.Where(d => d.BaseDefinition.GetType() == e.type ),
+                        definitions.Where(d => d.BaseDefinition.GetType() == e.type),
                         inactiveDefinitions.Where(d => d.BaseDefinition.GetType() == e.type)));
             });
         }

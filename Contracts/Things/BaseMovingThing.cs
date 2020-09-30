@@ -59,5 +59,37 @@ namespace LegendsGenerator.Contracts.Things
             this.MoveToCoordY = null;
             this.ResidualMovement = 0;
         }
+
+        /// <summary>
+        /// Gets the destination of this thing.
+        /// </summary>
+        /// <param name="world">The world.</param>
+        /// <returns>The X and Y Coordinates.</returns>
+        /// <exception cref="InvalidOperationException">This thing is not moving towards anything.</exception>
+        public (int X, int Y) GetDestination(World world)
+        {
+            if (!this.IsMoving)
+            {
+                throw new InvalidOperationException("This thing is not moving towards anything.");
+            }
+
+            int x, y;
+            switch (this.MoveType)
+            {
+                case MoveType.ToCoords:
+                    x = this.MoveToCoordX ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordX is null.");
+                    y = this.MoveToCoordX ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordX is null.");
+                    break;
+                case MoveType.ToThing:
+                    BaseThing thing = world.FindThing(this.MoveToThing ?? throw new InvalidOperationException("MoveType is set to ToThing but MoveToThing is null."));
+                    x = thing.X;
+                    y = thing.Y;
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unregoognized move type {this.MoveType}");
+            }
+
+            return (x, y);
+        }
     }
 }
