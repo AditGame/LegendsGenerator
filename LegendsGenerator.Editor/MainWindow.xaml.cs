@@ -51,14 +51,6 @@ namespace LegendsGenerator.Editor
                 })
                 .PersistOn(nameof(Window.Closing), this);
 
-            tracker.Configure<GridSplitter>()
-                .Properties(c => new
-                {
-                    c.,
-                    c.DefinitionFileFilter,
-                })
-                .PersistOn(nameof(Window.Closing), this);
-
             this.context = new Context();
             this.DataContext = this.context;
 
