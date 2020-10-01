@@ -9,6 +9,9 @@ namespace LegendsGenerator.Editor
     using System;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Forms;
+    using Jot;
     using LegendsGenerator.Contracts.Definitions;
     using Ookii.Dialogs.Wpf;
 
@@ -17,6 +20,11 @@ namespace LegendsGenerator.Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The tracker for state.
+        /// </summary>
+        private static Tracker tracker = new Tracker();
+
         /// <summary>
         /// The context with all the data in it.
         /// </summary>
@@ -29,8 +37,33 @@ namespace LegendsGenerator.Editor
         {
             this.InitializeComponent();
 
+            tracker.Configure<Window>()
+                .Id(w => w.Name, SystemInformation.VirtualScreen.Size)
+                .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
+                .PersistOn(nameof(Window.Closing))
+                .StopTrackingOn(nameof(Window.Closing));
+
+            tracker.Configure<Context>()
+                .Properties(c => new
+                {
+                    c.OpenedDirectory,
+                    c.DefinitionFileFilter,
+                })
+                .PersistOn(nameof(Window.Closing), this);
+
+            tracker.Configure<GridSplitter>()
+                .Properties(c => new
+                {
+                    c.,
+                    c.DefinitionFileFilter,
+                })
+                .PersistOn(nameof(Window.Closing), this);
+
             this.context = new Context();
             this.DataContext = this.context;
+
+            tracker.Track(this);
+            tracker.Track(this.context);
         }
 
         /// <summary>
@@ -46,7 +79,6 @@ namespace LegendsGenerator.Editor
             if (result == true)
             {
                 this.context.OpenedDirectory = dialog.SelectedPath;
-                this.context.SetDefinitions(dialog.SelectedPath);
             }
 
             Console.WriteLine(dialog.SelectedPath);
@@ -64,11 +96,11 @@ namespace LegendsGenerator.Editor
                 DefinitionSerializer.ReserializeToFiles(
                     new DefinitionCollection(this.context.Definitions.Select(x => x.BaseDefinition)));
             }
-#pragma warning disable CA1031 // Do not catch general exception types. Inteional to ensure data is not lost.
+#pragma warning disable CA1031 // Do not catch general exception types. Intentional to ensure data is not lost.
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                MessageBox.Show(ex.ToString());
+                System.Windows.MessageBox.Show(ex.ToString());
             }
         }
     }

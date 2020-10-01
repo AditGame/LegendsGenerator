@@ -133,6 +133,7 @@ namespace LegendsGenerator.Editor
             set
             {
                 this.openedDirectory = value;
+                this.SetDefinitions(value);
                 this.OnPropertyChanged(nameof(this.OpenedDirectory));
             }
         }
@@ -237,27 +238,30 @@ namespace LegendsGenerator.Editor
         /// Sets the definitions.
         /// </summary>
         /// <param name="path">The path to the definitions.</param>
-        public void SetDefinitions(string path)
+        private void SetDefinitions(string? path)
         {
             this.Definitions.Clear();
             this.InheritanceGraph.Clear();
             this.OpenedFilesSelector.Clear();
 
-            DefinitionCollection? definitions =
-                DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
-
-            foreach (var def in definitions.AllDefinitions)
+            if (path != null)
             {
-                this.Definitions.Add(new Definition(def));
-            }
+                DefinitionCollection? definitions =
+                    DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
 
-            if (this.OpenedDirectory != null)
-            {
-                this.OpenedFilesSelector.Add(AllDefinitionFiles);
-
-                foreach (string sourceName in definitions.AllDefinitions.OfType<ITopLevelDefinition>().Select(x => x.SourceFile).Distinct())
+                foreach (var def in definitions.AllDefinitions)
                 {
-                    this.OpenedFilesSelector.Add(Path.ChangeExtension(Path.GetRelativePath(this.OpenedDirectory, sourceName), null));
+                    this.Definitions.Add(new Definition(def));
+                }
+
+                if (this.OpenedDirectory != null)
+                {
+                    this.OpenedFilesSelector.Add(AllDefinitionFiles);
+
+                    foreach (string sourceName in definitions.AllDefinitions.OfType<ITopLevelDefinition>().Select(x => x.SourceFile).Distinct())
+                    {
+                        this.OpenedFilesSelector.Add(Path.ChangeExtension(Path.GetRelativePath(this.OpenedDirectory, sourceName), null));
+                    }
                 }
             }
 
