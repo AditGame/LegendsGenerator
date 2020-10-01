@@ -29,4 +29,4 @@ At the start of every turn:
 * During movement most Events should not apply to this Thing, but some Events may.
 * Any movement left is stored on the Thing as "Movement Progress", stored as Land movement. This will be used in the next Step.
    * This can be used to move into squares which have a movement cost which far exceeds the thing's movement speed.
-   * This value is cleared when movement completes to ensure it does not build up when somebody with high movement moves between two nearby sites, than instantly moves to a far away site.
+   * T his value is cleared when movement completes to ensure it does not build up when somebody with high movement moves between two nearby sites, than instantly moves to a far away site.

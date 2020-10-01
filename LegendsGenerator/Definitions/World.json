@@ -6,12 +6,13 @@
     {
       "MovementCost": ".5",
       "IsWater": true,
+      "IsSaltWater": true,
       "MinElevation": 0,
-      "MaxElevation": 0,
+      "MaxElevation": 99,
       "MinRainfall": 0,
-      "MaxRainfall": 0,
+      "MaxRainfall": 100,
       "MinDrainage": 0,
-      "MaxDrainage": 0,
+      "MaxDrainage": 100,
       "MovementCost_IsComplex": false,
       "Name": "Ocean",
       "Description": "A massive stretch of salt water, teeming with life",
@@ -26,6 +27,7 @@
     {
       "MovementCost": ".25",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 300,
       "MaxElevation": 400,
       "MinRainfall": 0,
@@ -45,6 +47,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 0,
@@ -64,6 +67,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -83,6 +87,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 0,
@@ -103,6 +108,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 0,
@@ -123,6 +129,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 0,
@@ -142,6 +149,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -161,6 +169,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 10,
@@ -181,6 +190,7 @@
     {
       "MovementCost": ".8",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 10,
@@ -201,6 +211,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -220,6 +231,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 20,
@@ -240,6 +252,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 20,
@@ -260,6 +273,7 @@
     {
       "MovementCost": ".25",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 33,
@@ -279,6 +293,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 33,
@@ -299,6 +314,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -318,6 +334,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 33,
@@ -338,6 +355,7 @@
     {
       "MovementCost": ".5",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 66,
@@ -357,6 +375,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -376,6 +395,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 299,
       "MinRainfall": 66,
@@ -396,6 +416,7 @@
     {
       "MovementCost": "1",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 100,
       "MaxElevation": 399,
       "MinRainfall": 75,
@@ -416,6 +437,7 @@
     {
       "MovementCost": "UNSET",
       "IsWater": false,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 0,
       "MinRainfall": 0,
@@ -435,6 +457,7 @@
     {
       "MovementCost": ".5",
       "IsWater": true,
+      "IsSaltWater": false,
       "MinElevation": 0,
       "MaxElevation": 99,
       "MinRainfall": 0,

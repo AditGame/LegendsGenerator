@@ -14,13 +14,8 @@ namespace LegendsGenerator
     /// <summary>
     /// Creates things.
     /// </summary>
-    public class ThingFactory
+    public class ThingFactory : IThingFactory
     {
-        /// <summary>
-        /// The definitions.
-        /// </summary>
-        private readonly DefinitionCollection definitions;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingFactory"/> class.
         /// </summary>
@@ -28,56 +23,48 @@ namespace LegendsGenerator
         public ThingFactory(
             DefinitionCollection definitions)
         {
-            this.definitions = definitions;
+            this.Definitions = definitions;
         }
 
         /// <summary>
-        /// Creates a thing.
+        /// Gets the definitions.
         /// </summary>
-        /// <param name="rdm">The random nubmer generator.</param>
-        /// <param name="x">The X coordinate of the site.</param>
-        /// <param name="y">The Y coordinate of the site.</param>
-        /// <param name="type">The type of thing to create.</param>
-        /// <param name="definitionName">The name of the definition to create.</param>
-        /// <returns>The created thing.</returns>
+        public DefinitionCollection Definitions { get; }
+
+        /// <inheritdoc/>
         public BaseThing CreateThing(Random rdm, int x, int y, ThingType type, string definitionName)
         {
             return type switch
             {
                 ThingType.Site => this.CreateSite(rdm, x, y, definitionName),
                 ThingType.NotablePerson => this.CreateNotablePerson(rdm, x, y, definitionName),
+                ThingType.WorldSquare => this.CreateWorldSquare(rdm, x, y, definitionName),
                 _ => throw new InvalidOperationException($"Can not handle {type}."),
             };
         }
 
-        /// <summary>
-        /// Creates a site.
-        /// </summary>
-        /// <param name="rdm">The random number generator.</param>
-        /// <param name="x">The X coordinate of the site.</param>
-        /// <param name="y">The Y coordinate of the site.</param>
-        /// <param name="siteDefinitionName">The name of the site's definition.</param>
-        /// <returns>The site.</returns>
+        /// <inheritdoc/>
         public Site CreateSite(Random rdm, int x, int y, string siteDefinitionName)
         {
-            Site site = CreateThing<Site, SiteDefinition>(rdm, x, y, this.definitions.SiteDefinitions, siteDefinitionName);
+            Site site = CreateThing<Site, SiteDefinition>(rdm, x, y, this.Definitions.SiteDefinitions, siteDefinitionName);
             site.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
             return site;
         }
 
-        /// <summary>
-        /// Creates a notable person.
-        /// </summary>
-        /// <param name="rdm">The random number generator.</param>
-        /// <param name="x">The X coordinate of the person.</param>
-        /// <param name="y">The Y coordinate of the person.</param>
-        /// <param name="personDefinitionName">The name of the person's definition.</param>
-        /// <returns>The notable person.</returns>
+        /// <inheritdoc/>
         public NotablePerson CreateNotablePerson(Random rdm, int x, int y, string personDefinitionName)
         {
-            NotablePerson person = CreateThing<NotablePerson, NotablePersonDefinition>(rdm, x, y, this.definitions.NotablePersonDefinitions, personDefinitionName);
+            NotablePerson person = CreateThing<NotablePerson, NotablePersonDefinition>(rdm, x, y, this.Definitions.NotablePersonDefinitions, personDefinitionName);
             person.Name = new RandomNameGeneratorLibrary.PersonNameGenerator(rdm).GenerateRandomFirstAndLastName();
             return person;
+        }
+
+        /// <inheritdoc/>
+        public WorldSquare CreateWorldSquare(Random rdm, int x, int y, string worldSquareDefinitionName)
+        {
+            WorldSquare square = CreateThing<WorldSquare, WorldSquareDefinition>(rdm, x, y, this.Definitions.WorldSquareDefinitions, worldSquareDefinitionName);
+            square.Name = $"{x},{y}";
+            return square;
         }
 
         /// <summary>

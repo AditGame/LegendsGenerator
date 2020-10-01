@@ -76,8 +76,8 @@
             {
               "MoveType": 2,
               "ThingToMoveTo": "UNSET",
-              "CoordToMoveToX": "Rand.Next(0, 20)",
-              "CoordToMoveToY": "Rand.Next(0, 20)",
+              "CoordToMoveToX": "Rand.Next(0, World.Grid.Width)",
+              "CoordToMoveToY": "Rand.Next(0, World.Grid.Height)",
               "CoordToMoveToX_IsComplex": false,
               "CoordToMoveToY_IsComplex": false,
               "AppliedTo": [

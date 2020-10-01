@@ -28,6 +28,8 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         public bool IsWater { get; set; }
 
+        public bool IsSaltWater { get; set; }
+
         public int MinElevation { get; set; }
 
         public int MaxElevation { get; set; }

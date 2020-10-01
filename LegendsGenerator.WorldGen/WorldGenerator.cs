@@ -11,6 +11,7 @@ namespace LegendsGenerator.WorldGen
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Things;
+    using LegendsGenerator.WorldGen.Contracts;
     using SimplexNoise;
 
     /// <summary>
@@ -21,29 +22,29 @@ namespace LegendsGenerator.WorldGen
         /// <summary>
         /// The definitions collection to source definitions from.
         /// </summary>
-        private DefinitionCollection definitions;
+        private IThingFactory thingFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldGenerator"/> class.
         /// </summary>
-        /// <param name="definitions">The definition collection.</param>
-        public WorldGenerator(DefinitionCollection definitions)
+        /// <param name="thingFactory">The thing factory.</param>
+        public WorldGenerator(IThingFactory thingFactory)
         {
             this.Seed = new Random().Next();
             this.Random = new Random(this.Seed);
-            this.definitions = definitions;
+            this.thingFactory = thingFactory;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldGenerator"/> class.
         /// </summary>
         /// <param name="seed">The seed to use.</param>
-        /// <param name="definitions">The definition collection.</param>
-        public WorldGenerator(int seed, DefinitionCollection definitions)
+        /// <param name="thingFactory">The thing factory.</param>
+        public WorldGenerator(int seed, IThingFactory thingFactory)
         {
             this.Seed = seed;
             this.Random = new Random(this.Seed);
-            this.definitions = definitions;
+            this.thingFactory = thingFactory;
         }
 
         /// <summary>
@@ -57,167 +58,75 @@ namespace LegendsGenerator.WorldGen
         public Random Random { get; }
 
         /// <summary>
-        /// Gets the generated world.
-        /// </summary>
-        public World GeneratedWorld { get; private set; } = new World();
-
-        /// <summary>
         /// Generates the world.
         /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        public void GenerateWorld(int width, int height)
+        /// <returns>The legends generator world.</returns>
+        public World GenerateWorld(int width, int height)
         {
-            this.GeneratedWorld = this.GeneratedWorld with
+            GeneratedWorld world = LandGenerator.Generate(width, height, this.Random);
+
+            return this.ConvertToWorld(world);
+        }
+
+        /// <summary>
+        /// Converts a generated world into a legends generator world.
+        /// </summary>
+        /// <param name="generated">The generated world.</param>
+        /// <returns>The legends generator world.</returns>
+        private World ConvertToWorld(GeneratedWorld generated)
+        {
+            World world = new World()
             {
 #pragma warning disable SA1101 // Prefix local calls with this. New C#9 feature.
-                Grid = new WorldGrid(width, height),
+                Grid = new WorldGrid(generated.Width, generated.Height),
 #pragma warning restore SA1101 // Prefix local calls with this
             };
 
-            Noise.Seed = this.Random.Next();
-            float[,] elevationMap = Noise.Calc2D(width, height, 0.05f);
-            Noise.Seed = this.Random.Next();
-            float[,] rainfallMap = Noise.Calc2D(width, height, 0.05f);
-            Noise.Seed = this.Random.Next();
-            float[,] drainageMap = Noise.Calc2D(width, height, 0.05f);
-            Noise.Seed = this.Random.Next();
-            float[,] tempertureMap = Noise.Calc2D(width, height, 0.05f);
-            Noise.Seed = this.Random.Next();
-            float[,] evilMap = Noise.Calc2D(width, height, 0.05f);
-            Noise.Seed = this.Random.Next();
-            float[,] savageMap = Noise.Calc2D(width, height, 0.05f);
-
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < generated.Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < generated.Height; y++)
                 {
-                    int elevation = (int)(ElevationMask(elevationMap[x, y], x, y, width, height) / 255f * 400f);
-                    int rainfall = (int)(rainfallMap[x, y] / 255f * 100f);
-                    int drainage = (int)(drainageMap[x, y] / 255f * 100f);
-                    int temperture = (int)TempertureMask(tempertureMap[x, y], y, height);
-                    int evil = (int)(evilMap[x, y] / 255f * 100f);
-                    int savagery = (int)(savageMap[x, y] / 255f * 100f);
+                    var genSquare = generated.Grid[x, y];
 
-                    WorldSquare square = new WorldSquare()
-                    {
-                        Name = $"{x},{y}",
-                        X = x,
-                        Y = y,
-                        BaseDefinition = this.GetDefinition(elevation, rainfall, drainage),
-                    };
+                    WorldSquare square = this.thingFactory.CreateWorldSquare(this.Random, x, y, this.GetDefinitionName(genSquare));
 
-                    square.BaseAttributes["Elevation"] = elevation;
-                    square.BaseAttributes["Rainfall"] = rainfall;
-                    square.BaseAttributes["Drainage"] = drainage;
-                    square.BaseAttributes["Temperature"] = temperture;
-                    square.BaseAttributes["Evil"] = evil;
-                    square.BaseAttributes["Savagery"] = savagery;
+                    // Overwrite the attributes provided by the world generation process.
+                    square.BaseAttributes[nameof(genSquare.Elevation)] = genSquare.Elevation;
+                    square.BaseAttributes[nameof(genSquare.Drainage)] = genSquare.Drainage;
+                    square.BaseAttributes[nameof(genSquare.Rainfall)] = genSquare.Rainfall;
+                    square.BaseAttributes[nameof(genSquare.Temperature)] = genSquare.Temperature;
+                    square.BaseAttributes[nameof(genSquare.Evil)] = genSquare.Evil;
+                    square.BaseAttributes[nameof(genSquare.Savagery)] = genSquare.Savagery;
 
-                    square.Name = square.BaseAttributes["Elevation"].ToString();
-
-                    this.GeneratedWorld.Grid.GetSquare(x, y).AddThing(square);
+                    world.Grid.GetSquare(x, y).SquareDefinition = square;
                 }
             }
 
-            // Convert tiles which connect to the edge to ocean.
-            WorldSquareDefinition ocean = this.definitions.WorldSquareDefinitions.First(d => d.Name.Equals("Ocean"));
-            WorldSquareDefinition lake = this.definitions.WorldSquareDefinitions.First(d => d.Name.Equals("Lake"));
-            ConvertToOcean(ocean, lake, this.GeneratedWorld.Grid, 0, 0);
-        }
-
-        /// <summary>
-        /// A mask to make elevation look right.
-        /// </summary>
-        /// <param name="initalValue">The input value.</param>
-        /// <param name="x">The X coord of this value.</param>
-        /// <param name="y">The Y coord of this value.</param>
-        /// <param name="maxX">The width of the world.</param>
-        /// <param name="maxY">The height of the world.</param>
-        /// <returns>The elevation to use.</returns>
-        private static float ElevationMask(float initalValue, int x, int y, int maxX, int maxY)
-        {
-            const float ColdFadeStart = 0.20f;
-
-            return
-                Masks.FadeToZeroAtEnds(
-                    ColdFadeStart,
-                    y,
-                    maxY,
-                    Masks.FadeToZeroAtEnds(
-                        ColdFadeStart,
-                        x,
-                        maxX,
-                        initalValue));
-        }
-
-        /// <summary>
-        /// A mask to make temperture look right.
-        /// </summary>
-        /// <param name="mapValue">The input value.</param>
-        /// <param name="y">The Y Coord of this value.</param>
-        /// <param name="maxY">The height of the world.</param>
-        /// <returns>The elevation to use.</returns>
-        private static float TempertureMask(float mapValue, int y, int maxY)
-        {
-            const int MinTemp = 0;
-            const int MaxTemp = 80;
-
-            float initialValue = (mapValue / 255f * 40f) - 20f;
-
-            float position = (float)y / (float)maxY * 2;
-            float positionInverse = (1.0f - ((float)y / (float)maxY)) * 2;
-
-            float baseValue = position <= 1.0f ? Masks.Lerp(MinTemp, MaxTemp, position) : Masks.Lerp(MinTemp, MaxTemp, positionInverse);
-
-            return baseValue + initialValue;
-        }
-
-        /// <summary>
-        /// Converts a square, and adjacent lake squares, into an ocean.
-        /// </summary>
-        /// <param name="ocean">The ocean definition.</param>
-        /// <param name="lake">The lake definition.</param>
-        /// <param name="grid">The grid.</param>
-        /// <param name="x">The X coord.</param>
-        /// <param name="y">The Y coord.</param>
-        private static void ConvertToOcean(WorldSquareDefinition ocean, WorldSquareDefinition lake, WorldGrid grid, int x, int y)
-        {
-            GridSquare? square = grid.GetSquare(x, y);
-            if (square.SquareDefinition == null || square.SquareDefinition?.Definition != lake)
-            {
-                return;
-            }
-
-            square.SquareDefinition.BaseDefinition = ocean;
-
-            ConvertToOcean(ocean, lake, grid, x - 1, y);
-            ConvertToOcean(ocean, lake, grid, x + 1, y);
-            ConvertToOcean(ocean, lake, grid, x, y - 1);
-            ConvertToOcean(ocean, lake, grid, x, y + 1);
+            return world;
         }
 
         /// <summary>
         /// Find the correct definition for the input parameters.
         /// </summary>
-        /// <param name="elevation">The elevation.</param>
-        /// <param name="rainfall">The rainfall.</param>
-        /// <param name="drainage">The drainage.</param>
+        /// <param name="square">The square to convert.</param>
         /// <returns>The matching definition.</returns>
-        private WorldSquareDefinition GetDefinition(int elevation, int rainfall, int drainage)
+        private string GetDefinitionName(GeneratedSquare square)
         {
-            WorldSquareDefinition? matchingDefinition = this.definitions.WorldSquareDefinitions.FirstOrDefault(
+            WorldSquareDefinition? matchingDefinition = this.thingFactory.Definitions.WorldSquareDefinitions.FirstOrDefault(
                 d =>
-                    elevation >= d.MinElevation && elevation <= d.MaxElevation &&
-                    rainfall >= d.MinRainfall && rainfall <= d.MaxRainfall &&
-                    drainage >= d.MinDrainage && drainage <= d.MaxDrainage);
+                    square.Elevation >= d.MinElevation && square.Elevation <= d.MaxElevation &&
+                    square.Rainfall >= d.MinRainfall && square.Rainfall <= d.MaxRainfall &&
+                    square.Drainage >= d.MinDrainage && square.Drainage <= d.MaxDrainage &&
+                    square.Water == d.IsWater && square.SaltWater == d.IsSaltWater);
 
             if (matchingDefinition == null)
             {
-                throw new InvalidOperationException($"No matching definition found for elevation:{elevation} rainfall:{rainfall} drainage:{drainage}");
+                throw new InvalidOperationException($"No matching definition found for {square}");
             }
 
-            return matchingDefinition;
+            return matchingDefinition.Name;
         }
     }
 }

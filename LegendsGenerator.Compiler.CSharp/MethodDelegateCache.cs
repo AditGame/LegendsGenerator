@@ -30,7 +30,6 @@ namespace LegendsGenerator.Compiler.CSharp
         public static MethodDelegate<T> Get(
             string content)
         {
-            Stopwatch watch = Stopwatch.StartNew();
             if (Cache.TryGetValue(content, out MethodDelegate<T>? d))
             {
                 return d;
@@ -38,7 +37,7 @@ namespace LegendsGenerator.Compiler.CSharp
 
             try
             {
-                var entry = CSScript.Evaluator.CreateDelegate<T>(content);
+                var entry = CSScript.RoslynEvaluator.CreateDelegate<T>(content);
 
                 Cache[content] = entry;
                 return entry;

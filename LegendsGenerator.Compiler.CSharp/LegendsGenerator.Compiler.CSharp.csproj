@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CS-Script.Core" Version="1.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0-3.final" />
   </ItemGroup>
 
   <ItemGroup>

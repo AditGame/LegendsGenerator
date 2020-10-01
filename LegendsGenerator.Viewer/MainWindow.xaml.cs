@@ -47,18 +47,16 @@ namespace LegendsGenerator.Viewer
         {
             int worldSeed = 915434125;
 
-            ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
+            ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>() { { "World", new World() }, });
             DefinitionCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
 
             HistoryGenerator history = new HistoryGenerator(factory, definitions);
 
-            WorldGen.WorldGenerator worldGen = new WorldGen.WorldGenerator(worldSeed, definitions);
+            WorldGen.WorldGenerator worldGen = new WorldGen.WorldGenerator(worldSeed, factory);
             int width = 200;
             int height = 200;
-            worldGen.GenerateWorld(width, height);
-
-            World world = worldGen.GeneratedWorld;
+            World world = worldGen.GenerateWorld(width, height);
 
             Random rdm = new Random(worldSeed);
             for (int i = 0; i < 100; i++)
@@ -70,7 +68,7 @@ namespace LegendsGenerator.Viewer
                 Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
             }
 
-            return new Context(history, world);
+            return new Context(history, world, processor);
         }
 
         /// <summary>

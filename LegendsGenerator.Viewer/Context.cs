@@ -12,6 +12,7 @@ namespace LegendsGenerator.Viewer
     using System.ComponentModel;
     using System.Linq;
     using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
     using LegendsGenerator.Viewer.Views;
 
@@ -60,9 +61,11 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="history">The history machine.</param>
         /// <param name="initialWorld">The initial world state.</param>
-        public Context(HistoryGenerator history, World initialWorld)
+        /// <param name="compiler">The condition compiler.</param>
+        public Context(HistoryGenerator history, World initialWorld, IConditionCompiler compiler)
         {
             this.History = history;
+            this.Compiler = compiler;
             this.WorldSteps[0] = initialWorld;
             this.CurrentStep = 0;
             instance = this;
@@ -85,6 +88,11 @@ namespace LegendsGenerator.Viewer
         /// Gets the history.
         /// </summary>
         public HistoryGenerator History { get; }
+
+        /// <summary>
+        /// Gets the condition compiler.
+        /// </summary>
+        public IConditionCompiler Compiler { get; }
 
         /// <summary>
         /// Gets or sets the selected square on the map.
@@ -410,7 +418,7 @@ namespace LegendsGenerator.Viewer
 #if DEBUG
             this.History.OpenDebuggerAtThing = this.DebugAtThingId;
 #endif
-
+            this.Compiler.UpdateGlobalVariables(new Dictionary<string, object>() { { "World", this.WorldSteps[toStep - 1] }, });
             this.WorldSteps[toStep] = this.History.Step(this.WorldSteps[toStep - 1]);
         }
     }

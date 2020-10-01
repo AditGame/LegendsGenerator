@@ -13,6 +13,7 @@ namespace LegendsGenerator.Editor
     using System.IO;
     using System.Linq;
     using LegendsGenerator.Compiler.CSharp;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
@@ -84,7 +85,10 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Gets the condition compiler.
         /// </summary>
-        public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler(new Dictionary<string, object>());
+        public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler(new Dictionary<string, object>()
+        {
+            { "World", new World() },
+        });
 
         /// <summary>
         /// Gets the list of all opened files.

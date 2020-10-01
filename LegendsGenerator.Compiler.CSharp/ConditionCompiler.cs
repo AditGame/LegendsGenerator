@@ -42,6 +42,25 @@ namespace LegendsGenerator.Compiler.CSharp
             this.globalVariables = globalVariables;
         }
 
+        /// <inheritdoc/>
+        public void UpdateGlobalVariables(IDictionary<string, object> variables)
+        {
+            foreach (var entry in variables)
+            {
+                if (!this.globalVariables.TryGetValue(entry.Key, out object? existing))
+                {
+                    throw new InvalidOperationException($"Can not add new global variables after initialization, attempted to add {entry.Key}.");
+                }
+
+                if (existing.GetType() != entry.Value.GetType())
+                {
+                    throw new InvalidOperationException($"Can not add change global variable type after initialization, changed {entry.Key} from {entry.Value.GetType()} to {existing.GetType()}.");
+                }
+
+                this.globalVariables[entry.Key] = entry.Value;
+            }
+        }
+
         /// <summary>
         /// Compiles a complex (multi-line) condition and executes it.
         /// </summary>

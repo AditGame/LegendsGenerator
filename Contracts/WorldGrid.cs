@@ -26,9 +26,7 @@ namespace LegendsGenerator.Contracts
         {
             this.Width = width;
             this.Height = height;
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional. Multidimensional is more preformant for our use case.
             this.Squares = new GridSquare[width, height];
-#pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
 
             for (int x = 0; x < this.Width; x++)
             {
@@ -52,11 +50,7 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets the grid.
         /// </summary>
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional. Multidimensional is more preformant for our use case.
-#pragma warning disable CA1819 // Properties should not return arrays
         public GridSquare[,] Squares { get; }
-#pragma warning restore CA1819 // Properties should not return arrays
-#pragma warning restore CA1814 // Prefer jagged arrays over multidimensional
 
         /// <summary>
         /// Clones this grid, without any Things.

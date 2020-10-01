@@ -15,11 +15,11 @@ namespace LegendsGenerator.Contracts.Compiler
     public interface ICompiledCondition<T>
     {
         /// <summary>
-        /// Evaolulates the condition based on the passed in variables.
+        /// Evaluates the condition based on the passed in variables.
         /// </summary>
         /// <param name="random">The random number generator.</param>
         /// <param name="variables">The variables.</param>
-        /// <returns>The result of evalulation.</returns>
+        /// <returns>The result of evaluation.</returns>
         T Evaluate(Random random, IDictionary<string, BaseThing> variables);
     }
 }

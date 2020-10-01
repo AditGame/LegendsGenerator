@@ -7,10 +7,16 @@ namespace LegendsGenerator.Contracts.Compiler
     using System.Collections.Generic;
 
     /// <summary>
-    /// Compiels a condition into something the system can understand.
+    /// Compiles a condition into something the system can understand.
     /// </summary>
     public interface IConditionCompiler
     {
+        /// <summary>
+        /// Update the global variables with new values.
+        /// </summary>
+        /// <param name="variables">The variables.</param>
+        void UpdateGlobalVariables(IDictionary<string, object> variables);
+
         /// <summary>
         /// Compiles a complex (multi-line) condition.
         /// </summary>
