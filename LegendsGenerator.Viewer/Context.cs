@@ -132,6 +132,7 @@ namespace LegendsGenerator.Viewer
 
                 this.OnPropertyChanged(nameof(this.SelectedThing));
                 this.OnPropertyChanged(nameof(this.Lines));
+                this.OnPropertyChanged(nameof(this.PathSquares));
                 this.OnPropertyChanged(nameof(this.DebugAtSelectedThing));
             }
         }
@@ -333,14 +334,32 @@ namespace LegendsGenerator.Viewer
         }
 
         /// <summary>
+        /// Gets all lines currently visible.
+        /// </summary>
+        public List<PathSquareView> PathSquares
+        {
+            get
+            {
+                List<PathSquareView> paths = new List<PathSquareView>();
+
+                if (this.SelectedThing != null)
+                {
+                    paths.AddRange(this.SelectedThing.ReleventPathParts);
+                }
+
+                return paths;
+            }
+        }
+
+        /// <summary>
         /// Gets the width of the viewer.
         /// </summary>
-        public int ViewerWidth => this.CurrentWorld.Grid.Width * 20;
+        public int ViewerWidth => this.CurrentWorld.Grid.Width * WorldViewer.GridSize;
 
         /// <summary>
         /// Gets the height of the viewer.
         /// </summary>
-        public int ViewerHeight => this.CurrentWorld.Grid.Height * 20;
+        public int ViewerHeight => this.CurrentWorld.Grid.Height * WorldViewer.GridSize;
 
         /// <summary>
         /// Advances the world state to the next step.

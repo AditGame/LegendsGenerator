@@ -49,11 +49,11 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the starting point of the line in viewer coords.
         /// </summary>
-        public Point ViewerStart => new Point((this.Start.X * 20) + 10, (this.Start.Y * 20) + 10);
+        public Point ViewerStart => new Point((this.Start.X * WorldViewer.GridSize) + (WorldViewer.GridSize / 2), (this.Start.Y * WorldViewer.GridSize) + (WorldViewer.GridSize / 2));
 
         /// <summary>
         /// Gets the endpoint of the line in viewer coords.
         /// </summary>
-        public Point ViewerEnd => new Point((this.End.X * 20) + 10, (this.End.Y * 20) + 10);
+        public Point ViewerEnd => new Point((this.End.X * WorldViewer.GridSize) + (WorldViewer.GridSize / 2), (this.End.Y * WorldViewer.GridSize) + (WorldViewer.GridSize / 2));
     }
 }

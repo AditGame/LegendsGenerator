@@ -4,7 +4,7 @@
   "NotablePeople": [],
   "WorldSquares": [
     {
-      "MovementCost": ".5",
+      "MovementCost": "1",
       "IsWater": true,
       "IsSaltWater": true,
       "MinElevation": 0,
@@ -25,7 +25,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".25",
+      "MovementCost": "4",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 300,
@@ -45,7 +45,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "2",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -65,7 +65,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "2",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 0,
@@ -85,7 +85,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "2",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -106,7 +106,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "2.1f",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -127,7 +127,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "3",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -147,7 +147,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "UNSET",
+      "MovementCost": "1",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 0,
@@ -167,7 +167,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "1",
+      "MovementCost": "0.8f",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -188,7 +188,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".8",
+      "MovementCost": "1",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -229,7 +229,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "1",
+      "MovementCost": "0.8f",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -250,7 +250,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "UNSET",
+      "MovementCost": "1",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -271,7 +271,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".25",
+      "MovementCost": "2.5f",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -353,7 +353,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "3",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -393,7 +393,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "UNSET",
+      "MovementCost": "2",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -414,7 +414,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": "1",
+      "MovementCost": "2",
       "IsWater": false,
       "IsSaltWater": false,
       "MinElevation": 100,
@@ -455,7 +455,7 @@
       "DefaultAspects_IsComplex": false
     },
     {
-      "MovementCost": ".5",
+      "MovementCost": "1",
       "IsWater": true,
       "IsSaltWater": false,
       "MinElevation": 0,

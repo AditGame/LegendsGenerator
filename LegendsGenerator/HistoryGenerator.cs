@@ -142,7 +142,7 @@ namespace LegendsGenerator
                         this.ApplyEvent(rdm, nextWorld, occurredEvent, newThing.Thing, stagedThings);
                     }
 
-                    ProcessMovement(rdm, nextWorld, newThing.Thing, stagedThings);
+                    ProcessMovement(rdm, currWorld, newThing.Thing, stagedThings);
                 }
             }
 
@@ -300,7 +300,6 @@ namespace LegendsGenerator
             if (newMovingThing != null && newMovingThing.IsMoving)
             {
                 MovementHandler handler = new MovementHandler(rdm, newMovingThing, world);
-                handler.ProcessMovement(rdm, world);
                 handler.ApplyMovement(newMovingThing);
             }
         }

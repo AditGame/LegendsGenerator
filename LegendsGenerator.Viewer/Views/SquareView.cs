@@ -83,12 +83,12 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the Left position to display this in the viewer.
         /// </summary>
-        public int ViewerX => this.inner.X * 20;
+        public int ViewerX => this.inner.X * WorldViewer.GridSize;
 
         /// <summary>
         /// Gets the Top position to display this in the viewer.
         /// </summary>
-        public int ViewerY => this.inner.Y * 20;
+        public int ViewerY => this.inner.Y * WorldViewer.GridSize;
 
         /// <summary>
         /// Gets the X coord of this in the world.

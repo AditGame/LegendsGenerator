@@ -29,6 +29,11 @@ namespace LegendsGenerator.Viewer
     public partial class WorldViewer : UserControl
     {
         /// <summary>
+        /// The size of the grid.
+        /// </summary>
+        public const int GridSize = 20;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WorldViewer"/> class.
         /// </summary>
         public WorldViewer()

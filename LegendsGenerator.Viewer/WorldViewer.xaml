@@ -41,5 +41,25 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <ItemsControl ItemsSource="{Binding PathSquares}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="PaleVioletRed" Width="{Binding Width}" Height="{Binding Height}" PreviewMouseDown="TextBlock_PreviewMouseDown">
+                        <TextBlock Text="" Background="{Binding Color}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding ViewerX}" />
+                    <Setter Property="Canvas.Top" Value="{Binding ViewerY}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
     </Canvas>
 </UserControl>

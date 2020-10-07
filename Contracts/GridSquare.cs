@@ -18,6 +18,11 @@ namespace LegendsGenerator.Contracts
     /// </summary>
     public class GridSquare
     {
+        /// <summary>
+        /// A cache of the movement cost to mvoe through this square.
+        /// </summary>
+        private float? movementCost;
+
         public GridSquare(int x, int y)
         {
             this.X = x;
@@ -43,6 +48,22 @@ namespace LegendsGenerator.Contracts
         /// The Y coord of this square.
         /// </summary>
         public int Y { get; }
+
+        /// <summary>
+        /// Gets the random number generator for this square.
+        /// </summary>
+        /// <param name="random">The random number generator.</param>
+        /// <returns>The movement cost.</returns>
+        public float GetMovementCost(Random random)
+        {
+            if (this.movementCost.HasValue)
+            {
+                return this.movementCost.Value;
+            }
+
+            this.movementCost = this.SquareDefinition?.Definition.EvalMovementCost(random, this.SquareDefinition) ?? 1;
+            return this.movementCost.Value;
+        }
 
         /// <summary>
         /// Clones this instance without things.

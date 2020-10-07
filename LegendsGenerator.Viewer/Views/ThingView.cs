@@ -135,6 +135,22 @@ namespace LegendsGenerator.Viewer.Views
             }
         }
 
+        /// <summary>
+        /// Gets the path parts relevant to this Thing.
+        /// </summary>
+        public List<PathSquareView> ReleventPathParts
+        {
+            get
+            {
+                if (this.IsMoving && this.thing is BaseMovingThing movingThing)
+                {
+                    return movingThing.Path?.Select(p => new PathSquareView(p.X, p.Y)).ToList() ?? new List<PathSquareView>();
+                }
+
+                return new List<PathSquareView>();
+            }
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

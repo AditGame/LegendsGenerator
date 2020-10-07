@@ -162,7 +162,7 @@
     {
       "Flies": "false",
       "LandSpeed": "1",
-      "WaterSpeed": "0",
+      "WaterSpeed": "0.1f",
       "Flies_IsComplex": false,
       "LandSpeed_IsComplex": false,
       "WaterSpeed_IsComplex": false,

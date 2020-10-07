@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Things
 {
     using System;
+    using System.Collections.Generic;
     using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>
@@ -44,6 +45,11 @@ namespace LegendsGenerator.Contracts.Things
         public float ResidualMovement { get; set; }
 
         /// <summary>
+        /// Gets or sets the path to the final coord.
+        /// </summary>
+        public List<Location>? Path { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether this thing is moving towards something.
         /// </summary>
         public bool IsMoving => this.MoveType != MoveType.Unknown;
@@ -54,6 +60,7 @@ namespace LegendsGenerator.Contracts.Things
         public void CompleteMovement()
         {
             this.MoveType = MoveType.Unknown;
+            this.Path = null;
             this.MoveToThing = null;
             this.MoveToCoordX = null;
             this.MoveToCoordY = null;
@@ -78,7 +85,7 @@ namespace LegendsGenerator.Contracts.Things
             {
                 case MoveType.ToCoords:
                     x = this.MoveToCoordX ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordX is null.");
-                    y = this.MoveToCoordX ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordX is null.");
+                    y = this.MoveToCoordY ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordY is null.");
                     break;
                 case MoveType.ToThing:
                     BaseThing thing = world.FindThing(this.MoveToThing ?? throw new InvalidOperationException("MoveType is set to ToThing but MoveToThing is null."));
@@ -86,7 +93,7 @@ namespace LegendsGenerator.Contracts.Things
                     y = thing.Y;
                     break;
                 default:
-                    throw new InvalidOperationException($"Unregoognized move type {this.MoveType}");
+                    throw new InvalidOperationException($"Unrecognized move type {this.MoveType}");
             }
 
             return (x, y);
