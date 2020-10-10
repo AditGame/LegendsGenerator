@@ -97,6 +97,8 @@ namespace LegendsGenerator
 
             IDictionary<Guid, StagedThing> stagedThings = new Dictionary<Guid, StagedThing>();
 
+            MovementHandler movementHandler = new MovementHandler(RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, Guid.Empty), currWorld);
+
             // Iterate through every gridsquare to create the new world.
             foreach (var (x, y, square) in currWorld.Grid.GetAllGridEntries())
             {
@@ -142,7 +144,7 @@ namespace LegendsGenerator
                         this.ApplyEvent(rdm, nextWorld, occurredEvent, newThing.Thing, stagedThings);
                     }
 
-                    ProcessMovement(rdm, currWorld, newThing.Thing, stagedThings);
+                    ProcessMovement(newThing.Thing, movementHandler, stagedThings);
                 }
             }
 
@@ -289,17 +291,15 @@ namespace LegendsGenerator
         /// <summary>
         /// Processes movement for this thing.
         /// </summary>
-        /// <param name="rdm">The random number generator for this thing.</param>
-        /// <param name="world">The world.</param>
         /// <param name="thing">The thing to apply the event to.</param>
+        /// <param name="handler">The movement handler.</param>
         /// <param name="stagedThings">The staged things.</param>
-        private static void ProcessMovement(Random rdm, World world, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings)
+        private static void ProcessMovement(BaseThing thing, MovementHandler handler, IDictionary<Guid, StagedThing> stagedThings)
         {
             // Handle movement
             BaseMovingThing? newMovingThing = GetOrCreate(stagedThings, thing)?.Thing as BaseMovingThing;
             if (newMovingThing != null && newMovingThing.IsMoving)
             {
-                MovementHandler handler = new MovementHandler(rdm, newMovingThing, world);
                 handler.ApplyMovement(newMovingThing);
             }
         }

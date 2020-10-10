@@ -30,6 +30,8 @@ namespace LegendsGenerator.Viewer.Views
             { "Ocean", Brushes.DarkBlue },
             { "Lake", Brushes.Blue },
             { "Mountain", Brushes.DarkSlateGray },
+            { "Mountain Heights", Brushes.SlateGray },
+            { "Mountain Peeks", Brushes.LightSlateGray },
             { "Sand Desert", Brushes.Goldenrod },
             { "Flat Rocky Wasteland", Brushes.RosyBrown },
             { "Hilly Rocky Wasteland", Brushes.RosyBrown },

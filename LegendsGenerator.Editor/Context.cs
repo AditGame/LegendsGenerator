@@ -235,46 +235,6 @@ namespace LegendsGenerator.Editor
         }
 
         /// <summary>
-        /// Sets the definitions.
-        /// </summary>
-        /// <param name="path">The path to the definitions.</param>
-        private void SetDefinitions(string? path)
-        {
-            this.Definitions.Clear();
-            this.InheritanceGraph.Clear();
-            this.OpenedFilesSelector.Clear();
-
-            if (path != null)
-            {
-                DefinitionCollection? definitions =
-                    DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
-
-                foreach (var def in definitions.AllDefinitions)
-                {
-                    this.Definitions.Add(new Definition(def));
-                }
-
-                if (this.OpenedDirectory != null)
-                {
-                    this.OpenedFilesSelector.Add(AllDefinitionFiles);
-
-                    foreach (string sourceName in definitions.AllDefinitions.OfType<ITopLevelDefinition>().Select(x => x.SourceFile).Distinct())
-                    {
-                        this.OpenedFilesSelector.Add(Path.ChangeExtension(Path.GetRelativePath(this.OpenedDirectory, sourceName), null));
-                    }
-                }
-            }
-
-            // This will fill the filtered list with entries.
-            this.DefinitionFileFilter = null;
-
-            Instance = this;
-
-            this.RegenerateInheritanceGraph();
-            this.Attach();
-        }
-
-        /// <summary>
         /// Attaches and initializes the compilation process.
         /// Must be called again every time a node is added or removed.
         /// </summary>
@@ -363,6 +323,46 @@ namespace LegendsGenerator.Editor
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Sets the definitions.
+        /// </summary>
+        /// <param name="path">The path to the definitions.</param>
+        private void SetDefinitions(string? path)
+        {
+            this.Definitions.Clear();
+            this.InheritanceGraph.Clear();
+            this.OpenedFilesSelector.Clear();
+
+            if (path != null)
+            {
+                DefinitionCollection? definitions =
+                    DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
+
+                foreach (var def in definitions.AllDefinitions)
+                {
+                    this.Definitions.Add(new Definition(def));
+                }
+
+                if (this.OpenedDirectory != null)
+                {
+                    this.OpenedFilesSelector.Add(AllDefinitionFiles);
+
+                    foreach (string sourceName in definitions.AllDefinitions.OfType<ITopLevelDefinition>().Select(x => x.SourceFile).Distinct())
+                    {
+                        this.OpenedFilesSelector.Add(Path.ChangeExtension(Path.GetRelativePath(this.OpenedDirectory, sourceName), null));
+                    }
+                }
+            }
+
+            // This will fill the filtered list with entries.
+            this.DefinitionFileFilter = null;
+
+            Instance = this;
+
+            this.RegenerateInheritanceGraph();
+            this.Attach();
         }
 
         /// <summary>

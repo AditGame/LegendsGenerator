@@ -161,8 +161,8 @@
   "NotablePeople": [
     {
       "Flies": "false",
-      "LandSpeed": "1",
-      "WaterSpeed": "0.1f",
+      "LandSpeed": "10",
+      "WaterSpeed": "1",
       "Flies_IsComplex": false,
       "LandSpeed_IsComplex": false,
       "WaterSpeed_IsComplex": false,

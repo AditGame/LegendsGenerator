@@ -20,4 +20,11 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Hide the license from visual studio -->
+    <None Update="PathFinding\LICENSE.txt">
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
 </Project>
