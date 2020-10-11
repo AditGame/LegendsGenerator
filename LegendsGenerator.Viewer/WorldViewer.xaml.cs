@@ -39,6 +39,30 @@ namespace LegendsGenerator.Viewer
         public WorldViewer()
         {
             this.InitializeComponent();
+
+            Context.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName?.Equals(nameof(Context.Squares)) == true)
+                {
+                    this.InvalidateVisual();
+                }
+            };
+        }
+
+        /// <inheritdoc/>
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            foreach (SquareView entry in Context.Instance.Squares)
+            {
+                drawingContext.DrawRectangle(entry.BackgroundColor, null, new Rect(entry.ViewerX, entry.ViewerY, GridSize, GridSize));
+
+                if (entry.Foreground != null)
+                {
+                    drawingContext.DrawRectangle(entry.Foreground, null, new Rect(entry.ViewerX, entry.ViewerY, GridSize, GridSize));
+                }
+            }
+
+            base.OnRender(drawingContext);
         }
 
         /// <summary>
@@ -46,16 +70,32 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void TextBlock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void TheWorld_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is not Grid grid || grid.DataContext is not SquareView square)
+            if (sender is not Canvas canvas)
             {
+                MessageBox.Show($"Click sender was not a Canvas, was a {sender.GetType()}");
                 return;
             }
 
-            Context.Instance.Squares.ForEach(s => s.Selected = false);
-            square.Selected = true;
-            Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(square.X, square.Y);
+            Point clicked = Mouse.GetPosition(canvas);
+
+            int gridX = (int)(clicked.X / GridSize);
+            int gridY = (int)(clicked.Y / GridSize);
+
+            Context.Instance.Squares.ForEach(s =>
+            {
+                if (s.X == gridX && s.Y == gridY)
+                {
+                    s.Selected = true;
+                }
+                else
+                {
+                    s.Selected = false;
+                }
+            });
+
+            Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(gridX, gridY);
         }
     }
 }

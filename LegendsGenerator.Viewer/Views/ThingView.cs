@@ -11,6 +11,7 @@ namespace LegendsGenerator.Viewer.Views
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows.Media;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
@@ -109,6 +110,16 @@ namespace LegendsGenerator.Viewer.Views
         }
 
         /// <summary>
+        /// Gets the X coord of this thing.
+        /// </summary>
+        public int X => this.thing.X;
+
+        /// <summary>
+        /// Gets the Y coords of this thing.
+        /// </summary>
+        public int Y => this.thing.Y;
+
+        /// <summary>
         /// Gets the X coord of the square this is moving towards.
         /// </summary>
         public int? MovingTowardsX { get; }
@@ -144,7 +155,7 @@ namespace LegendsGenerator.Viewer.Views
             {
                 if (this.IsMoving && this.thing is BaseMovingThing movingThing)
                 {
-                    return movingThing.Path?.Select(p => new PathSquareView(p.X, p.Y)).ToList() ?? new List<PathSquareView>();
+                    return movingThing.Path?.Select(p => new PathSquareView(p.X, p.Y, 0.5f, Brushes.PaleVioletRed)).ToList() ?? new List<PathSquareView>();
                 }
 
                 return new List<PathSquareView>();

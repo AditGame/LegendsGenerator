@@ -6,27 +6,7 @@
              xmlns:local="clr-namespace:LegendsGenerator.Viewer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Canvas x:Name="TheWorld" Background="DarkGreen" Width="{Binding ViewerWidth}" Height="{Binding ViewerHeight}">
-        <ItemsControl ItemsSource="{Binding Squares}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid Background="{Binding BackgroundColor}" Width="20" Height="20" PreviewMouseDown="TextBlock_PreviewMouseDown">
-                        <TextBlock Text="" PreviewMouseDown="TextBlock_PreviewMouseDown" Background="{Binding Foreground}"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding ViewerX}" />
-                    <Setter Property="Canvas.Top" Value="{Binding ViewerY}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+    <Canvas x:Name="TheWorld" Background="Transparent" Width="{Binding ViewerWidth}" Height="{Binding ViewerHeight}" PreviewMouseDown="TheWorld_PreviewMouseDown">
         <ItemsControl ItemsSource="{Binding Lines}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -44,8 +24,7 @@
         <ItemsControl ItemsSource="{Binding PathSquares}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Background="PaleVioletRed" Width="{Binding Width}" Height="{Binding Height}" PreviewMouseDown="TextBlock_PreviewMouseDown">
-                        <TextBlock Text="" Background="{Binding Color}"/>
+                    <Grid Background="{Binding Color}" Width="{Binding Width}" Height="{Binding Height}" Opacity="{Binding Opacity}">
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

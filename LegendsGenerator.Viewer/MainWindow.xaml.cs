@@ -68,7 +68,9 @@ namespace LegendsGenerator.Viewer
                 Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
             }
 
-            return new Context(history, world, processor);
+            Context.Instance.Attach(history, world, processor);
+
+            return Context.Instance;
         }
 
         /// <summary>

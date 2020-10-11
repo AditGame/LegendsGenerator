@@ -157,11 +157,6 @@ namespace LegendsGenerator.Viewer.Views
                     value = Brushes.Green;
                 }
 
-                if (this.Selected)
-                {
-                    value = Brushes.Red;
-                }
-
                 return value;
             }
         }

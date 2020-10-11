@@ -11,6 +11,7 @@ namespace LegendsGenerator.Viewer
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using System.Windows.Media;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
@@ -24,7 +25,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// The last created Context instance.
         /// </summary>
-        private static Context? instance;
+        private static Context instance = new Context();
 
         /// <summary>
         /// The backing field for current step.
@@ -59,16 +60,8 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
-        /// <param name="history">The history machine.</param>
-        /// <param name="initialWorld">The initial world state.</param>
-        /// <param name="compiler">The condition compiler.</param>
-        public Context(HistoryGenerator history, World initialWorld, IConditionCompiler compiler)
+        private Context()
         {
-            this.History = history;
-            this.Compiler = compiler;
-            this.WorldSteps[0] = initialWorld;
-            this.CurrentStep = 0;
-            instance = this;
         }
 
         /// <inheritdoc/>
@@ -77,7 +70,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the last created instance of this class.
         /// </summary>
-        public static Context Instance => instance ?? throw new InvalidOperationException("Can not get Context instance before it's created.");
+        public static Context Instance => instance;
 
         /// <summary>
         /// Gets the steps of the world.
@@ -87,12 +80,12 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the history.
         /// </summary>
-        public HistoryGenerator History { get; }
+        public HistoryGenerator? History { get; private set; }
 
         /// <summary>
         /// Gets the condition compiler.
         /// </summary>
-        public IConditionCompiler Compiler { get; }
+        public IConditionCompiler? Compiler { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected square on the map.
@@ -345,6 +338,7 @@ namespace LegendsGenerator.Viewer
                 if (this.SelectedThing != null)
                 {
                     paths.AddRange(this.SelectedThing.ReleventPathParts);
+                    paths.Add(new PathSquareView(this.SelectedThing.X, this.SelectedThing.Y, 1, Brushes.Red, 0.5f));
                 }
 
                 return paths;
@@ -360,6 +354,20 @@ namespace LegendsGenerator.Viewer
         /// Gets the height of the viewer.
         /// </summary>
         public int ViewerHeight => this.CurrentWorld.Grid.Height * WorldViewer.GridSize;
+
+        /// <summary>
+        /// Attaches information to this context.
+        /// </summary>
+        /// <param name="history">The history.</param>
+        /// <param name="initialWorld">The initial world state.</param>
+        /// <param name="compiler">The compiler.</param>
+        public void Attach(HistoryGenerator history, World initialWorld, IConditionCompiler compiler)
+        {
+            this.History = history;
+            this.Compiler = compiler;
+            this.WorldSteps[0] = initialWorld;
+            this.CurrentStep = 0;
+        }
 
         /// <summary>
         /// Advances the world state to the next step.
@@ -429,6 +437,11 @@ namespace LegendsGenerator.Viewer
         /// <param name="toStep">The step to load to.</param>
         private void BackfillToStep(int toStep)
         {
+            if (this.History == null || this.Compiler == null)
+            {
+                throw new InvalidOperationException("Must attach the world before changing history.");
+            }
+
             if (!this.WorldSteps.ContainsKey(toStep - 1))
             {
                 this.BackfillToStep(toStep - 1);

@@ -13,16 +13,21 @@ namespace LegendsGenerator.Viewer.Views
     /// </summary>
     public class PathSquareView
     {
-#pragma warning disable CA1822 // Mark members as static. Standard practice of view classes.
         /// <summary>
         /// Initializes a new instance of the <see cref="PathSquareView"/> class.
         /// </summary>
         /// <param name="x">The X coord.</param>
         /// <param name="y">The Y coord.</param>
-        public PathSquareView(int x, int y)
+        /// <param name="size">The size of the brush, with 1 being the full size of the square.</param>
+        /// <param name="color">The color of the square.</param>
+        /// <param name="opacity">The opacity of this square.</param>
+        public PathSquareView(int x, int y, float size, Brush color, float opacity = 1f)
         {
             this.X = x;
             this.Y = y;
+            this.Size = size;
+            this.Color = color;
+            this.Opacity = opacity;
         }
 
         /// <summary>
@@ -36,29 +41,38 @@ namespace LegendsGenerator.Viewer.Views
         public int Y { get; set; }
 
         /// <summary>
+        /// Gets or sets the size of the square as a function of the total size of the square.
+        /// </summary>
+        public float Size { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of this square in the viewer.
+        /// </summary>
+        public Brush Color { get; set; }
+
+        /// <summary>
+        /// Gets or sets the opacitty of this square.
+        /// </summary>
+        public float Opacity { get; set; }
+
+        /// <summary>
         /// Gets the X position of this square in the viewer.
         /// </summary>
-        public int ViewerX => (this.X * WorldViewer.GridSize) + (WorldViewer.GridSize / 4);
+        public int ViewerX => (this.X * WorldViewer.GridSize) + (int)(WorldViewer.GridSize * (1f - this.Size) / 2);
 
         /// <summary>
         /// Gets the Y position of this square in the viewer.
         /// </summary>
-        public int ViewerY => (this.Y * WorldViewer.GridSize) + (WorldViewer.GridSize / 4);
+        public int ViewerY => (this.Y * WorldViewer.GridSize) + (int)(WorldViewer.GridSize * (1f - this.Size) / 2);
 
         /// <summary>
         /// Gets the width of this square in the viewer.
         /// </summary>
-        public int Width => WorldViewer.GridSize / 2;
+        public int Width => (int)(WorldViewer.GridSize * this.Size);
 
         /// <summary>
         /// Gets the height of this square in the viewer.
         /// </summary>
-        public int Height => WorldViewer.GridSize / 2;
-
-        /// <summary>
-        /// Gets the color of this square in the viewer.
-        /// </summary>
-        public Brush Color => Brushes.PaleVioletRed;
+        public int Height => (int)(WorldViewer.GridSize * this.Size);
     }
-#pragma warning restore CA1822 // Mark members as static
 }
