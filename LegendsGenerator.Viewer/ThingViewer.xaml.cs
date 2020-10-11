@@ -20,25 +20,5 @@ namespace LegendsGenerator.Viewer
         {
             this.InitializeComponent();
         }
-
-        /// <summary>
-        /// Increments to the previous thing in this square.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
-        private void PreviousThing_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Context.Instance.PreviousThingInSquare();
-        }
-
-        /// <summary>
-        /// Increments to the next thing in this square.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event args.</param>
-        private void NextThing_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Context.Instance.NextThingInSquare();
-        }
     }
 }

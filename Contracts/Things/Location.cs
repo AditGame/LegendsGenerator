@@ -4,7 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
-    public class Location
+    public record Location
     {
         public int X { get; set; }
 

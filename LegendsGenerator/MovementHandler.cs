@@ -8,6 +8,7 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
 
     using LegendsGenerator.Contracts;
@@ -117,7 +118,7 @@ namespace LegendsGenerator
                 // A new path needs calculating.
                 if (canFly)
                 {
-                    newThing.Path = FlightPath((startX, startY), (destinationX, destinationY));
+                    newThing.Path = FlightPath((startX, startY), (destinationX, destinationY)).ToImmutableList();
                 }
                 else
                 {
@@ -128,7 +129,7 @@ namespace LegendsGenerator
                         throw new InvalidOperationException("Could not find a path? We need to handle this somehow.");
                     }
 
-                    newThing.Path = path.Select(p => new Location() { X = p.X, Y = p.Y }).ToList();
+                    newThing.Path = path.Select(p => new Location() { X = p.X, Y = p.Y }).ToImmutableList();
                 }
             }
 
@@ -153,7 +154,7 @@ namespace LegendsGenerator
                 }
 
                 // Remove this path entry.
-                newThing.Path?.RemoveAt(0);
+                newThing.Path = newThing.Path?.RemoveAt(0);
 
                 // Apply the movement
                 newThing.X = pathEntry.X;

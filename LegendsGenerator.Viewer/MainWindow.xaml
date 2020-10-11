@@ -49,7 +49,7 @@
             <DataGridCell Grid.Column="2">
                 <TabControl TabStripPlacement="Bottom">
                     <TabItem Header="Thing Info">
-                        <local:ThingViewer />
+                        <local:ThingViewPanel />
                     </TabItem>
                     <TabItem Header="World Events">
                         <ListBox ItemsSource="{Binding OccurredEvents}">

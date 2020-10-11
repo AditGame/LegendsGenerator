@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Things
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using LegendsGenerator.Contracts.Definitions;
 
     /// <summary>
@@ -47,7 +48,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets or sets the path to the final coord.
         /// </summary>
-        public List<Location>? Path { get; set; }
+        public ImmutableList<Location>? Path { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this thing is moving towards something.

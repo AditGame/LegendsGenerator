@@ -6,114 +6,73 @@
              xmlns:local="clr-namespace:LegendsGenerator.Viewer"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Name: "/>
-                <TextBlock Text="{Binding SelectedThing.Name}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Type: "/>
-                <TextBlock Text="{Binding SelectedThing.ThingType}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="ThingId: "/>
-                <TextBlock Text="{Binding SelectedThing.ThingId}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Definition: "/>
-                <TextBlock Text="{Binding SelectedThing.DefinitionName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding SelectedThing.DefinitionDescription}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding SelectedThing.IsMoving, Converter={StaticResource VisibleIfTrueConverter}}">
-                <TextBlock Text="Moving towards "/>
-                <TextBlock Text="{Binding SelectedThing.MovingTowards}"/>
-            </StackPanel>
-            <TextBlock  Text="Attributes" FontWeight="Bold" FontSize="16"/>
-            <ListBox ItemsSource="{Binding SelectedThing.Attributes}" HorizontalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="5" ToolTip="{Binding Tooltip}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Title}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding Effective}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBlock  Text="Effects" FontWeight="Bold" FontSize="16"/>
-            <ListBox ItemsSource="{Binding SelectedThing.Effects}" HorizontalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="5" ToolTip="{Binding Description}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Title}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding EffectString}"/>
-                            <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
-                                <TextBlock Text="Expires "/>
-                                <TextBlock Text="{Binding DurationString}"/>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+    <StackPanel Grid.Row="0">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Name: "/>
+            <TextBlock Text="{Binding Name}"/>
         </StackPanel>
-        <Grid Margin="20" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Click="PreviousThing_Click" Padding="5" Grid.Column="0">Previous</Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ComboBox ItemsSource="{Binding ThingsInSquare}" SelectedItem="{Binding SelectedThing}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding DefinitionName}" />
-                                <TextBlock Text=" " />
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding FollowThing}" ToolTip="Follow this thing as history progresses">Follow</CheckBox>
-                    <CheckBox 
-                        IsChecked="{Binding DebugAtSelectedThing}"
-                        Visibility="{Binding CanDebugAtThing, Converter={StaticResource VisibleIfTrueConverter}}"
-                        ToolTip="Open a debugger at the start of thing evaluation in Step()">
-                        Debug At
-                    </CheckBox>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Click="NextThing_Click" Padding="5" Grid.Column="2">Next</Button>
-            </StackPanel>
-        </Grid>
-    </Grid>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Type: "/>
+            <TextBlock Text="{Binding ThingType}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="ThingId: "/>
+            <TextBlock Text="{Binding ThingId}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Definition: "/>
+            <TextBlock Text="{Binding DefinitionName}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding DefinitionDescription}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Visibility="{Binding IsMoving, Converter={StaticResource VisibleIfTrueConverter}}">
+            <TextBlock Text="Moving towards "/>
+            <TextBlock Text="{Binding MovingTowards}"/>
+        </StackPanel>
+        <TextBlock  Text="Attributes" FontWeight="Bold" FontSize="16"/>
+        <ListBox ItemsSource="{Binding Attributes}" HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" ToolTip="{Binding Tooltip}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Effective}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock  Text="Effects" FontWeight="Bold" FontSize="16"/>
+        <ListBox ItemsSource="{Binding Effects}" HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" ToolTip="{Binding Description}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding EffectString}"/>
+                        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
+                            <TextBlock Text="Expires "/>
+                            <TextBlock Text="{Binding DurationString}"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
 </UserControl>

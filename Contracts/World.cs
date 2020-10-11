@@ -15,9 +15,14 @@ namespace LegendsGenerator.Contracts
     public record World
     {
         /// <summary>
+        /// Backing friend for Step Count.
+        /// </summary>
+        private int step;
+
+        /// <summary>
         /// A cache of the results of searching for things by GUID.
         /// </summary>
-        private readonly IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
+        private IDictionary<Guid, BaseThing> searchByGuidHash = new Dictionary<Guid, BaseThing>();
 
         /// <summary>
         /// Gets the world seed. This should be randomly picked at the start and not changed.
@@ -27,7 +32,19 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets the step which this world is currently in. Starts at 1.
         /// </summary>
-        public int StepCount { get; init; } = 1;
+        public int StepCount
+        {
+            get => this.step;
+            set
+            {
+                this.step = value;
+
+                // The search by GUID hash should be cleared with each copy, but there's no way to inject custom logic into the copy step.
+                // Clearing when we change the step is good enough as we need to do that on each copy anyways.
+                // Once Records are no longer a preview feature we should revisit this.
+                this.searchByGuidHash = new Dictionary<Guid, BaseThing>();
+            }
+        }
 
         /// <summary>
         /// Gets the grid of this world.

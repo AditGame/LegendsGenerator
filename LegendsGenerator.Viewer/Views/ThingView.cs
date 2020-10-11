@@ -110,6 +110,17 @@ namespace LegendsGenerator.Viewer.Views
         }
 
         /// <summary>
+        /// Gets a string a short description of the thing.
+        /// </summary>
+        public string ShortDescription
+        {
+            get
+            {
+                return $"{this.DefinitionName} {this.Name}";
+            }
+        }
+
+        /// <summary>
         /// Gets the X coord of this thing.
         /// </summary>
         public int X => this.thing.X;

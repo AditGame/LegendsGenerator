@@ -100,15 +100,32 @@ namespace LegendsGenerator.Viewer
                 this.ThingsInSquare.Clear();
                 if (this.selectedSquare != null)
                 {
-                    this.selectedSquare.GetThings().ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t, this.CurrentWorld)));
+                    // Do not include the square definition in the list of things to show, as that has a special spot at the top.
+                    this.selectedSquare.GetThings().Where(x => x != this.selectedSquare.SquareDefinition).ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t, this.CurrentWorld)));
 
-                    if (this.ThingsInSquare.Any())
-                    {
-                        this.SelectedThing = this.ThingsInSquare.First();
-                    }
+                    this.SelectedThing = this.ThingsInSquare.FirstOrDefault();
                 }
 
                 this.OnPropertyChanged(nameof(this.SelectedSquare));
+                this.OnPropertyChanged(nameof(this.PathSquares));
+                this.OnPropertyChanged(nameof(this.SelectedWorldSquare));
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected world square.
+        /// </summary>
+        public ThingView? SelectedWorldSquare
+        {
+            get
+            {
+                var def = this.SelectedSquare?.SquareDefinition;
+                if (def != null)
+                {
+                    return new ThingView(def, this.CurrentWorld);
+                }
+
+                return null;
             }
         }
 
@@ -338,7 +355,11 @@ namespace LegendsGenerator.Viewer
                 if (this.SelectedThing != null)
                 {
                     paths.AddRange(this.SelectedThing.ReleventPathParts);
-                    paths.Add(new PathSquareView(this.SelectedThing.X, this.SelectedThing.Y, 1, Brushes.Red, 0.5f));
+                }
+
+                if (this.SelectedSquare != null)
+                {
+                    paths.Add(new PathSquareView(this.SelectedSquare.X, this.SelectedSquare.Y, 1, Brushes.Red, 0.5f));
                 }
 
                 return paths;
