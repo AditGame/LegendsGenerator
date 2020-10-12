@@ -243,17 +243,38 @@ namespace LegendsGenerator
                 IEnumerable<(int X, int Y, GridSquare Square)> squaresInRange = world.Grid.GetGridEntriesWithinRange(coordinates.X, coordinates.Y, @object.Value.Distance).Shuffle(rdm);
 
                 BaseThing? matchingThing = null;
-                foreach (var (x, y, square) in squaresInRange)
+                if (@object.Value.Maximize == null)
                 {
-                    matchingThing =
-                        square.GetThings(@object.Value.Type)
-                        .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
-                        .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
-
-                    // Break from the loop once a matching thing is found in ANY square.
-                    if (matchingThing != null)
+                    foreach (var (x, y, square) in squaresInRange)
                     {
-                        break;
+                        matchingThing =
+                            square.GetThings(@object.Value.Type)
+                            .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
+                            .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
+
+                        // Break from the loop once a matching thing is found in ANY square.
+                        if (matchingThing != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    List<(float Value, BaseThing Thing)> matchingThings = new List<(float Value, BaseThing Thing)>();
+                    foreach (var (x, y, square) in squaresInRange)
+                    {
+                        matchingThings.AddRange(
+                            square.GetThings(@object.Value.Type)
+                            .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
+                            .Where(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }))
+                            .Select(t => (@object.Value.EvalMaximize(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }), t)));
+                    }
+
+                    if (matchingThings.Any())
+                    {
+                        float max = matchingThings.Max(x => x.Value);
+                        matchingThing = matchingThings.First(t => t.Value == max).Thing;
                     }
                 }
 

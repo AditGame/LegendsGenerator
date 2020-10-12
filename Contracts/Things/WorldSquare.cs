@@ -21,5 +21,10 @@ namespace LegendsGenerator.Contracts.Things
 
         /// <inheritdoc/>
         public override ThingType ThingType => ThingType.WorldSquare;
+
+        /// <summary>
+        /// Gets a value indicating whether this square is water.
+        /// </summary>
+        public bool IsWater => this.Definition.IsWater;
     }
 }

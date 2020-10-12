@@ -27,5 +27,11 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// </summary>
         [Compiled(typeof(bool), "Subject")]
         public string Condition { get; set; } = "true";
+
+        /// <summary>
+        /// Gets or sets the condition to Maximize when selecting an Object. If null, no condition is maximized and a randomly matching thing is selected.
+        /// </summary>
+        [Compiled(typeof(float), "Subject")]
+        public string? Maximize { get; set; }
     }
 }

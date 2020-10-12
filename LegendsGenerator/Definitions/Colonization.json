@@ -62,7 +62,18 @@
           "Settler"
         ]
       },
-      "Objects": {},
+      "Objects": {
+        "ColonizationSite": {
+          "Optional": false,
+          "Distance": 10,
+          "Condition": "bool hasSite(int x, int y)\r\n{\r\n\tforeach (var thing in World.Grid.GetSquare(x, y).GetThings())\r\n\t{\r\n\t\tif (thing is Site)\r\n\t\t{\r\n\t\t\treturn true;\r\n\t\t}\r\n\t}\r\n\r\n\treturn false;\r\n}\r\n\r\nreturn !((WorldSquare)ColonizationSite).IsWater && \r\n\tColonizationSite.X != Subject.X && ColonizationSite.Y != Subject.Y && \r\n\t!hasSite(ColonizationSite.X, ColonizationSite.Y) &&\r\n\t!hasSite(ColonizationSite.X, ColonizationSite.Y - 1) &&\r\n\t!hasSite(ColonizationSite.X, ColonizationSite.Y + 1) &&\r\n\t!hasSite(ColonizationSite.X - 1, ColonizationSite.Y) &&\r\n\t!hasSite(ColonizationSite.X + 1, ColonizationSite.Y) &&\r\n\t!hasSite(ColonizationSite.X - 1, ColonizationSite.Y - 1) &&\r\n\t!hasSite(ColonizationSite.X - 1, ColonizationSite.Y + 1) &&\r\n\t!hasSite(ColonizationSite.X + 1, ColonizationSite.Y - 1) &&\r\n\t!hasSite(ColonizationSite.X + 1, ColonizationSite.Y + 1);",
+          "Maximize": "-ColonizationSite->Evil + ColonizationSite->Rainfall",
+          "Condition_IsComplex": true,
+          "Maximize_IsComplex": false,
+          "Type": "WorldSquare",
+          "Definitions": []
+        }
+      },
       "Description": "The settler {Subject.Name} is moving to a new location.",
       "Results": [
         {
@@ -76,8 +87,8 @@
             {
               "MoveType": 2,
               "ThingToMoveTo": "UNSET",
-              "CoordToMoveToX": "Rand.Next(0, World.Grid.Width)",
-              "CoordToMoveToY": "Rand.Next(0, World.Grid.Height)",
+              "CoordToMoveToX": "ColonizationSite.X",
+              "CoordToMoveToY": "ColonizationSite.Y",
               "CoordToMoveToX_IsComplex": false,
               "CoordToMoveToY_IsComplex": false,
               "AppliedTo": [
