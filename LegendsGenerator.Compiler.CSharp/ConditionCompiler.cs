@@ -9,56 +9,41 @@ namespace LegendsGenerator.Compiler.CSharp
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using LegendsGenerator.Compiler.CSharp.Presentation;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Processes a condition into a compiled condition.
     /// </summary>
-    public class ConditionCompiler : IConditionCompiler
+    /// <typeparam name="TGlobals">The object which contains all the global variables.</typeparam>
+    public class ConditionCompiler<TGlobals> : IConditionCompiler<TGlobals>
+        where TGlobals : BaseGlobalVariables
     {
-        /// <summary>
-        /// The name of the Random parameter.
-        /// </summary>
-        public const string RandomVariableName = "Rand";
-
         /// <summary>
         /// The regex used to turn attribute arrows to their code equivilent.
         /// </summary>
         private static readonly Regex AttributeArrowRegex =
-            new Regex("->([A-Za-z0-9_]*)");
+            new Regex("->([A-Za-z0-9_]*)(:[0-9])?");
 
         /// <summary>
         /// The list of variables that should be exposed to all conditions.
         /// </summary>
-        private readonly IDictionary<string, object> globalVariables = new Dictionary<string, object>();
+        private readonly TGlobals globalVariables;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionCompiler"/> class.
+        /// Initializes a new instance of the <see cref="ConditionCompiler{TGlobals}"/> class.
         /// </summary>
         /// <param name="globalVariables">The variables that should be available to all conditions.</param>
-        public ConditionCompiler(IDictionary<string, object> globalVariables)
+        public ConditionCompiler(TGlobals globalVariables)
         {
             this.globalVariables = globalVariables;
         }
 
         /// <inheritdoc/>
-        public void UpdateGlobalVariables(IDictionary<string, object> variables)
+        public void UpdateGlobalVariables(Action<TGlobals> updateFunc)
         {
-            foreach (var entry in variables)
-            {
-                if (!this.globalVariables.TryGetValue(entry.Key, out object? existing))
-                {
-                    throw new InvalidOperationException($"Can not add new global variables after initialization, attempted to add {entry.Key}.");
-                }
-
-                if (existing.GetType() != entry.Value.GetType())
-                {
-                    throw new InvalidOperationException($"Can not add change global variable type after initialization, changed {entry.Key} from {entry.Value.GetType()} to {existing.GetType()}.");
-                }
-
-                this.globalVariables[entry.Key] = entry.Value;
-            }
+            updateFunc(this.globalVariables);
         }
 
         /// <summary>
@@ -154,6 +139,7 @@ namespace LegendsGenerator.Compiler.CSharp
             StringBuilder bldr = new StringBuilder();
             bldr.AppendLine("using LegendsGenerator.Contracts;");
             bldr.AppendLine("using LegendsGenerator.Contracts.Things;");
+            bldr.AppendLine("using LegendsGenerator.Compiler.CSharp.Presentation;");
             bldr.Append($"{typeof(T).Name} EvaluateCondition(");
             bldr.AppendJoin(", ", variables.Select(v => $"{v.Value.Name} {v.Key}"));
             bldr.Append(") {");
@@ -170,24 +156,30 @@ namespace LegendsGenerator.Compiler.CSharp
         {
             return AttributeArrowRegex.Replace(condition, match =>
             {
-                return $".{nameof(BaseThing.EffectiveAttribute)}(\"{match.Groups[1]}\")";
+                string defaultVal = "0";
+                if (!string.IsNullOrEmpty(match.Groups[2].ToString()))
+                {
+                    defaultVal = match.Groups[2].ToString();
+                }
+
+                return $".{nameof(BaseThing.EffectiveAttribute)}(\"{match.Groups[1]}\", {defaultVal})";
             });
         }
 
         /// <summary>
-        /// Generates a combiled condition method based on the inner code.
+        /// Generates a compiled condition method based on the inner code.
         /// </summary>
         /// <typeparam name="T">The type of output.</typeparam>
         /// <param name="inner">The inner code.</param>
         /// <param name="variableNames">The variable names.</param>
         /// <returns>The condition with the inner text as the method body.</returns>
-        private CompiledCondition<T> GenerateCompiledCondition<T>(string inner, IEnumerable<string> variableNames)
+        private CompiledCondition<T, TGlobals> GenerateCompiledCondition<T>(string inner, IEnumerable<string> variableNames)
         {
             IDictionary<string, Type> combinedVariables =
-                this.globalVariables.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.GetType())
-                .Concat(variableNames.ToDictionary(n => n, n => typeof(BaseThing)))
+                this.globalVariables.ToDictionary().ToDictionary(kvp => kvp.Key, kvp => kvp.Value.GetType())
+                .Concat(variableNames.ToDictionary(n => n, n => typeof(BaseThingPres)))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            combinedVariables[RandomVariableName] = typeof(Random);
+            combinedVariables[Constants.RandomVariableName] = typeof(Random);
             StringBuilder bldr = new StringBuilder();
             bldr.AppendLine(GenerateMethodSignature<T>(combinedVariables));
             bldr.AppendLine(inner);
@@ -195,7 +187,7 @@ namespace LegendsGenerator.Compiler.CSharp
 
             var compiledCondition = MethodDelegateCache<T>.Get(bldr.ToString());
 
-            return new CompiledCondition<T>(
+            return new CompiledCondition<T, TGlobals>(
                 compiledCondition, combinedVariables.Select(kvp => kvp.Key).ToList(), this.globalVariables);
         }
     }

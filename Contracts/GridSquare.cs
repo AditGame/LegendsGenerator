@@ -79,10 +79,11 @@ namespace LegendsGenerator.Contracts
         /// <summary>
         /// Gets all things on this square, including the square itself.
         /// </summary>
+        /// <param name="excludeSquareDef">Exclude the definition of the square itself.</param>
         /// <returns>All thing matching type.</returns>
-        public IEnumerable<BaseThing> GetThings()
+        public IEnumerable<BaseThing> GetThings(bool excludeSquareDef = false)
         {
-            if (this.SquareDefinition != null)
+            if (this.SquareDefinition != null && !excludeSquareDef)
             {
                 yield return this.SquareDefinition;
             }

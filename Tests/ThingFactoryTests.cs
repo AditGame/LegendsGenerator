@@ -52,7 +52,7 @@ namespace LegendsGenerator.Tests
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
 
-            ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>());
+            ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables());
 
             definitions.Attach(processor);
             ThingFactory factory = new ThingFactory(definitions);

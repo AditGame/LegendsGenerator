@@ -162,16 +162,22 @@ namespace CompiledDefinitionSourceGenerator
             sb.AppendLine("base.Attach(compiler, upsteamDefinition);");
             foreach (var prop in classInfo.CompiledProps)
             {
+                sb.AppendLine($"if (this.{prop.Name} != null)");
+                sb.StartBrace();
                 sb.AppendLine($"this.compiledCondition{prop.Name} = ");
                 sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.CreateCondition<{prop.ReturnType}>(this.{prop.Name}, {prop.AsFormattedText.ToString().ToLower()}, this.{prop.Name}_IsComplex, this.GetParameters{prop.Name}()));");
+                sb.EndBrace();
             }
 
             foreach (var prop in classInfo.CompiledDictionaryProps)
             {
                 sb.AppendLine($"foreach (var entry in this.{prop.Name})");
                 sb.StartBrace();
+                sb.AppendLine($"if (this.{prop.Name}[entry.Key] != null)");
+                sb.StartBrace();
                 sb.AppendLine($"this.compiledCondition{prop.Name}[entry.Key] = ");
                 sb.AppendLine($"   new Lazy<ICompiledCondition<{prop.ReturnType}>>(() => this.CreateCondition<{prop.ReturnType}>(this.{prop.Name}[entry.Key], {prop.AsFormattedText.ToString().ToLower()}, this.{prop.Name}_IsComplex, this.GetParameters{prop.Name}()));");
+                sb.EndBrace();
                 sb.EndBrace();
                 sb.AppendLine();
             }

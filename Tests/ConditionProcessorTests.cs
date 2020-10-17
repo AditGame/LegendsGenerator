@@ -26,11 +26,9 @@ namespace LegendsGenerator.Tests
         [TestMethod]
         public void SimpleCondition()
         {
-            var globals = new Dictionary<string, object>()
-            {
-            };
+            var globals = new BaseGlobalVariables();
 
-            ConditionCompiler processor = new ConditionCompiler(globals);
+            ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(globals);
 
             Site site = new Site();
             site.BaseAttributes["Health"] = 5;

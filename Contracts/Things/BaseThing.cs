@@ -7,6 +7,7 @@ namespace LegendsGenerator.Contracts.Things
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Text;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions;
@@ -110,7 +111,7 @@ namespace LegendsGenerator.Contracts.Things
                 return defaultValue;
             }
 
-            return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
+            return SafeSum(value, GetEffectsModifying(attribute).Select(x => x.AttributeEffect));
         }
 
         /// <summary>
@@ -125,15 +126,7 @@ namespace LegendsGenerator.Contracts.Things
                 throw new ArgumentException($"{ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
-            // TODO: Handle this scenario better.
-            try
-            {
-                return value + GetEffectsModifying(attribute).Sum(a => a.AttributeEffect);
-            }
-            catch (OverflowException)
-            {
-                return int.MaxValue;
-            }
+            return SafeSum(value, GetEffectsModifying(attribute).Select(x => x.AttributeEffect));
         }
 
         /// <inheritdoc/>
@@ -148,6 +141,34 @@ namespace LegendsGenerator.Contracts.Things
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Safely adds many values together, changing any overflow/underflow to the nearest value.
+        /// </summary>
+        /// <param name="startValue">The start value.</param>
+        /// <param name="ints">The ints to add.</param>
+        /// <returns>The summed integer, bounded by int min and max value.</returns>
+        private static int SafeSum(int startValue, IEnumerable<int> ints)
+        {
+            if (!ints.Any())
+            {
+                return startValue;
+            }
+
+            BigInteger sum = startValue + ints.Select(x => new BigInteger(x)).Aggregate(BigInteger.Add);
+            if (sum < int.MinValue)
+            {
+                return int.MinValue;
+            }
+            else if (sum > int.MaxValue)
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                return (int)sum;
+            }
         }
     }
 }

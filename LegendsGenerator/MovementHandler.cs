@@ -124,12 +124,10 @@ namespace LegendsGenerator
                 {
                     var path = this.finder.FindPath(new Point(startX, startY), new Point(destinationX, destinationY), waterSpeedRatio);
 
-                    if (path == null)
+                    if (path != null)
                     {
-                        throw new InvalidOperationException("Could not find a path? We need to handle this somehow.");
+                        newThing.Path = path.Select(p => new Location() { X = p.X, Y = p.Y }).ToImmutableList();
                     }
-
-                    newThing.Path = path.Select(p => new Location() { X = p.X, Y = p.Y }).ToImmutableList();
                 }
             }
 

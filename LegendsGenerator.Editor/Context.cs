@@ -85,9 +85,9 @@ namespace LegendsGenerator.Editor
         /// <summary>
         /// Gets the condition compiler.
         /// </summary>
-        public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler(new Dictionary<string, object>()
+        public IConditionCompiler Compiler { get; private set; } = new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables()
         {
-            { "World", new World() },
+            World = new World(),
         });
 
         /// <summary>

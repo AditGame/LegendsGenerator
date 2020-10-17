@@ -14,6 +14,7 @@ namespace LegendsGenerator.Viewer
     using Gu.Wpf.DataGrid2D;
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
@@ -47,7 +48,8 @@ namespace LegendsGenerator.Viewer
         {
             int worldSeed = 915434125;
 
-            ConditionCompiler processor = new ConditionCompiler(new Dictionary<string, object>() { { "World", new World() }, });
+            ConditionCompiler<BaseGlobalVariables> processor =
+                new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables() { World = new World(), });
             DefinitionCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
 

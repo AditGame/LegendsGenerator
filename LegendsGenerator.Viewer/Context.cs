@@ -12,6 +12,7 @@ namespace LegendsGenerator.Viewer
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Media;
+    using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
@@ -85,7 +86,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the condition compiler.
         /// </summary>
-        public IConditionCompiler? Compiler { get; private set; }
+        public IConditionCompiler<BaseGlobalVariables>? Compiler { get; private set; }
 
         /// <summary>
         /// Gets or sets the selected square on the map.
@@ -101,7 +102,7 @@ namespace LegendsGenerator.Viewer
                 if (this.selectedSquare != null)
                 {
                     // Do not include the square definition in the list of things to show, as that has a special spot at the top.
-                    this.selectedSquare.GetThings().Where(x => x != this.selectedSquare.SquareDefinition).ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t, this.CurrentWorld)));
+                    this.selectedSquare.GetThings(true).ToList().ForEach(t => this.ThingsInSquare.Add(new ThingView(t, this.CurrentWorld)));
 
                     this.SelectedThing = this.ThingsInSquare.FirstOrDefault();
                 }
@@ -382,7 +383,7 @@ namespace LegendsGenerator.Viewer
         /// <param name="history">The history.</param>
         /// <param name="initialWorld">The initial world state.</param>
         /// <param name="compiler">The compiler.</param>
-        public void Attach(HistoryGenerator history, World initialWorld, IConditionCompiler compiler)
+        public void Attach(HistoryGenerator history, World initialWorld, IConditionCompiler<BaseGlobalVariables> compiler)
         {
             this.History = history;
             this.Compiler = compiler;
@@ -471,7 +472,7 @@ namespace LegendsGenerator.Viewer
 #if DEBUG
             this.History.OpenDebuggerAtThing = this.DebugAtThingId;
 #endif
-            this.Compiler.UpdateGlobalVariables(new Dictionary<string, object>() { { "World", this.WorldSteps[toStep - 1] }, });
+            this.Compiler.UpdateGlobalVariables(x => x.World = this.WorldSteps[toStep - 1]);
             this.WorldSteps[toStep] = this.History.Step(this.WorldSteps[toStep - 1]);
         }
     }

@@ -34,11 +34,6 @@ namespace LegendsGenerator.PathFinding
         /// <inheritdoc/>
         public int Compare(Point a, Point b)
         {
-            if (a == null || b == null)
-            {
-                return 0;
-            }
-
             if (this.grid[a.X, a.Y].F > this.grid[b.X, b.Y].F)
             {
                 return 1;

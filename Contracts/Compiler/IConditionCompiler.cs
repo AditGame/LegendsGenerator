@@ -12,12 +12,6 @@ namespace LegendsGenerator.Contracts.Compiler
     public interface IConditionCompiler
     {
         /// <summary>
-        /// Update the global variables with new values.
-        /// </summary>
-        /// <param name="variables">The variables.</param>
-        void UpdateGlobalVariables(IDictionary<string, object> variables);
-
-        /// <summary>
         /// Compiles a complex (multi-line) condition.
         /// </summary>
         /// <typeparam name="T">The output type of the condition.</typeparam>

@@ -9,19 +9,23 @@ namespace LegendsGenerator.Compiler.CSharp
     using System.Linq;
 
     using CSScriptLib;
+    using LegendsGenerator.Compiler.CSharp.Presentation;
+    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Processes conditions.
     /// </summary>
-    /// <typeparam name="T">The output type of the condition.</typeparam>
-    public class CompiledCondition<T> : ICompiledCondition<T>
+    /// <typeparam name="TOut">The output type of the condition.</typeparam>
+    /// <typeparam name="TGlobals">THe type of the global variables.</typeparam>
+    public class CompiledCondition<TOut, TGlobals> : ICompiledCondition<TOut>
+        where TGlobals : BaseGlobalVariables
     {
         /// <summary>
         /// The compiled condition.
         /// </summary>
-        private readonly MethodDelegate<T> compiledCondition;
+        private readonly MethodDelegate<TOut> compiledCondition;
 
         /// <summary>
         /// The names of the variables.
@@ -31,18 +35,18 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <summary>
         /// The list of variables that should be exposed to all conditions.
         /// </summary>
-        private readonly IDictionary<string, object> globalVariables = new Dictionary<string, object>();
+        private readonly TGlobals globalVariables;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompiledCondition{T}"/> class.
+        /// Initializes a new instance of the <see cref="CompiledCondition{TOut, TGlobals}"/> class.
         /// </summary>
         /// <param name="compiledCondition">The compiled condition.</param>
         /// <param name="variableNames">The names of the variables in the condition.</param>
         /// <param name="globalVariables">The global variables.</param>
         internal CompiledCondition(
-            MethodDelegate<T> compiledCondition,
+            MethodDelegate<TOut> compiledCondition,
             IList<string> variableNames,
-            IDictionary<string, object> globalVariables)
+            TGlobals globalVariables)
         {
             this.compiledCondition = compiledCondition;
             this.variableNames = variableNames;
@@ -50,22 +54,23 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <inheritdoc/>
-        public T Evaluate(Random random, IDictionary<string, BaseThing> variables)
+        public TOut Evaluate(Random random, IDictionary<string, BaseThing> variables)
         {
             IList<object?> functionParameters = new List<object?>();
+            var globals = this.globalVariables.ToDictionary();
             foreach (var variableName in this.variableNames)
             {
-                if (variableName.Equals(ConditionCompiler.RandomVariableName, StringComparison.OrdinalIgnoreCase))
+                if (variableName.Equals(Constants.RandomVariableName, StringComparison.OrdinalIgnoreCase))
                 {
                     functionParameters.Add(random);
                 }
-                else if (this.globalVariables.TryGetValue(variableName, out object? value))
+                else if (globals.TryGetValue(variableName, out object? value))
                 {
                     functionParameters.Add(value);
                 }
                 else if (variables.TryGetValue(variableName, out BaseThing? thing))
                 {
-                    functionParameters.Add(thing);
+                    functionParameters.Add(BaseThingPres.CreateFromBaseThing(thing, this.globalVariables.World ?? throw new InvalidOperationException("Global variable World can not be null.")));
                 }
                 else
                 {
