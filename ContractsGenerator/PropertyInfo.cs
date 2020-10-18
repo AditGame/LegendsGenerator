@@ -6,6 +6,7 @@ namespace CompiledDefinitionSourceGenerator
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Microsoft.CodeAnalysis;
 
@@ -28,10 +29,12 @@ namespace CompiledDefinitionSourceGenerator
             this.ReturnType = attributeConstructorArguments
                 .First(x => x.Type?.Name == "Type").Value?.ToString() ?? "void";
 
-            this.Variables = attributeConstructorArguments
-                .First(x => x.Type?.ToString().Equals("String[]", StringComparison.OrdinalIgnoreCase) == true).Values
-                .Select(x => x.Value?.ToString() ?? "void")
-                .ToList();
+            Trace.WriteLine(string.Join(", ", property.GetAttributes("CompiledVariableAttribute").Select(a => a.ConstructorArguments.Select(x => x.Type))));
+
+            this.Variables = property.GetAttributes("CompiledVariableAttribute")
+                .Select(a => (
+                    a.ConstructorArguments.First(x => x.Type?.Name.Equals("String", StringComparison.OrdinalIgnoreCase) == true).Value?.ToString() ?? "void",
+                    a.ConstructorArguments.First(x => x.Type?.Name.Equals("Type", StringComparison.OrdinalIgnoreCase) == true).Value?.ToString() ?? "void")).ToList();
 
             this.AsFormattedText = property
                 .GetAttributes("CompiledAttribute")
@@ -58,6 +61,6 @@ namespace CompiledDefinitionSourceGenerator
         /// <summary>
         /// Gets or sets the variable names.
         /// </summary>
-        public IReadOnlyCollection<string> Variables { get; set; }
+        public IReadOnlyCollection<(string Name, string Type)> Variables { get; set; }
     }
 }

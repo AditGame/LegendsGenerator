@@ -18,6 +18,11 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseThing
     {
+        public BaseThing(BaseThingDefinition definition)
+        {
+            this.BaseDefinition = definition;
+        }
+
         /// <summary>
         /// Gets the name of the thing.
         /// </summary>
@@ -26,7 +31,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets or sets the base definition of the thing.
         /// </summary>
-        public BaseThingDefinition BaseDefinition { get; set; } = new BaseThingDefinition();
+        public BaseThingDefinition BaseDefinition { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this thing.

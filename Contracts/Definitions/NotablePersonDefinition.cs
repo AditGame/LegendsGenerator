@@ -2,6 +2,7 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
+using LegendsGenerator.Contracts.Definitions.Events;
 using System;
 
 namespace LegendsGenerator.Contracts.Definitions
@@ -11,5 +12,6 @@ namespace LegendsGenerator.Contracts.Definitions
     /// </summary>
     public partial class NotablePersonDefinition : BaseMovingThingDefinition
     {
+        public override ThingType ThingType => ThingType.NotablePerson;
     }
 }

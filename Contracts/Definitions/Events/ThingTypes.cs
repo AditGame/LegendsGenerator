@@ -4,6 +4,8 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
+    using LegendsGenerator.Contracts.Things;
+    using System;
     using System.Text.Json.Serialization;
 
     /// <summary>
@@ -37,5 +39,24 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// A square on the world map.
         /// </summary>
         WorldSquare,
+    }
+
+    /// <summary>
+    /// Extensions for the ThingType enum.
+    /// </summary>
+    public static class ThingTypeExtensions
+    {
+        /// <summary>
+        /// Gets the C# type associated with this thing type.
+        /// </summary>
+        /// <param name="thing">The thing type.</param>
+        /// <returns>The associated type.</returns>
+        public static Type AssociatedType(this ThingType thing) => thing switch
+        {
+            ThingType.Site => typeof(Site),
+            ThingType.NotablePerson => typeof(NotablePerson),
+            ThingType.WorldSquare => typeof(WorldSquare),
+            _ => typeof(BaseThing),
+        };
     }
 }

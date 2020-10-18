@@ -46,7 +46,7 @@ public int EvalAttributes(Random rdm, BaseThing subject, IDictionary<string, Bas
 
 All compiled properties in a class can have additional parameters added via the below method function. This works in conjunction with the other AdditionalParametersFor* methods:
 ```csharp
-public IList<string> AdditionalParametersForClass()
+public IList<CompiledVariable> AdditionalParametersForClass()
 ```
 
 If a class is decorated with the `UsesAdditionalParametersForHoldingClassAttribute` attribute, than the outter class will pass in their `AdditionalParametersForClass` method (if it exists), and additional parameters from that method will be added to the compiled conditions of this class.

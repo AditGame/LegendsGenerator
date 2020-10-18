@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The effect definition.
@@ -20,7 +21,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets or sets the magnitude of the change.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Magnitude { get; set; } = UnsetString;
     }
 }

@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     [UsesAdditionalParametersForHoldingClass]
     public partial class BaseEffectDefinitionWithDuration : BaseEffectDefinition
@@ -12,7 +13,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets or sets the duration of the change. -1 is forever.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Duration { get; set; } = UnsetString;
     }
 }

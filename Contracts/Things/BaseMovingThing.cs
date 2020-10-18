@@ -14,6 +14,11 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseMovingThing : BaseThing
     {
+        protected BaseMovingThing(BaseThingDefinition definition)
+            : base(definition)
+        {
+        }
+
         /// <summary>
         /// Gets the definition as a moving thing definition.
         /// </summary>

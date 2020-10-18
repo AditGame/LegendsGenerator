@@ -7,6 +7,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using System.Collections.Generic;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// A definition of a result which spawns a new thing.
@@ -27,7 +28,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets the attribute overrides for this spawn.
         /// </summary>
-        [CompiledDictionary(typeof(int), "Subject")]
+        [CompiledDictionary(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public Dictionary<string, string> AttributeOverrides { get; } = new Dictionary<string, string>();
 
         /// <summary>
@@ -38,13 +40,15 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets or sets the X Position.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string PositionX { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the Y position.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string PositionY { get; set; } = UnsetString;
     }
 }

@@ -250,7 +250,7 @@ namespace LegendsGenerator
                         matchingThing =
                             square.GetThings(@object.Value.Type)
                             .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
-                            .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }));
+                            .FirstOrDefault(t => @object.Value.EvalCondition(rdm, subject, t));
 
                         // Break from the loop once a matching thing is found in ANY square.
                         if (matchingThing != null)
@@ -267,8 +267,8 @@ namespace LegendsGenerator
                         matchingThings.AddRange(
                             square.GetThings(@object.Value.Type)
                             .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
-                            .Where(t => @object.Value.EvalCondition(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }))
-                            .Select(t => (@object.Value.EvalMaximize(rdm, subject, new Dictionary<string, BaseThing>() { { @object.Key, t } }), t)));
+                            .Where(t => @object.Value.EvalCondition(rdm, subject, t))
+                            .Select(t => (@object.Value.EvalMaximize(rdm, subject, t), t)));
                     }
 
                     if (matchingThings.Any())

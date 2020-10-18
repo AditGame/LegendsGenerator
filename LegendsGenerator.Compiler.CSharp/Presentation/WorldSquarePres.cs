@@ -65,6 +65,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <returns>All things in this square which match.</returns>
         public IReadOnlyCollection<TType> ThingsInSqaureOfType<TType>()
             where TType : BaseThingPres =>
-            new ReadOnlyCollection<TType>(this.Square.GetThings(true).Select(x => BaseThingPres.CreateFromBaseThing(x, this.World)).OfType<TType>().ToList());
+            new ReadOnlyCollection<TType>(this.Square.GetThings(true).Select(x => PresentationConverters.ConvertToPresentationType(x, this.World)).OfType<TType>().ToList());
     }
 }

@@ -3,6 +3,7 @@
   "Sites": [],
   "NotablePeople": [
     {
+      "ThingType": "NotablePerson",
       "Flies": "false",
       "LandSpeed": "1",
       "WaterSpeed": "0",

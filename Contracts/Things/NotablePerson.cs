@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Things
 {
     using System;
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
@@ -12,6 +13,11 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record NotablePerson : BaseMovingThing, ICanEnterSites
     {
+        public NotablePerson(NotablePersonDefinition definition)
+            : base(definition)
+        {
+        }
+
         /// <summary>
         /// Gets the name of this Thing Type.
         /// </summary>

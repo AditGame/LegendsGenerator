@@ -6,6 +6,8 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
+    using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Compiler;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -19,9 +21,10 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Parameters which are available to all functions.
         /// </summary>
-        private static readonly List<string> StaticParameters = new List<string>
+        private static readonly List<CompiledVariable> StaticParameters = new List<CompiledVariable>
         {
-            "Rand",
+            new CompiledVariable("Rand", typeof(Random)),
+            new CompiledVariable("World", typeof(World)),
         };
 
         /// <summary>
@@ -37,7 +40,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// A function which gets the parameters for the compiled conditions.
         /// </summary>
-        private readonly Func<PropertyNode, IList<string>> getParametersFunc;
+        private readonly Func<PropertyNode, IList<CompiledVariable>> getParametersFunc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledPropertyNode"/> class.
@@ -90,11 +93,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets the parameters of this method.
         /// </summary>
-        public IList<string> Parameters
+        public IList<CompiledVariable> Parameters
         {
             get
             {
-                List<string> param = new List<string>();
+                List<CompiledVariable> param = new List<CompiledVariable>();
                 param.AddRange(StaticParameters);
                 param.AddRange(this.getParametersFunc(this));
                 return param;

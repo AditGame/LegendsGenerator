@@ -44,7 +44,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             bool nullable,
             Func<PropertyNode, object?> getValue,
             Action<PropertyNode, object?> setValue,
-            Func<PropertyNode, IList<string>>? getCompiledParameters,
+            Func<PropertyNode, IList<CompiledVariable>>? getCompiledParameters,
             CompiledAttribute? compiled,
             (object OutterObject, string Condition)? hiddenInEditorCondition)
         {
@@ -54,7 +54,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.Nullable = nullable;
             this.GetValue = getValue;
             this.SetValue = setValue;
-            this.GetCompiledParameters = getCompiledParameters ?? (prop => Array.Empty<string>());
+            this.GetCompiledParameters = getCompiledParameters ?? (prop => Array.Empty<CompiledVariable>());
             this.Compiled = compiled;
 
             if (hiddenInEditorCondition != null)
@@ -102,7 +102,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets or sets a method which gets the compiled parameters of this element.
         /// </summary>
-        public Func<PropertyNode, IList<string>> GetCompiledParameters { get; set; }
+        public Func<PropertyNode, IList<CompiledVariable>> GetCompiledParameters { get; set; }
 
         /// <summary>
         /// Gets or sets the compiled attribute.

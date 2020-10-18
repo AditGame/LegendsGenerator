@@ -4,15 +4,18 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
+    using System;
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Definitions.Validation;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// THe base definition of a thing.
     /// </summary>
-    public partial class BaseThingDefinition : BaseDefinition, ITopLevelDefinition
+    public abstract partial class BaseThingDefinition : BaseDefinition, ITopLevelDefinition
     {
         /// <inheritdoc/>
         [JsonIgnore]
@@ -25,6 +28,12 @@ namespace LegendsGenerator.Contracts.Definitions
             get => this.Name;
             set => this.Name = value;
         }
+
+        /// <summary>
+        /// Gets the thing type this represents.
+        /// </summary>
+        [JsonIgnore]
+        public abstract ThingType ThingType { get; }
 
         /// <summary>
         /// Gets or sets the full list of all inherited definition names (including the top level).
@@ -48,7 +57,8 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the string which returns the maximum number of events.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable("Subject", typeof(BaseThing))]
         public string MaxEvents { get; set; } = "1";
 
         /// <summary>
@@ -67,5 +77,14 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [CompiledDictionary(typeof(string))]
         public Dictionary<string, string> DefaultAspects { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Gets the type of Subject.
+        /// </summary>
+        /// <returns>The type of the subject in this thing.</returns>
+        public Type TypeOfSubject()
+        {
+            return this.ThingType.AssociatedType();
+        }
     }
 }

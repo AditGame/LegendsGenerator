@@ -7,6 +7,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using System.Collections.Generic;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
     [UsesAdditionalParametersForHoldingClass]
     public partial class BaseEffectDefinition : BaseDefinition
@@ -19,13 +20,15 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets or sets the title of the effect.
         /// </summary>
-        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        [Compiled(typeof(string), AsFormattedText = true)]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Title { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the description of the effect.
         /// </summary>
-        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        [Compiled(typeof(string), AsFormattedText = true)]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Description { get; set; } = UnsetString;
     }
 }

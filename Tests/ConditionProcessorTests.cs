@@ -11,6 +11,7 @@ namespace LegendsGenerator.Tests
 
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Things;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,7 +31,7 @@ namespace LegendsGenerator.Tests
 
             ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(globals);
 
-            Site site = new Site();
+            Site site = new Site(new SiteDefinition());
             site.BaseAttributes["Health"] = 5;
             site.BaseAttributes["Fear"] = 23;
             site.BaseAttributes["Strength"] = 1;
@@ -42,7 +43,7 @@ namespace LegendsGenerator.Tests
 
             Random rdm = new Random(5);
 
-            List<string> variables = paramList.Select(x => x.Key).ToList();
+            var variables = paramList.Select(x => new CompiledVariable(x.Key, x.Value.GetType())).ToList();
 
             var condition = processor.AsSimple<int>("(Subject->Health + Subject->Fear) / 2", variables);
 

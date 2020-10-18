@@ -9,6 +9,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events.Effects;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The result of an event occurring.
@@ -24,13 +25,15 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets a string which returns a number between 1 and 100 representing the chance of this happening.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Chance { get; set; } = "100";
 
         /// <summary>
         /// Gets or sets the string condition of this event.
         /// </summary>
-        [Compiled(typeof(bool), "Subject")]
+        [Compiled(typeof(bool))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Condition { get; set; } = "true";
 
         /// <summary>

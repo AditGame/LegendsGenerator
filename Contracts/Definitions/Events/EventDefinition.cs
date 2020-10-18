@@ -4,24 +4,31 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json.Serialization;
 
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Validation;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The definition of a single event.
     /// </summary>
     public partial class EventDefinition : BaseDefinition, ITopLevelDefinition
     {
+        /// <summary>
+        /// The name of the Subject variable name.
+        /// </summary>
+        public const string SubjectVarName = "Subject";
+
         /// <inheritdoc/>
         [JsonIgnore]
         public string SourceFile { get; set; } = UnsetString;
 
         /// <summary>
-        /// Gets or sets the defintion name, if not set the definition name will be the event description.
+        /// Gets or sets the definition name, if not set the definition name will be the event description.
         /// </summary>
         [ControlsDefinitionName]
         public string? DefinitionName { get; set; }
@@ -51,7 +58,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the event Condition, from one to one hundred.
         /// </summary>
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(SubjectVarName, typeof(BaseThing))]
         public string Chance { get; set; } = "100";
 
         /// <summary>
@@ -78,7 +86,8 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the description of this event.
         /// </summary>
-        [Compiled(typeof(string), "Subject", AsFormattedText = true)]
+        [Compiled(typeof(string), AsFormattedText = true)]
+        [CompiledVariable(SubjectVarName, typeof(BaseThing))]
         [ControlsDefinitionName]
         public string Description { get; set; } = UnsetString;
 
@@ -91,9 +100,18 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets additional variable names for the Description method.
         /// </summary>
         /// <returns>The list of additional parameters.</returns>
-        public IList<string> AdditionalParametersForClass()
+        public IList<CompiledVariable> AdditionalParametersForClass()
         {
-            return this.Objects?.Select(x => x.Key).ToList() ?? new List<string>();
+            return this.Objects?.Select(x => new CompiledVariable(x.Key, x.Value.Type.AssociatedType())).ToList() ?? new List<CompiledVariable>();
+        }
+
+        /// <summary>
+        /// Gets the actual type of the Subject variable.
+        /// </summary>
+        /// <returns>The  actual type of the subject variable.</returns>
+        public Type TypeOfSubject()
+        {
+            return this.Subject.Type.AssociatedType();
         }
     }
 }

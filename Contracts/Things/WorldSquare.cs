@@ -14,6 +14,11 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record WorldSquare : BaseThing
     {
+        public WorldSquare(WorldSquareDefinition definition)
+            : base(definition)
+        {
+        }
+
         /// <summary>
         /// Gets the site definition.
         /// </summary>

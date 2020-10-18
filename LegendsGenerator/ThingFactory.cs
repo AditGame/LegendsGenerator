@@ -46,7 +46,13 @@ namespace LegendsGenerator
         /// <inheritdoc/>
         public Site CreateSite(Random rdm, int x, int y, string siteDefinitionName)
         {
-            Site site = CreateThing<Site, SiteDefinition>(rdm, x, y, this.Definitions.SiteDefinitions, siteDefinitionName);
+            Site site = CreateThing<Site, SiteDefinition>(
+                rdm,
+                x,
+                y,
+                d => new Site(d),
+                this.Definitions.SiteDefinitions,
+                siteDefinitionName);
             site.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
             return site;
         }
@@ -54,7 +60,13 @@ namespace LegendsGenerator
         /// <inheritdoc/>
         public NotablePerson CreateNotablePerson(Random rdm, int x, int y, string personDefinitionName)
         {
-            NotablePerson person = CreateThing<NotablePerson, NotablePersonDefinition>(rdm, x, y, this.Definitions.NotablePersonDefinitions, personDefinitionName);
+            NotablePerson person = CreateThing<NotablePerson, NotablePersonDefinition>(
+                rdm,
+                x,
+                y,
+                d => new NotablePerson(d),
+                this.Definitions.NotablePersonDefinitions,
+                personDefinitionName);
             person.Name = new RandomNameGeneratorLibrary.PersonNameGenerator(rdm).GenerateRandomFirstAndLastName();
             return person;
         }
@@ -62,7 +74,13 @@ namespace LegendsGenerator
         /// <inheritdoc/>
         public WorldSquare CreateWorldSquare(Random rdm, int x, int y, string worldSquareDefinitionName)
         {
-            WorldSquare square = CreateThing<WorldSquare, WorldSquareDefinition>(rdm, x, y, this.Definitions.WorldSquareDefinitions, worldSquareDefinitionName);
+            WorldSquare square = CreateThing<WorldSquare, WorldSquareDefinition>(
+                rdm,
+                x,
+                y,
+                d => new WorldSquare(d),
+                this.Definitions.WorldSquareDefinitions,
+                worldSquareDefinitionName);
             square.Name = $"{x},{y}";
             return square;
         }
@@ -72,9 +90,10 @@ namespace LegendsGenerator
         /// </summary>
         /// <typeparam name="TThing">The type of the thing to create.</typeparam>
         /// <typeparam name="TDefinition">The type of definition.</typeparam>
-        /// <param name="rdm">The random nubmer generator.</param>
+        /// <param name="rdm">The random number generator.</param>
         /// <param name="x">The X position.</param>
         /// <param name="y">The Y position.</param>
+        /// <param name="createFunc">The function to use to create the thing.</param>
         /// <param name="definitions">The list of all definitions for this thing type.</param>
         /// <param name="thingName">The name of the thing to make.</param>
         /// <returns>The created thing.</returns>
@@ -82,10 +101,11 @@ namespace LegendsGenerator
             Random rdm,
             int x,
             int y,
+            Func<TDefinition, TThing> createFunc,
             IReadOnlyList<TDefinition> definitions,
             string thingName)
             where TDefinition : BaseThingDefinition
-            where TThing : BaseThing, new()
+            where TThing : BaseThing
         {
             IList<TDefinition> inheritanceList = new List<TDefinition>();
 
@@ -107,12 +127,10 @@ namespace LegendsGenerator
                 thingToSearchFor = definition.InheritsFrom;
             }
 
-            TThing thing = new TThing()
-            {
-                BaseDefinition = inheritanceList.First(),
-                X = x,
-                Y = y,
-            };
+            TThing thing = createFunc(inheritanceList.First());
+
+            thing.X = x;
+            thing.Y = y;
 
             foreach (var inheritedDefinition in inheritanceList.Reverse())
             {

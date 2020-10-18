@@ -11,6 +11,8 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Threading.Tasks;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Definitions.Events;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Definition of a world square.
@@ -20,7 +22,8 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the cost of moving into this square.
         /// </summary>
-        [Compiled(typeof(float), new[] { "Subject" })]
+        [Compiled(typeof(float))]
+        [CompiledVariable("Subject", typeof(WorldSquare))]
         public string MovementCost { get; set; } = UnsetString;
 
         /// <summary>
@@ -41,5 +44,7 @@ namespace LegendsGenerator.Contracts.Definitions
         public int MinDrainage { get; set; }
 
         public int MaxDrainage { get; set; }
+
+        public override ThingType ThingType => ThingType.WorldSquare;
     }
 }

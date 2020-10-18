@@ -65,7 +65,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 nullable: property.IsNullable(),
                 getValue: prop => property.GetValue(thing),
                 setValue: (prop, value) => property.SetValue(thing, value),
-                getCompiledParameters: getParameters != null ? prop => getParameters?.Invoke(thing, null) as IList<string> ?? new List<string>() : (Func<PropertyNode, IList<string>>?)null,
+                getCompiledParameters: getParameters != null ? prop => getParameters?.Invoke(thing, null) as IList<CompiledVariable> ?? new List<CompiledVariable>() : (Func<PropertyNode, IList<CompiledVariable>>?)null,
                 compiled: compiled,
                 hiddenInEditorCondition: (hideInEditor == null || thing == null) ? null : (thing, hideInEditor.Condition))
             {

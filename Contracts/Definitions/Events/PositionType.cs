@@ -31,7 +31,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         RelativeSafe,
 
         /// <summary>
-        /// Relative to the subject, reguardless of terrain type.
+        /// Relative to the subject, regardless of terrain type.
         /// </summary>
         RelativeAbsolute,
     }

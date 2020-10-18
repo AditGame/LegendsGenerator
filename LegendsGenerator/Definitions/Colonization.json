@@ -6,11 +6,11 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
-        "Condition_IsComplex": false,
         "Type": "Site",
         "Definitions": [
           "Population Center"
-        ]
+        ],
+        "Condition_IsComplex": false
       },
       "Objects": {},
       "Description": "A settler has been rallied at {Subject.Name}",
@@ -56,22 +56,22 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
-        "Condition_IsComplex": false,
         "Type": "NotablePerson",
         "Definitions": [
           "Settler"
-        ]
+        ],
+        "Condition_IsComplex": false
       },
       "Objects": {
         "ColonizationSite": {
           "Optional": false,
           "Distance": 10,
-          "Condition": "bool hasSite(int x, int y)\r\n{\r\n\tforeach (var thing in World.Grid.GetSquare(x, y).GetThings())\r\n\t{\r\n\t\tif (thing is Site)\r\n\t\t{\r\n\t\t\treturn true;\r\n\t\t}\r\n\t}\r\n\r\n\treturn false;\r\n}\r\n\r\nreturn !((WorldSquarePres)ColonizationSite).IsWater && \r\n\tColonizationSite.Position.X != Subject.Position.X && ColonizationSite.Position.Y != Subject.Position.Y && \r\n\t!hasSite(ColonizationSite.Position.X, ColonizationSite.Position.Y) &&\r\n\t!hasSite(ColonizationSite.Position.X, ColonizationSite.Position.Y - 1) &&\r\n\t!hasSite(ColonizationSite.Position.X, ColonizationSite.Position.Y + 1) &&\r\n\t!hasSite(ColonizationSite.Position.X - 1, ColonizationSite.Position.Y) &&\r\n\t!hasSite(ColonizationSite.Position.X + 1, ColonizationSite.Position.Y) &&\r\n\t!hasSite(ColonizationSite.Position.X - 1, ColonizationSite.Position.Y - 1) &&\r\n\t!hasSite(ColonizationSite.Position.X - 1, ColonizationSite.Position.Y + 1) &&\r\n\t!hasSite(ColonizationSite.Position.X + 1, ColonizationSite.Position.Y - 1) &&\r\n\t!hasSite(ColonizationSite.Position.X + 1, ColonizationSite.Position.Y + 1);",
-          "Maximize": "-ColonizationSite->Evil + ColonizationSite->Rainfall",
-          "Condition_IsComplex": true,
-          "Maximize_IsComplex": false,
+          "Condition": "bool hasSite(int x, int y)\r\n{\r\n\tforeach (var thing in World.Grid.GetSquare(x, y).GetThings())\r\n\t{\r\n\t\tif (thing is Site)\r\n\t\t{\r\n\t\t\treturn true;\r\n\t\t}\r\n\t}\r\n\r\n\treturn false;\r\n}\r\n\r\nreturn !Object.IsWater && \r\n\tObject.Position.X != Subject.Position.X && Object.Position.Y != Subject.Position.Y && \r\n\t!hasSite(Object.Position.X, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X, Object.Position.Y + 1) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y + 1) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y + 1);",
+          "Maximize": "-Object->Evil + Object->Rainfall",
           "Type": "WorldSquare",
-          "Definitions": []
+          "Definitions": [],
+          "Condition_IsComplex": true,
+          "Maximize_IsComplex": false
         }
       },
       "Description": "The settler {Subject.Name} is moving to a new location.",
@@ -114,11 +114,11 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
-        "Condition_IsComplex": false,
         "Type": "NotablePerson",
         "Definitions": [
           "Settler"
-        ]
+        ],
+        "Condition_IsComplex": false
       },
       "Objects": {},
       "Description": "Settler {Subject.Name} has created a town",
@@ -171,6 +171,7 @@
   "Sites": [],
   "NotablePeople": [
     {
+      "ThingType": "NotablePerson",
       "Flies": "false",
       "LandSpeed": "10",
       "WaterSpeed": "1",

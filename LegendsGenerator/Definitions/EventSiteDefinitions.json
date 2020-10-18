@@ -6,9 +6,9 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "Subject->Population > 50000",
-        "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": []
+        "Definitions": [],
+        "Condition_IsComplex": false
       },
       "Objects": {},
       "Description": "The city {Subject.Name} has suffered massive population loss.",
@@ -76,9 +76,9 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
-        "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": []
+        "Definitions": [],
+        "Condition_IsComplex": false
       },
       "Objects": {},
       "Description": "The city {Subject.Name} has had population gain.",
@@ -172,19 +172,19 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "Subject->Population > 50000",
-        "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": []
+        "Definitions": [],
+        "Condition_IsComplex": false
       },
       "Objects": {
         "Rival": {
           "Optional": false,
           "Distance": 0,
-          "Condition": "Rival->Population < 50000",
-          "Condition_IsComplex": false,
-          "Maximize_IsComplex": false,
+          "Condition": "Object->Population < 50000",
           "Type": "Site",
-          "Definitions": []
+          "Definitions": [],
+          "Condition_IsComplex": false,
+          "Maximize_IsComplex": false
         }
       },
       "Description": "The city {Subject.Name} has issued a declaration of war at {Rival.Name}.",
@@ -240,19 +240,19 @@
       "AffectOnMovement": 0,
       "Subject": {
         "Condition": "true",
-        "Condition_IsComplex": false,
         "Type": "Site",
-        "Definitions": []
+        "Definitions": [],
+        "Condition_IsComplex": false
       },
       "Objects": {
         "Eaten": {
           "Optional": false,
           "Distance": 1,
-          "Condition": "Subject->Population > Eaten->Population",
-          "Condition_IsComplex": false,
-          "Maximize_IsComplex": false,
+          "Condition": "Subject->Population > Object->Population",
           "Type": "Site",
-          "Definitions": []
+          "Definitions": [],
+          "Condition_IsComplex": false,
+          "Maximize_IsComplex": false
         }
       },
       "Description": "The city {Subject.Name} Consumes {Eaten.Name} as it is much larger.",

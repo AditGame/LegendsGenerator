@@ -61,15 +61,15 @@ namespace LegendsGenerator.Compiler.CSharp
                 variables = new Dictionary<string, BaseThing>();
             }
 
-            return this.AsComplex<T>(condition, variables.Select(x => x.Key)).Evaluate(rdm, variables);
+            return this.AsComplex<T>(condition, variables.Select(x => new CompiledVariable(x.Key, x.Value.GetType()))).Evaluate(rdm, variables);
         }
 
         /// <inheritdoc/>
-        public ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<string> variableNames)
+        public ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<CompiledVariable> variables)
         {
             return this.GenerateCompiledCondition<T>(
                 ConvertAttributeArrow(condition),
-                variableNames);
+                variables);
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace LegendsGenerator.Compiler.CSharp
                 variables = new Dictionary<string, BaseThing>();
             }
 
-            return this.AsSimple<T>(condition, variables.Select(x => x.Key)).Evaluate(rdm, variables);
+            return this.AsSimple<T>(condition, variables.Select(x => new CompiledVariable(x.Key, x.Value.GetType()))).Evaluate(rdm, variables);
         }
 
         /// <inheritdoc/>
-        public ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<string> variableNames)
+        public ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<CompiledVariable> variableNames)
         {
             if (!condition.EndsWith(";"))
             {
@@ -117,11 +117,11 @@ namespace LegendsGenerator.Compiler.CSharp
                 variables = new Dictionary<string, BaseThing>();
             }
 
-            return this.AsFormattedText(format, variables.Select(x => x.Key)).Evaluate(rdm, variables);
+            return this.AsFormattedText(format, variables.Select(x => new CompiledVariable(x.Key, x.Value.GetType()))).Evaluate(rdm, variables);
         }
 
         /// <inheritdoc/>
-        public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<string> variableNames)
+        public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variableNames)
         {
             return this.GenerateCompiledCondition<string>(
                 $"return $\"{ConvertAttributeArrow(format)}\";",
@@ -136,12 +136,26 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <returns>The generated method signature.</returns>
         private static string GenerateMethodSignature<T>(IDictionary<string, Type> variables)
         {
+            // Convert types to presentation types if needed.
+            var presentationVariables = new Dictionary<string, Type>();
+            foreach (var variable in variables)
+            {
+                if (PresentationConverters.TryGetPresentationType(variable.Value, out Type? presentation))
+                {
+                    presentationVariables[variable.Key] = presentation;
+                }
+                else
+                {
+                    presentationVariables[variable.Key] = variable.Value;
+                }
+            }
+
             StringBuilder bldr = new StringBuilder();
             bldr.AppendLine("using LegendsGenerator.Contracts;");
             bldr.AppendLine("using LegendsGenerator.Contracts.Things;");
             bldr.AppendLine("using LegendsGenerator.Compiler.CSharp.Presentation;");
             bldr.Append($"{typeof(T).Name} EvaluateCondition(");
-            bldr.AppendJoin(", ", variables.Select(v => $"{v.Value.Name} {v.Key}"));
+            bldr.AppendJoin(", ", presentationVariables.Select(v => $"{v.Value.Name} {v.Key}"));
             bldr.Append(") {");
 
             return bldr.ToString();
@@ -171,13 +185,13 @@ namespace LegendsGenerator.Compiler.CSharp
         /// </summary>
         /// <typeparam name="T">The type of output.</typeparam>
         /// <param name="inner">The inner code.</param>
-        /// <param name="variableNames">The variable names.</param>
+        /// <param name="variables">The variables.</param>
         /// <returns>The condition with the inner text as the method body.</returns>
-        private CompiledCondition<T, TGlobals> GenerateCompiledCondition<T>(string inner, IEnumerable<string> variableNames)
+        private CompiledCondition<T, TGlobals> GenerateCompiledCondition<T>(string inner, IEnumerable<CompiledVariable> variables)
         {
             IDictionary<string, Type> combinedVariables =
                 this.globalVariables.ToDictionary().ToDictionary(kvp => kvp.Key, kvp => kvp.Value.GetType())
-                .Concat(variableNames.ToDictionary(n => n, n => typeof(BaseThingPres)))
+                .Concat(variables.ToDictionary(n => n.Name, n => n.Type))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             combinedVariables[Constants.RandomVariableName] = typeof(Random);
             StringBuilder bldr = new StringBuilder();

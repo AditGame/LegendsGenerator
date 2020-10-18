@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Validation;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Definition of something moving to something else.
@@ -28,14 +29,16 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// Gets or sets the coord this thing will move towards.
         /// </summary>
         [HideInEditor("value.MoveType != MoveType.ToCoords")]
-        [Compiled(typeof(int), "Subject")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string CoordToMoveToX { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the coord this thing will move towards.
         /// </summary>
-        [HideInEditorAttribute("value.MoveType != MoveType.ToCoords")]
-        [Compiled(typeof(int), "Subject")]
+        [HideInEditor("value.MoveType != MoveType.ToCoords")]
+        [Compiled(typeof(int))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string CoordToMoveToY { get; set; } = UnsetString;
     }
 }

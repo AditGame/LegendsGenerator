@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Text.Json.Serialization;
 
     using LegendsGenerator.Contracts.Compiler;
@@ -66,13 +67,34 @@ namespace LegendsGenerator.Contracts.Definitions
         }
 
         /// <summary>
+        /// Combines all of the type reassignments.
+        /// </summary>
+        /// <returns>A dictionary of variable name to the new type.</returns>
+        protected virtual IDictionary<string, Type> CombinedVariableTypeReassignments()
+        {
+            Dictionary<string, Type> param = new Dictionary<string, Type>();
+
+            foreach (var entry in this.UpsteamDefinition?.CombinedVariableTypeReassignments() ?? new Dictionary<string, Type>())
+            {
+                param[entry.Key] = entry.Value;
+            }
+
+            return param;
+        }
+
+        /// <summary>
         /// Returns all additional class-wide parameters, cluding upstream parameters.
         /// </summary>
         /// <returns>The list of upstream parameters.</returns>
-        protected virtual List<string> CombinedAdditionalParametersForClass()
+        protected virtual List<CompiledVariable> CombinedAdditionalParametersForClass()
         {
-            List<string> param = new List<string>();
-            param.AddRange(this.UpsteamDefinition?.CombinedAdditionalParametersForClass() ?? new List<string>());
+            List<CompiledVariable> param = new List<CompiledVariable>();
+
+            if (this.GetType().GetCustomAttribute<UsesAdditionalParametersForHoldingClassAttribute>() != null)
+            {
+                param.AddRange(this.UpsteamDefinition?.CombinedAdditionalParametersForClass() ?? new List<CompiledVariable>());
+            }
+
             return param;
         }
 
@@ -85,7 +107,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="complex">True to represent as a complex condition.</param>
         /// <param name="parameters">The parameters list of the strings.</param>
         /// <returns></returns>
-        protected ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<string> parameters)
+        protected ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<CompiledVariable> parameters)
         {
             if (this.Compiler == null)
             {

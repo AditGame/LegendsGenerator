@@ -16,25 +16,25 @@ namespace LegendsGenerator.Contracts.Compiler
         /// </summary>
         /// <typeparam name="T">The output type of the condition.</typeparam>
         /// <param name="condition">The condition.</param>
-        /// <param name="variableNames">All variables used within.</param>
+        /// <param name="variables">All variables used within.</param>
         /// <returns>The compiled condition.</returns>
-        ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<string> variableNames);
+        ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<CompiledVariable> variables);
 
         /// <summary>
         /// Compiles a simple text formatter.
         /// </summary>
         /// <param name="format">The format of the text.</param>
-        /// <param name="variableNames">The variables used in the format.</param>
+        /// <param name="variables">All variables used within.</param>
         /// <returns>The compiled condition.</returns>
-        ICompiledCondition<string> AsFormattedText(string format, IEnumerable<string> variableNames);
+        ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variables);
 
         /// <summary>
         /// Compiles a simple (single line) condition.
         /// </summary>
         /// <typeparam name="T">The output type of the condition.</typeparam>
         /// <param name="condition">The condition.</param>
-        /// <param name="variableNames">All variables used within.</param>
+        /// <param name="variables">All variables used within.</param>
         /// <returns>The compiled condition.</returns>
-        ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<string> variableNames);
+        ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<CompiledVariable> variables);
     }
 }

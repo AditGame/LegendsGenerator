@@ -79,20 +79,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         protected World World { get; }
 
         /// <summary>
-        /// Converts thing into the correct presentation type.
-        /// </summary>
-        /// <param name="thing">The thing.</param>
-        /// <param name="world">The world.</param>
-        /// <returns>The thing presentation.</returns>
-        public static BaseThingPres CreateFromBaseThing(BaseThing thing, World world) => thing switch
-        {
-            Site site => new SitePres(site, world),
-            WorldSquare square => new WorldSquarePres(world.Grid.GetSquare(square.X, square.Y), world),
-            NotablePerson person => new NotablePersonPres(person, world),
-            _ => throw new InvalidOperationException($"Conversation of {thing.GetType()} to presentation is not supported."),
-        };
-
-        /// <summary>
         /// Gets the effects which are modifying the specified value.
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>

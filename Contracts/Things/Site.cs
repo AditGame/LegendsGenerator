@@ -14,6 +14,11 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record Site : BaseThing
     {
+        public Site(SiteDefinition definition)
+            : base(definition)
+        {
+        }
+
         /// <summary>
         /// Gets the site definition.
         /// </summary>

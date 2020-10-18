@@ -29,6 +29,11 @@ namespace CompiledDefinitionSourceGenerator
         public const string AdditionalParamtersForClassMethod = "AdditionalParametersForClass";
 
         /// <summary>
+        /// The start of method names which provide reassignments of type for parameters.
+        /// </summary>
+        public const string TypeOfMethodPrefix = "TypeOf";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ClassInfo"/> class.
         /// </summary>
         /// <param name="type">The type of the class.</param>
@@ -93,6 +98,13 @@ namespace CompiledDefinitionSourceGenerator
                 .Where(x => x.Name.StartsWith(AdditionalParamtersMethodPrefix))
                 .Select(x => x.Name)
                 .ToArray();
+
+            this.TypeOfMethods = type
+                .GetMembersRecursive()
+                .OfType<IMethodSymbol>()
+                .Where(x => x.Name.StartsWith(TypeOfMethodPrefix))
+                .Select(x => x.Name)
+                .ToArray();
         }
 
         /// <summary>
@@ -145,6 +157,11 @@ namespace CompiledDefinitionSourceGenerator
         /// Gets the methods which modify the property list before compiling.
         /// </summary>
         public IReadOnlyCollection<string> AdditionalParametersForMethods { get; }
+
+        /// <summary>
+        /// Gets the methods which modify the types of parameters.
+        /// </summary>
+        public IReadOnlyCollection<string> TypeOfMethods { get; }
 
         /// <summary>
         /// Checks if the provided property is an auto property.

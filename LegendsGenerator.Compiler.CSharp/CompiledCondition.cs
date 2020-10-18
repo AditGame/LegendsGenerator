@@ -70,7 +70,15 @@ namespace LegendsGenerator.Compiler.CSharp
                 }
                 else if (variables.TryGetValue(variableName, out BaseThing? thing))
                 {
-                    functionParameters.Add(BaseThingPres.CreateFromBaseThing(thing, this.globalVariables.World ?? throw new InvalidOperationException("Global variable World can not be null.")));
+                    // We need to convert things to their presentation type if needed.
+                    if (PresentationConverters.TryConvertToPresentationType(thing, this.globalVariables.World ?? throw new InvalidOperationException("Global variable World can not be null."), out object? presentation))
+                    {
+                        functionParameters.Add(presentation);
+                    }
+                    else
+                    {
+                        functionParameters.Add(thing);
+                    }
                 }
                 else
                 {

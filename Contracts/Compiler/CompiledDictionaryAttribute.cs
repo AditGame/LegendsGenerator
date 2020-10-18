@@ -12,9 +12,8 @@ namespace LegendsGenerator.Contracts.Compiler
         /// Initializes a new instance of the <see cref="CompiledDictionaryAttribute"/> class.
         /// </summary>
         /// <param name="returnType">The return type of the compiled statement.</param>
-        /// <param name="parameterNames">The names of the parameters expected in this compiled statement.</param>
-        public CompiledDictionaryAttribute(Type returnType, params string[] parameterNames)
-            : base(returnType, parameterNames)
+        public CompiledDictionaryAttribute(Type returnType)
+            : base(returnType)
         {
         }
     }

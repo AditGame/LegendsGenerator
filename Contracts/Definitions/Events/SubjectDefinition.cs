@@ -4,15 +4,30 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
+    using System;
+    using System.Collections.Generic;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
 
-    public partial class SubjectDefinition : ThingScopable
+    public partial class SubjectDefinition : BaseDefinition
     {
         /// <summary>
         /// Gets or sets the condition on the thing to scope on.
         /// </summary>
-        [Compiled(typeof(bool), "Subject")]
+        [Compiled(typeof(bool))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
         public string Condition { get; set; } = "true";
+
+        /// <summary>
+        /// Gets or sets the type of thing this scope relates to.
+        /// </summary>
+        public ThingType Type { get; set; } = ThingType.None;
+
+        /// <summary>
+        /// Gets or sets the applicable Definition names which this relates to.
+        /// If empty, any Definition is allowed.
+        /// </summary>
+        public List<string> Definitions { get; set; } = new List<string>();
     }
 }

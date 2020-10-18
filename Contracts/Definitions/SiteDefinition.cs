@@ -2,6 +2,8 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
+using LegendsGenerator.Contracts.Definitions.Events;
+
 namespace LegendsGenerator.Contracts.Definitions
 {
     /// <summary>
@@ -9,5 +11,6 @@ namespace LegendsGenerator.Contracts.Definitions
     /// </summary>
     public partial class SiteDefinition : BaseThingDefinition
     {
+        public override ThingType ThingType => ThingType.Site;
     }
 }

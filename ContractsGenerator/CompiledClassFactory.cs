@@ -54,6 +54,7 @@ namespace CompiledDefinitionSourceGenerator
             CompileMethod(sb, classInfo);
             AttachMethod(sb, classInfo);
             CombinedAdditionalParametersForClass(sb, additionalParametersForClassDefined);
+            CombinedVariableTypeReassignments(sb, classInfo.TypeOfMethods);
 
             foreach (var prop in classInfo.CompiledProps)
             {
@@ -127,10 +128,10 @@ namespace CompiledDefinitionSourceGenerator
                     ReturnsDoc = "All class-wide additional parameters.",
                     Access = AccessLevel.Protected,
                     Override = true,
-                    Type = "List<string>",
+                    Type = "List<CompiledVariable>",
                 });
 
-            sb.AppendLine($"List<string> addParams = base.CombinedAdditionalParametersForClass();");
+            sb.AppendLine($"var addParams = base.CombinedAdditionalParametersForClass();");
 
             if (classAddParams)
             {
@@ -138,6 +139,33 @@ namespace CompiledDefinitionSourceGenerator
             }
 
             sb.AppendLine("return addParams;");
+        }
+
+        /// <summary>
+        /// Creates a class which combined the class-wide additional parameters class and the upstream parameters.
+        /// </summary>
+        /// <param name="sb">The class writer.</param>
+        /// <param name="typeOfMethods">The type reassignment methods.</param>
+        private static void CombinedVariableTypeReassignments(ClassWriter sb, IReadOnlyCollection<string> typeOfMethods)
+        {
+            using var braces = sb.AddMethod(
+                new MethodDefinition($"CombinedVariableTypeReassignments")
+                {
+                    SummaryDoc = "Combines all of the type reassignments, including upstream parameters.",
+                    ReturnsDoc = "All type reassignments.",
+                    Access = AccessLevel.Protected,
+                    Override = true,
+                    Type = "IDictionary<string, Type>",
+                });
+
+            sb.AppendLine($"var typeReassignments = base.CombinedVariableTypeReassignments();");
+
+            foreach (string methodName in typeOfMethods)
+            {
+                sb.AppendLine($"typeReassignments[\"{methodName.Replace(ClassInfo.TypeOfMethodPrefix, string.Empty)}\"] = this.{methodName}();");
+            }
+
+            sb.AppendLine("return typeReassignments;");
         }
 
         /// <summary>
@@ -300,7 +328,7 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
@@ -329,7 +357,7 @@ namespace CompiledDefinitionSourceGenerator
             sb.AddDictionary(
                 "Dictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                 "param",
-                info.Variables.ToDictionary(x => x, x => x));
+                info.Variables.ToDictionary(x => x.Name, x => x.Name));
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
@@ -366,7 +394,7 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
@@ -395,7 +423,7 @@ namespace CompiledDefinitionSourceGenerator
             sb.AddDictionary(
                 "Dictionary<string, LegendsGenerator.Contracts.Things.BaseThing>",
                 "param",
-                info.Variables.ToDictionary(x => x, x => x));
+                info.Variables.Select(x => x.Name).ToDictionary(x => x, x => x));
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
@@ -422,6 +450,11 @@ namespace CompiledDefinitionSourceGenerator
             IReadOnlyCollection<string> additionParameterMethods,
             bool classAddParams)
         {
+            string VarToString((string Name, string Type) var)
+            {
+                return $"new CompiledVariable({SurroundInQuotes(var.Name)}, typeof({var.Type}))";
+            }
+
             string? matchingAdditionalParamtersMethod =
                 additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
 
@@ -431,10 +464,10 @@ namespace CompiledDefinitionSourceGenerator
                        SummaryDoc = $"Gets all parameters which should be presented to the {info.Name} expression.",
                        ReturnsDoc = "All parameters needed by the expression.",
                        Access = AccessLevel.Public,
-                       Type = "IList<string>",
+                       Type = "IList<CompiledVariable>",
                    });
 
-            sb.AppendLine($"List<string> parameters = new List<string> {{ {string.Join(", ", info.Variables.Select(SurroundInQuotes))} }};");
+            sb.AppendLine($"List<CompiledVariable> parameters = new List<CompiledVariable> {{ {string.Join(", ", info.Variables.Select(VarToString))} }};");
 
             if (matchingAdditionalParamtersMethod != null)
             {
@@ -446,7 +479,22 @@ namespace CompiledDefinitionSourceGenerator
                 sb.AppendLine($"parameters.AddRange(this.Combined{ClassInfo.AdditionalParamtersForClassMethod}());");
             }
 
-            sb.AppendLine("return parameters;");
+            // Reassign the parameters to have the reassigned types if needed.
+            sb.AppendLine("List<CompiledVariable> reassignedParameters = new List<CompiledVariable>();");
+            sb.AppendLine("var reassignments = this.CombinedVariableTypeReassignments();");
+            sb.AppendLine("foreach (var parm in parameters)");
+            sb.StartBrace();
+            sb.AppendLine("if (reassignments.TryGetValue(parm.Name, out Type? newType))");
+            sb.StartBrace();
+            sb.AppendLine("reassignedParameters.Add(new CompiledVariable(parm.Name, newType));");
+            sb.EndBrace();
+            sb.AppendLine("else");
+            sb.StartBrace();
+            sb.AppendLine("reassignedParameters.Add(parm);");
+            sb.EndBrace();
+            sb.EndBrace();
+
+            sb.AppendLine("return reassignedParameters;");
         }
 
         /// <summary>
