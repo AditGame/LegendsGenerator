@@ -19,12 +19,17 @@
       "ThingType": "Site",
       "Name": "City",
       "Description": "A moderate sized settlement",
-      "MaxEvents": "1",
+      "MaxEvents": "2",
       "InheritsFrom": "Population Center",
       "DefaultAttributes": {
         "Population": "Rand.Next(20000, 100000)"
       },
-      "DefaultAspects": {},
+      "DefaultAspects": {
+        "WasHamlet": "True",
+        "WasVillage": "True",
+        "WasTown": "True",
+        "WasCity": "True"
+      },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
       "DefaultAspects_IsComplex": false
@@ -38,7 +43,11 @@
       "DefaultAttributes": {
         "Population": "Rand.Next(2000, 10000)"
       },
-      "DefaultAspects": {},
+      "DefaultAspects": {
+        "WasHamlet": "True",
+        "WasVillage": "True",
+        "WasTown": "True"
+      },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
       "DefaultAspects_IsComplex": false
@@ -68,6 +77,80 @@
         "Population": "Rand.Next(0, 1000000)"
       },
       "DefaultAspects": {},
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "ThingType": "Site",
+      "Name": "Village",
+      "Description": "A small collection of building forming a small community",
+      "MaxEvents": "1",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(200, 2000)"
+      },
+      "DefaultAspects": {
+        "WasHamlet": "True",
+        "WasVillage": "True"
+      },
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "ThingType": "Site",
+      "Name": "Hamlet",
+      "Description": "A cluster of buildings, typically one extended family",
+      "MaxEvents": "1",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(20, 200)"
+      },
+      "DefaultAspects": {
+        "WasHamlet": "True"
+      },
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "ThingType": "Site",
+      "Name": "Metropolis",
+      "Description": "A very large city, a center of commerce",
+      "MaxEvents": "3",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(100000, 1000000)"
+      },
+      "DefaultAspects": {
+        "WasHamlet": "True",
+        "WasVillage": "True",
+        "WasTown": "True",
+        "WasCity": "True",
+        "WasMetropolis": "True"
+      },
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "ThingType": "Site",
+      "Name": "Megaopolis",
+      "Description": "A city the size of a normal country; a powerhouse of the world",
+      "MaxEvents": "1",
+      "InheritsFrom": "Population Center",
+      "DefaultAttributes": {
+        "Population": "Rand.Next(1000000,10000000)"
+      },
+      "DefaultAspects": {
+        "WasHamlet": "True",
+        "WasVillage": "True",
+        "WasTown": "True",
+        "WasCity": "True",
+        "WasMetropolis": "True",
+        "WasMegaopolis": "True"
+      },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
       "DefaultAspects_IsComplex": false
