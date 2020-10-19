@@ -7,6 +7,7 @@
         xmlns:code="clr-namespace:LegendsGenerator.Editor.CodeEditor"
         xmlns:nodes="clr-namespace:LegendsGenerator.Editor.ContractParsing"
         xmlns:history="clr-namespace:LegendsGenerator.Editor.ChangeHistory"
+        xmlns:editorIntegration="clr-namespace:LegendsGenerator.Contracts.Compiler.EditorIntegration;assembly=LegendsGenerator.Contracts"
         mc:Ignorable="d"
         Title="LegendsGenerator Editor"
         WindowState="Maximized">
@@ -104,7 +105,57 @@
                         <TextBlock Text="{Binding SelectedNode.ReturnType}" />
                     </StackPanel>
                     <TextBlock Text="Parameters: " />
-                    <ListView ItemsSource="{Binding SelectedNode.Parameters}" />
+                    <ListView ItemsSource="{Binding SelectedNode.Parameters}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" ToolTipService.ShowDuration="999999999">
+                                    <TextBlock.ToolTip>
+                                        <ListView ItemsSource="{Binding Tooltip}" >
+                                            <ListView.Resources>
+                                                <HierarchicalDataTemplate DataType="{x:Type editorIntegration:PropertyMember}">
+                                                    <Label>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding ReturnType.Name}" Foreground="Blue" />
+                                                            <TextBlock Text=" " />
+                                                            <TextBlock Text="{Binding Name}" />
+                                                        </StackPanel>
+                                                    </Label>
+                                                </HierarchicalDataTemplate>
+                                                <HierarchicalDataTemplate DataType="{x:Type editorIntegration:MethodMember}">
+                                                    <Label>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding ReturnType.Name}" Foreground="Blue" />
+                                                            <TextBlock Text=" " />
+                                                            <TextBlock Text="{Binding Name}" />
+                                                            <TextBlock Text="(" />
+                                                            <ItemsControl ItemsSource="{Binding Parameters}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Horizontal"/>
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock Text="{Binding Type.Name}" Foreground="Blue"/>
+                                                                            <TextBlock Text=" "/>
+                                                                            <TextBlock Text="{Binding Name}"/>
+                                                                            <TextBlock Text=", "/>
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                            <TextBlock Text=")" />
+                                                        </StackPanel>
+                                                    </Label>
+                                                </HierarchicalDataTemplate>
+                                            </ListView.Resources>
+                                        </ListView>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </DataGridCell>
 

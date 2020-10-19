@@ -41,6 +41,9 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <inheritdoc/>
+        public IEditorIntegration EditorIntegration => new EditorIntegration();
+
+        /// <inheritdoc/>
         public void UpdateGlobalVariables(Action<TGlobals> updateFunc)
         {
             updateFunc(this.globalVariables);

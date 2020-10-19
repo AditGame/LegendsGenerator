@@ -8,6 +8,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 {
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Editor.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -93,14 +94,14 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <summary>
         /// Gets the parameters of this method.
         /// </summary>
-        public IList<CompiledVariable> Parameters
+        public IList<CompiledVariableView> Parameters
         {
             get
             {
                 List<CompiledVariable> param = new List<CompiledVariable>();
                 param.AddRange(StaticParameters);
                 param.AddRange(this.getParametersFunc(this));
-                return param;
+                return param.Select(v => new CompiledVariableView(v)).ToList();
             }
         }
 

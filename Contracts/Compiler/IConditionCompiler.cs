@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Compiler
 {
+    using LegendsGenerator.Compiler.CSharp;
     using System.Collections.Generic;
 
     /// <summary>
@@ -11,6 +12,11 @@ namespace LegendsGenerator.Contracts.Compiler
     /// </summary>
     public interface IConditionCompiler
     {
+        /// <summary>
+        /// Gets a class which assists with the editor integrating with this compiler.
+        /// </summary>
+        IEditorIntegration EditorIntegration { get; }
+
         /// <summary>
         /// Compiles a complex (multi-line) condition.
         /// </summary>
