@@ -9,6 +9,7 @@ namespace LegendsGenerator.Viewer
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using Gu.Wpf.DataGrid2D;
@@ -36,6 +37,7 @@ namespace LegendsGenerator.Viewer
         public MainWindow()
         {
             this.InitializeComponent();
+            Context.Instance.Dispatcher = this.Dispatcher;
             this.context = InitContext();
             this.DataContext = this.context;
         }
@@ -98,9 +100,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void PrevStep_Click(object sender, RoutedEventArgs e)
+        private async void PrevStep_Click(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep -= 1;
+            await Task.Run(() => this.context.CurrentStep -= 1).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -108,9 +110,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void PrevStep_Click_10(object sender, RoutedEventArgs e)
+        private async void PrevStep_Click_10(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep -= 10;
+            await Task.Run(() => this.context.CurrentStep -= 10).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -118,9 +120,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void PrevStep_Click_100(object sender, RoutedEventArgs e)
+        private async void PrevStep_Click_100(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep -= 100;
+            await Task.Run(() => this.context.CurrentStep -= 100).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -128,9 +130,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void NextStep_Click(object sender, RoutedEventArgs e)
+        private async void NextStep_Click(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep += 1;
+            await Task.Run(() => this.context.CurrentStep += 1).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -138,9 +140,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void NextStep_Click_10(object sender, RoutedEventArgs e)
+        private async void NextStep_Click_10(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep += 10;
+            await Task.Run(() => this.context.CurrentStep += 10).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -148,9 +150,9 @@ namespace LegendsGenerator.Viewer
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
-        private void NextStep_Click_100(object sender, RoutedEventArgs e)
+        private async void NextStep_Click_100(object sender, RoutedEventArgs e)
         {
-            this.context.CurrentStep += 100;
+            await Task.Run(() => this.context.CurrentStep += 100).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -192,6 +194,16 @@ namespace LegendsGenerator.Viewer
             {
                 this.context.SelectedSquare = null;
             }
+        }
+
+        /// <summary>
+        /// Handles the clicking of the cancel activation button.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void CancelGeneration_Click(object sender, RoutedEventArgs e)
+        {
+            Context.Instance.HistoryGenerationCancellationRequested = true;
         }
     }
 }

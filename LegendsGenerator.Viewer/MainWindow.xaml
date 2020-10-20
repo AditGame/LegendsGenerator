@@ -73,19 +73,20 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Click="PrevStep_Click_100" ToolTip="Go Back" Padding="5" Grid.Column="0">-100</Button>
-                        <Button Click="PrevStep_Click_10" ToolTip="Go Back" Padding="5" Grid.Column="0">-10</Button>
-                        <Button Click="PrevStep_Click" ToolTip="Go Back" Padding="5" Grid.Column="0">-1</Button>
+                        <Button Click="PrevStep_Click_100" ToolTip="Go Back" Padding="5" Grid.Column="0" IsEnabled="{Binding IsNotGeneratingHistory}">-100</Button>
+                        <Button Click="PrevStep_Click_10" ToolTip="Go Back" Padding="5" Grid.Column="0" IsEnabled="{Binding IsNotGeneratingHistory}">-10</Button>
+                        <Button Click="PrevStep_Click" ToolTip="Go Back" Padding="5" Grid.Column="0" IsEnabled="{Binding IsNotGeneratingHistory}">-1</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBox Text="{Binding CurrentStep}" Padding="5" TextAlignment="Center" />
+                        <TextBox Text="{Binding CurrentStep,IsAsync=True}" Padding="5" TextAlignment="Center" IsEnabled="{Binding IsNotGeneratingHistory}"/>
                         <TextBlock Text="/" Padding="5" TextAlignment="Center" />
                         <TextBlock Text="{Binding MaxSteps}" Padding="5" TextAlignment="Center" />
+                        <Button Click="CancelGeneration_Click" ToolTip="Cancel Generation Process" Padding="5" IsEnabled="{Binding IsGeneratingHistory}">X</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Click="NextStep_Click" ToolTip="Go Forward" Padding="5" Grid.Column="2">+1</Button>
-                        <Button Click="NextStep_Click_10" ToolTip="Go Forward" Padding="5" Grid.Column="2">+10</Button>
-                        <Button Click="NextStep_Click_100" ToolTip="Go Forward" Padding="5" Grid.Column="2">+100</Button>
+                        <Button Click="NextStep_Click" ToolTip="Go Forward" Padding="5" Grid.Column="2" IsEnabled="{Binding IsNotGeneratingHistory}">+1</Button>
+                        <Button Click="NextStep_Click_10" ToolTip="Go Forward" Padding="5" Grid.Column="2" IsEnabled="{Binding IsNotGeneratingHistory}">+10</Button>
+                        <Button Click="NextStep_Click_100" ToolTip="Go Forward" Padding="5" Grid.Column="2" IsEnabled="{Binding IsNotGeneratingHistory}">+100</Button>
                     </StackPanel>
                 </Grid>
             </DataGridCell>

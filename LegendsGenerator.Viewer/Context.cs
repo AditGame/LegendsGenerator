@@ -12,6 +12,7 @@ namespace LegendsGenerator.Viewer
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Media;
+    using System.Windows.Threading;
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
@@ -59,6 +60,16 @@ namespace LegendsGenerator.Viewer
         private Guid? debugAtThingId;
 
         /// <summary>
+        /// Backing field for IsGeneratingHistory.
+        /// </summary>
+        private bool isGeneratingHistory;
+
+        /// <summary>
+        /// Backing field for IsHistoryGenerationCancellationRequested.
+        /// </summary>
+        private bool isHistoryGenerationCancellationRequested;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
         private Context()
@@ -82,6 +93,11 @@ namespace LegendsGenerator.Viewer
         /// Gets the history.
         /// </summary>
         public HistoryGenerator? History { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dispatcher to use for non-backend thread stuff.
+        /// </summary>
+        public Dispatcher? Dispatcher { get; set; }
 
         /// <summary>
         /// Gets the condition compiler.
@@ -165,35 +181,113 @@ namespace LegendsGenerator.Viewer
                     value = 0;
                 }
 
+                if (this.IsGeneratingHistory)
+                {
+                    // Fast exit if world generation is ongoing.
+                    return;
+                }
+
                 if (!this.WorldSteps.ContainsKey(value))
                 {
+                    this.IsGeneratingHistory = true;
                     this.BackfillToStep(value);
-                    this.OnPropertyChanged(nameof(this.MaxSteps));
+                    this.IsGeneratingHistory = false;
                 }
 
-                this.currentStep = value;
-                this.OccurredEvents.Clear();
-                this.CurrentWorld.OccurredEvents.ToList().ForEach(this.OccurredEvents.Add);
-
-                Guid? selectedThingId = this.SelectedThing?.ThingId;
-
-                this.Squares = this.CurrentWorld.Grid.GetAllGridEntries().Select(x => new SquareView(x.Square)).ToList();
-
-                this.OnPropertyChanged(nameof(this.CurrentStep));
-                this.OnPropertyChanged(nameof(this.CurrentWorld));
-
-                // This has to occur after the above notifications, as those change around the squares.
-                if (this.FollowThing && selectedThingId.HasValue && this.CurrentWorld.TryFindThing(selectedThingId.Value, out BaseThing? result))
+                if (value <= this.MaxSteps)
                 {
-                    // If FollowThing is set, follow the thing as it moves.
-                    this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(result.X, result.Y);
-                    this.SelectedThing = new ThingView(result, this.CurrentWorld);
+                    this.currentStep = value;
                 }
-                else if (this.SelectedSquare != null)
+                else
                 {
-                    // Keep the current grid in focus otherwise.
-                    this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(this.SelectedSquare.X, this.SelectedSquare.Y);
+                    this.currentStep = this.MaxSteps;
                 }
+
+                // Reset cancellation if it's been set.
+                this.HistoryGenerationCancellationRequested = false;
+
+                Action action = () =>
+                {
+                    this.OccurredEvents.Clear();
+                    this.CurrentWorld.OccurredEvents.ToList().ForEach(this.OccurredEvents.Add);
+
+                    Guid? selectedThingId = this.SelectedThing?.ThingId;
+
+                    this.Squares = this.CurrentWorld.Grid.GetAllGridEntries().Select(x => new SquareView(x.Square)).ToList();
+
+                    this.OnPropertyChanged(nameof(this.CurrentStep));
+                    this.OnPropertyChanged(nameof(this.CurrentWorld));
+
+                    // This has to occur after the above notifications, as those change around the squares.
+                    if (this.FollowThing && selectedThingId.HasValue && this.CurrentWorld.TryFindThing(selectedThingId.Value, out BaseThing? result))
+                    {
+                        // If FollowThing is set, follow the thing as it moves.
+                        this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(result.X, result.Y);
+                        this.SelectedThing = new ThingView(result, this.CurrentWorld);
+                    }
+                    else if (this.SelectedSquare != null)
+                    {
+                        // Keep the current grid in focus otherwise.
+                        this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(this.SelectedSquare.X, this.SelectedSquare.Y);
+                    }
+                };
+
+                if (this.Dispatcher != null)
+                {
+                    this.Dispatcher.BeginInvoke(action);
+                }
+                else
+                {
+                    action();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether history generation is NOT in process.
+        /// </summary>
+        public bool IsNotGeneratingHistory => !this.IsGeneratingHistory;
+
+        /// <summary>
+        /// Gets a value indicating whether history generation is in process.
+        /// </summary>
+        public bool IsGeneratingHistory
+        {
+            get
+            {
+                return this.isGeneratingHistory;
+            }
+
+            private set
+            {
+                this.isGeneratingHistory = value;
+                this.OnPropertyChanged(nameof(this.IsGeneratingHistory));
+                this.OnPropertyChanged(nameof(this.IsNotGeneratingHistory));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether history generation has been requested to cancel.
+        /// </summary>
+        public bool HistoryGenerationCancellationRequested
+        {
+            get
+            {
+                return this.isHistoryGenerationCancellationRequested;
+            }
+
+            set
+            {
+                if (!this.isGeneratingHistory)
+                {
+                    this.isHistoryGenerationCancellationRequested = false;
+                }
+                else
+                {
+                    this.isHistoryGenerationCancellationRequested = value;
+                }
+
+                this.OnPropertyChanged(nameof(this.HistoryGenerationCancellationRequested));
             }
         }
 
@@ -469,11 +563,18 @@ namespace LegendsGenerator.Viewer
                 this.BackfillToStep(toStep - 1);
             }
 
+            if (this.HistoryGenerationCancellationRequested)
+            {
+                // If generation cancellation is requested, don't generate this step.
+                return;
+            }
+
 #if DEBUG
             this.History.OpenDebuggerAtThing = this.DebugAtThingId;
 #endif
             this.Compiler.UpdateGlobalVariables(x => x.World = this.WorldSteps[toStep - 1]);
             this.WorldSteps[toStep] = this.History.Step(this.WorldSteps[toStep - 1]);
+            this.OnPropertyChanged(nameof(this.MaxSteps));
         }
     }
 }
