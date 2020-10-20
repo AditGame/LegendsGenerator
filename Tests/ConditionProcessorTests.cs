@@ -27,7 +27,10 @@ namespace LegendsGenerator.Tests
         [TestMethod]
         public void SimpleCondition()
         {
-            var globals = new BaseGlobalVariables();
+            var globals = new BaseGlobalVariables()
+            {
+                World = new Contracts.World(),
+            };
 
             ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(globals);
 
