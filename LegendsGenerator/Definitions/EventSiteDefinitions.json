@@ -34,6 +34,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -60,6 +61,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -104,6 +106,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -130,6 +133,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -156,6 +160,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -224,6 +229,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -278,6 +284,7 @@
             }
           ],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [
             {
               "AppliedTo": [

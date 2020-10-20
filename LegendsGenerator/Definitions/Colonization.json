@@ -25,12 +25,14 @@
               "DefinitionNameToSpawn": "Settler",
               "Type": "NotablePerson",
               "AttributeOverrides": {},
+              "AspectOverrides": {},
               "PositionType": "Absolute",
               "PositionX": "Subject.Position.X",
               "PositionY": "Subject.Position.Y",
               "PositionX_IsComplex": false,
               "PositionY_IsComplex": false,
               "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
               "AppliedTo": [
                 "Subject"
               ],
@@ -40,6 +42,7 @@
               "Description_IsComplex": false
             }
           ],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [],
           "Chance_IsComplex": false,
@@ -82,6 +85,7 @@
           "Condition": "true",
           "Effects": [],
           "Spawns": [],
+          "Transforms": [],
           "Destroys": [],
           "Moves": [
             {
@@ -133,12 +137,14 @@
               "DefinitionNameToSpawn": "Town",
               "Type": "Site",
               "AttributeOverrides": {},
+              "AspectOverrides": {},
               "PositionType": "RelativeAbsolute",
               "PositionX": "0",
               "PositionY": "0",
               "PositionX_IsComplex": false,
               "PositionY_IsComplex": false,
               "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
               "AppliedTo": [
                 "Subject"
               ],
@@ -148,6 +154,7 @@
               "Description_IsComplex": false
             }
           ],
+          "Transforms": [],
           "Destroys": [
             {
               "AppliedTo": [

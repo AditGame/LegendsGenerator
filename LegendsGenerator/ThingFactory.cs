@@ -148,7 +148,7 @@ namespace LegendsGenerator
                 {
                     string value = inheritedDefinition.EvalDefaultAspects(aspectName, rdm);
 
-                    // TODO: Wire in aspects.
+                    thing.BaseAspects[aspectName] = value;
                 }
             }
 

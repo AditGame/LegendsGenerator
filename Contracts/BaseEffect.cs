@@ -9,7 +9,7 @@ namespace LegendsGenerator.Contracts
     /// <summary>
     /// The effect of an Event on a Thing.
     /// </summary>
-    public record Effect
+    public record BaseEffect
     {
         /// <summary>
         /// Gets or sets a short title of the Effect.
@@ -20,16 +20,6 @@ namespace LegendsGenerator.Contracts
         /// Gets or sets a long description of the Effect.
         /// </summary>
         public string Description { get; set; } = "UNSET";
-
-        /// <summary>
-        /// Gets or sets the Attribute which this Effect will modify.
-        /// </summary>
-        public string Attribute { get; set; } = "UNSET";
-
-        /// <summary>
-        /// Gets or sets the effect this Effect has on the Attribute.
-        /// </summary>
-        public int AttributeEffect { get; set; }
 
         /// <summary>
         /// Gets or sets the Step this Effect was applied.

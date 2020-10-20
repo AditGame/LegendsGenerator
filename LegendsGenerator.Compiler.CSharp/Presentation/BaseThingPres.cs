@@ -61,7 +61,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <summary>
         /// Gets the effects on this object.
         /// </summary>
-        public IReadOnlyList<Effect> Effects => new ReadOnlyCollection<Effect>(this.Inner.Effects);
+        public IReadOnlyList<BaseEffect> Effects => this.Inner.Effects;
 
         /// <summary>
         /// Gets the square this thing is on.
@@ -83,14 +83,22 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>
         /// <returns>The list of all effects which are modifying this specified attrbute.</returns>
-        public IEnumerable<Effect> GetEffectsModifying(string attribute) => this.Inner.GetEffectsModifying(attribute);
+        public IEnumerable<AttributeEffect> GetEffectsModifying(string attribute) => this.Inner.GetAttributeEffectsModifying(attribute);
 
         /// <summary>
         /// Calculates the effective attribute value based on the current effects.
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>
-        /// <param name="defaultValue">The default value, if the attribtue does not exist.</param>
+        /// <param name="defaultValue">The default value, if the attribute does not exist.</param>
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute, int defaultValue) => this.Inner.EffectiveAttribute(attribute, defaultValue);
+
+        /// <summary>
+        /// Calculates the effective attribute value based on the current effects.
+        /// </summary>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <param name="defaultValue">The default value, if the aspect does not exist.</param>
+        /// <returns>The effective aspect value.</returns>
+        public string EffectiveAspect(string aspect, string defaultValue) => this.Inner.EffectiveAspect(aspect, defaultValue);
     }
 }

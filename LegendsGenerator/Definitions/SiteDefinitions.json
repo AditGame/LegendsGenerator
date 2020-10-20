@@ -1,5 +1,534 @@
 {
-  "Events": [],
+  "Events": [
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population > 200",
+        "Type": "Site",
+        "Definitions": [
+          "Hamlet"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The Hamlet {Subject.Name} has grown into a village.",
+      "Results": [
+        {
+          "Default": true,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Town",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population > 10000",
+        "Type": "Site",
+        "Definitions": [
+          "Town"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The town {Subject.Name} has grown into a city.",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "City",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population > 100000",
+        "Type": "Site",
+        "Definitions": [
+          "City"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The city {Subject.Name} has grown into a Metropolis",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Metropolis",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population > 2000",
+        "Type": "Site",
+        "Definitions": [
+          "Village"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The village {Subject.Name} has turned into a town",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Town",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population > 1000000",
+        "Type": "Site",
+        "Definitions": [
+          "Metropolis"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The Metropolis {Subject.Name} has grown into a Megaopolis",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Megaopolis",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population <= 0",
+        "Type": "Site",
+        "Definitions": [
+          "Hamlet"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The hamlet {Subject.Name} has been abandoned ",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Abandoned Population Center",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": true,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population < 200",
+        "Type": "Site",
+        "Definitions": [
+          "Village"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The village {Subject.Name} has shunk into a Hamlet",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Hamlet",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population < 2000",
+        "Type": "Site",
+        "Definitions": [
+          "Town"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The town {Subject.Name} has shrunk into a village",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Village",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population < 10000",
+        "Type": "Site",
+        "Definitions": [
+          "City"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The city {Subject.Name} has shrunk into a town",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Town",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population < 100000",
+        "Type": "Site",
+        "Definitions": [
+          "Metropolis"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The metropolis {Subject.Name} has shunk into a city",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "City",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "Subject->Population < 1000000",
+        "Type": "Site",
+        "Definitions": [
+          "Megaopolis"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "The megaopolis {Subject.Name} has shunk into a metropolis",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ChangeDefinitionName": "Metropolis",
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    }
+  ],
   "Sites": [
     {
       "ThingType": "Site",
@@ -25,10 +554,10 @@
         "Population": "Rand.Next(20000, 100000)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True",
-        "WasVillage": "True",
-        "WasTown": "True",
-        "WasCity": "True"
+        "WasHamlet": "\"true\"",
+        "WasVillage": "\"true\"",
+        "WasTown": "\"true\"",
+        "WasCity": "\"true\""
       },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
@@ -44,9 +573,9 @@
         "Population": "Rand.Next(2000, 10000)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True",
-        "WasVillage": "True",
-        "WasTown": "True"
+        "WasHamlet": "\"true\"",
+        "WasVillage": "\"true\"",
+        "WasTown": "\"true\""
       },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
@@ -91,8 +620,8 @@
         "Population": "Rand.Next(200, 2000)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True",
-        "WasVillage": "True"
+        "WasHamlet": "\"true\"",
+        "WasVillage": "\"true\""
       },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
@@ -108,7 +637,7 @@
         "Population": "Rand.Next(20, 200)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True"
+        "WasHamlet": "\"true\""
       },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
@@ -124,11 +653,11 @@
         "Population": "Rand.Next(100000, 1000000)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True",
-        "WasVillage": "True",
-        "WasTown": "True",
-        "WasCity": "True",
-        "WasMetropolis": "True"
+        "WasHamlet": "\"true\"",
+        "WasVillage": "\"true\"",
+        "WasTown": "\"true\"",
+        "WasCity": "\"true\"",
+        "WasMetropolis": "\"true\""
       },
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
@@ -144,13 +673,24 @@
         "Population": "Rand.Next(1000000,10000000)"
       },
       "DefaultAspects": {
-        "WasHamlet": "True",
-        "WasVillage": "True",
-        "WasTown": "True",
-        "WasCity": "True",
-        "WasMetropolis": "True",
-        "WasMegaopolis": "True"
+        "WasHamlet": "\"true\"",
+        "WasVillage": "\"true\"",
+        "WasTown": "\"true\"",
+        "WasCity": "\"true\"",
+        "WasMetropolis": "\"true\"",
+        "WasMegaopolis": "\"true\""
       },
+      "MaxEvents_IsComplex": false,
+      "DefaultAttributes_IsComplex": false,
+      "DefaultAspects_IsComplex": false
+    },
+    {
+      "ThingType": "Site",
+      "Name": "Abandoned Population Center",
+      "Description": "Now some decaying buildings",
+      "MaxEvents": "1",
+      "DefaultAttributes": {},
+      "DefaultAspects": {},
       "MaxEvents_IsComplex": false,
       "DefaultAttributes_IsComplex": false,
       "DefaultAspects_IsComplex": false

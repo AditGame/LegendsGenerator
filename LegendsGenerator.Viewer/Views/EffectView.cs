@@ -21,13 +21,13 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// The underlying effect.
         /// </summary>
-        private readonly Effect effect;
+        private readonly BaseEffect effect;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectView"/> class.
         /// </summary>
         /// <param name="effect">The underlying effect.</param>
-        public EffectView(Effect effect)
+        public EffectView(BaseEffect effect)
         {
             this.effect = effect;
         }
@@ -45,12 +45,17 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the Attribute which this Effect will modify.
         /// </summary>
-        public string Attribute => this.effect.Attribute;
+        public string Attribute => (this.effect is AttributeEffect attr) ? attr.Attribute : ((AspectEffect)this.effect).Aspect;
 
         /// <summary>
         /// Gets the effect this Effect has on the Attribute.
         /// </summary>
-        public int AttributeEffect => this.effect.AttributeEffect;
+        public string AttributeEffect => this.effect switch
+        {
+            AttributeEffect attr => attr.Manitude.ToString(),
+            AspectEffect aspect => aspect.Value,
+            _ => string.Empty,
+        };
 
         /// <summary>
         /// Gets the Step this Effect was applied.
@@ -70,7 +75,12 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the string version of the effect.
         /// </summary>
-        public string EffectString => this.AttributeEffect > 0 ? $"{this.Attribute} +{this.AttributeEffect}" : $"{this.Attribute} {this.AttributeEffect}";
+        public string EffectString => this.effect switch
+        {
+            AttributeEffect attr => attr.Manitude > 0 ? $"{this.Attribute} +{this.AttributeEffect}" : $"{this.Attribute} {this.AttributeEffect}",
+            AspectEffect aspect => aspect.Value,
+            _ => string.Empty,
+        };
 
         /// <summary>
         /// Gets what Thing applied this Effect, if applicable.

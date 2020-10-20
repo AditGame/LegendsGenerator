@@ -372,12 +372,12 @@ namespace LegendsGenerator
 
             foreach (AttributeEffectDefinition effectDefinition in result.Effects)
             {
-                Effect effect = new Effect()
+                AttributeEffect effect = new AttributeEffect()
                 {
                     Title = effectDefinition.EvalTitle(rdm, thing, ev.Objects),
                     Description = effectDefinition.EvalDescription(rdm, thing, ev.Objects),
                     Attribute = effectDefinition.AffectedAttribute,
-                    AttributeEffect = effectDefinition.EvalMagnitude(rdm, thing, ev.Objects),
+                    Manitude = effectDefinition.EvalMagnitude(rdm, thing, ev.Objects),
                     Duration = effectDefinition.EvalDuration(rdm, thing, ev.Objects),
                     TookEffect = world.StepCount,
                 };
@@ -387,7 +387,7 @@ namespace LegendsGenerator
                     BaseThing? appliedToThing = GetThing(appliedTo);
                     if (appliedToThing != null)
                     {
-                        GetOrCreate(stagedThings, appliedToThing).Thing.Effects.Add(effect);
+                        GetOrCreate(stagedThings, appliedToThing).Thing.AttributeEffects.Add(effect);
                     }
                 }
             }
@@ -415,8 +415,82 @@ namespace LegendsGenerator
                     spawnedThing.BaseAttributes[overrideAttr] = spawnDefinition.EvalAttributeOverrides(overrideAttr, rdm, spawnedThing, ev.Objects);
                 }
 
+                foreach (var overrideAspect in spawnDefinition.AspectOverrides.Keys)
+                {
+                    spawnedThing.BaseAspects[overrideAspect] = spawnDefinition.EvalAspectOverrides(overrideAspect, rdm, spawnedThing, ev.Objects);
+                }
+
                 // Should never get, and always create.
                 GetOrCreate(stagedThings, spawnedThing);
+            }
+
+            foreach (TransformDefinition transformDefinition in result.Transforms)
+            {
+                foreach (string appliedTo in transformDefinition.AppliedTo)
+                {
+                    BaseThing? thingToTransform = GetThing(appliedTo);
+                    if (thingToTransform == null)
+                    {
+                        continue;
+                    }
+
+                    // If there's a new definition name provided, transform this thing into the new type.
+                    if (transformDefinition.ChangeDefinitionName != null)
+                    {
+                        // We spawn a new thing for the transform. However, data is copied from this object and it will be ultimately discarded.
+                        BaseThing newThing = this.thingFactory.CreateThing(
+                            rdm,
+                            thingToTransform.X,
+                            thingToTransform.X,
+                            thingToTransform.ThingType,
+                            transformDefinition.ChangeDefinitionName);
+
+                        // Copy the definition from the new object to the old object.
+                        thingToTransform.BaseDefinition = newThing.BaseDefinition;
+
+                        // If we elect to reset all attributes and aspect, we should delete all from the old object so the next process fills them in.
+                        if (transformDefinition.ResetAttributesAndAspects)
+                        {
+                            thingToTransform.BaseAttributes.Clear();
+                            thingToTransform.BaseAspects.Clear();
+                        }
+
+                        if (transformDefinition.ResetEffects)
+                        {
+                            thingToTransform.AttributeEffects.Clear();
+                            thingToTransform.AspectEffects.Clear();
+                        }
+
+                        // We only copy over attributes which are missing in the existing thing.
+                        foreach (var attribute in newThing.BaseAttributes)
+                        {
+                            if (!thingToTransform.BaseAttributes.ContainsKey(attribute.Key))
+                            {
+                                thingToTransform.BaseAttributes[attribute.Key] = attribute.Value;
+                            }
+                        }
+
+                        // We only copy over aspects which are missing in the existing thing.
+                        foreach (var aspect in newThing.BaseAspects)
+                        {
+                            if (!thingToTransform.BaseAspects.ContainsKey(aspect.Key))
+                            {
+                                thingToTransform.BaseAspects[aspect.Key] = aspect.Value;
+                            }
+                        }
+                    }
+
+                    // Override whatever we did above with any overrides.
+                    foreach (var overrideAttr in transformDefinition.AttributeOverrides.Keys)
+                    {
+                        thingToTransform.BaseAttributes[overrideAttr] = transformDefinition.EvalAttributeOverrides(overrideAttr, rdm, thingToTransform, ev.Objects);
+                    }
+
+                    foreach (var overrideAspect in transformDefinition.AspectOverrides.Keys)
+                    {
+                        thingToTransform.BaseAspects[overrideAspect] = transformDefinition.EvalAspectOverrides(overrideAspect, rdm, thingToTransform, ev.Objects);
+                    }
+                }
             }
 
             foreach (DestroyDefinition destroyDefinition in result.Destroys)

@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="AttributeView.cs" company="Tom Luppi">
+// <copyright file="AspectView.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -15,39 +15,47 @@ namespace LegendsGenerator.Viewer.Views
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
-    /// The attribute view.
+    /// The aspect view.
     /// </summary>
-    public class AttributeView
+    public class AspectView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeView"/> class.
+        /// Initializes a new instance of the <see cref="AspectView"/> class.
         /// </summary>
-        /// <param name="thing">The thing to get the attribute info for.</param>
-        /// <param name="name">The name of the attribute.</param>
-        public AttributeView(BaseThing thing, string name)
+        /// <param name="thing">The thing to get the Aspect info for.</param>
+        /// <param name="name">The name of the Aspect.</param>
+        public AspectView(BaseThing thing, string name)
         {
-            this.Title = $"{name} (Base {thing.BaseAttributes[name]})";
-            this.Effective = thing.EffectiveAttribute(name);
+            this.Title = $"{name} (Base {thing.BaseAspects[name]})";
+            this.Effective = thing.EffectiveAspect(name, "None");
+
+            var current = thing.GetCurrentAspectEffect(name);
 
             StringBuilder sb = new StringBuilder();
-            foreach (AttributeEffect effect in thing.GetAttributeEffectsModifying(name))
+            foreach (AspectEffect effect in thing.GetAspectEffectsModifying(name))
             {
                 EffectView view = new EffectView(effect);
-                sb.AppendLine($"{view.Title} {view.EffectString}");
+                string str = $"{view.Title} {view.EffectString}";
+                if (effect == current)
+                {
+                    str += $" (Current)";
+                }
+
+                sb.AppendLine(str);
             }
 
             this.Tooltip = sb.ToString();
         }
 
         /// <summary>
-        /// Gets the title for the attribute.
+        /// Gets the title for the Aspect.
         /// </summary>
         public string Title { get; }
 
         /// <summary>
         /// Gets the effective value.
         /// </summary>
-        public int Effective { get; }
+        public string Effective { get; }
 
         /// <summary>
         /// Gets the tooltip.

@@ -56,6 +56,11 @@ namespace LegendsGenerator.Viewer.Views
             { "City", new ImageBrush(new BitmapImage(new Uri(@"resources\City.png", UriKind.Relative))) },
             { "Town", new ImageBrush(new BitmapImage(new Uri(@"resources\Town.png", UriKind.Relative))) },
             { "Settler", new ImageBrush(new BitmapImage(new Uri(@"resources\Settler.png", UriKind.Relative))) },
+            { "Hamlet", new ImageBrush(new BitmapImage(new Uri(@"resources\Hamlet.png", UriKind.Relative))) },
+            { "Megaopolis", new ImageBrush(new BitmapImage(new Uri(@"resources\Megaopolis.png", UriKind.Relative))) },
+            { "Metropolis", new ImageBrush(new BitmapImage(new Uri(@"resources\Metropolis.png", UriKind.Relative))) },
+            { "Village", new ImageBrush(new BitmapImage(new Uri(@"resources\Village.png", UriKind.Relative))) },
+            { "Abandoned Population Center", new ImageBrush(new BitmapImage(new Uri(@"resources\Abandoned Population Center.png", UriKind.Relative))) },
         };
 
         /// <summary>

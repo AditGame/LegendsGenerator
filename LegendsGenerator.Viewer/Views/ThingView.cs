@@ -69,7 +69,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the effects on the thing.
         /// </summary>
-        public IList<EffectView> Effects => this.thing.Effects.Select(x => new EffectView(x)).ToList();
+        public IList<EffectView> Effects => this.thing.AttributeEffects.Select(x => new EffectView(x)).ToList();
 
         /// <summary>
         /// Gets the base Attribute on this object before Effects are applied.
@@ -82,6 +82,12 @@ namespace LegendsGenerator.Viewer.Views
         /// </summary>
         public IList<AttributeView> Attributes =>
             this.thing.BaseAttributes.Keys.Select(x => new AttributeView(this.thing, x)).ToList();
+
+        /// <summary>
+        /// Gets the base Aspect on this object after Effects are applied.
+        /// </summary>
+        public IList<AspectView> Aspects =>
+            this.thing.BaseAspects.Keys.Select(x => new AspectView(this.thing, x)).ToList();
 
         /// <summary>
         /// Gets a value indicating whether this thing is moving.

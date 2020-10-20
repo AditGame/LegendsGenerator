@@ -33,6 +33,13 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         public Dictionary<string, string> AttributeOverrides { get; } = new Dictionary<string, string>();
 
         /// <summary>
+        /// Gets the aspect overrides for this spawn.
+        /// </summary>
+        [CompiledDictionary(typeof(string))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
+        public Dictionary<string, string> AspectOverrides { get; } = new Dictionary<string, string>();
+
+        /// <summary>
         /// Gets or sets the type of position.
         /// </summary>
         public PositionType PositionType { get; set; }

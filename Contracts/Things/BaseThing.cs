@@ -59,9 +59,24 @@ namespace LegendsGenerator.Contracts.Things
         public Dictionary<string, int> BaseAttributes { get; init; } = new Dictionary<string, int>();
 
         /// <summary>
-        /// Gets all effects on this thing. Expired effects should be culled on Step.
+        /// Gets the base Aspect on this object before Effects are applied.
         /// </summary>
-        public IList<Effect> Effects { get; init; } = new List<Effect>();
+        public Dictionary<string, string> BaseAspects { get; init; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Gets all attribute effects on this thing. Expired effects should be culled on Step.
+        /// </summary>
+        public IList<AttributeEffect> AttributeEffects { get; init; } = new List<AttributeEffect>();
+
+        /// <summary>
+        /// Gets all aspect effects on this thing. Expired effects should be culled on Step.
+        /// </summary>
+        public IList<AspectEffect> AspectEffects { get; init; } = new List<AspectEffect>();
+
+        /// <summary>
+        /// Gets all effects on this thing.
+        /// </summary>
+        public IReadOnlyList<BaseEffect> Effects => this.AttributeEffects.OfType<BaseEffect>().Concat(this.AspectEffects).ToList();
 
         /// <summary>
         /// Creates a clone of this thing incrementing the step count by one.
@@ -72,18 +87,34 @@ namespace LegendsGenerator.Contracts.Things
             // Clone the thing with an empty effect list.
             BaseThing newThing = this with
             {
-                Effects = new List<Effect>(),
+                AttributeEffects = new List<AttributeEffect>(),
+                AspectEffects = new List<AspectEffect>(),
             };
 
-            foreach (Effect effect in Effects)
+            foreach (AttributeEffect effect in this.AttributeEffects)
             {
                 if (effect.Duration == -1)
                 {
-                    newThing.Effects.Add(effect with { });
+                    newThing.AttributeEffects.Add(effect with { });
                 }
                 else if (effect.Duration >= 1)
                 {
-                    newThing.Effects.Add(effect with
+                    newThing.AttributeEffects.Add(effect with
+                    {
+                        Duration = effect.Duration - 1,
+                    });
+                }
+            }
+
+            foreach (AspectEffect effect in this.AspectEffects)
+            {
+                if (effect.Duration == -1)
+                {
+                    newThing.AspectEffects.Add(effect with { });
+                }
+                else if (effect.Duration >= 1)
+                {
+                    newThing.AspectEffects.Add(effect with
                     {
                         Duration = effect.Duration - 1,
                     });
@@ -94,29 +125,57 @@ namespace LegendsGenerator.Contracts.Things
         }
 
         /// <summary>
-        /// Gets the effects which are modifying the specified value.
+        /// Gets the effects which are modifying the specified attribute.
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>
-        /// <returns>The list of all effects which are modifying this specified attrbute.</returns>
-        public IEnumerable<Effect> GetEffectsModifying(string attribute)
+        /// <returns>The list of all effects which are modifying this specified attribute.</returns>
+        public IEnumerable<AttributeEffect> GetAttributeEffectsModifying(string attribute)
         {
-            return Effects.Where(a => a.Attribute.Equals(attribute));
+            return this.AttributeEffects.Where(a => a.Attribute.Equals(attribute));
+        }
+
+        /// <summary>
+        /// Gets the effects which are modifying the specified attribute.
+        /// </summary>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <returns>The list of all effects which are modifying this specified aspect.</returns>
+        public IEnumerable<AspectEffect> GetAspectEffectsModifying(string aspect)
+        {
+            return this.AspectEffects.Where(a => a.Aspect.Equals(aspect));
+        }
+
+        /// <summary>
+        /// Gets the effect which is setting the given aspect.
+        /// </summary>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <returns>The effect which is setting the aspect, or null if none are.</returns>
+        public AspectEffect? GetCurrentAspectEffect(string aspect)
+        {
+            var aspectEffects = this.GetAspectEffectsModifying(aspect);
+
+            if (!aspectEffects.Any())
+            {
+                return null;
+            }
+
+            int maxAge = aspectEffects.Max(X => X.TookEffect);
+            return aspectEffects.First(x => x.TookEffect == maxAge);
         }
 
         /// <summary>
         /// Calculates the effective attribute value based on the current effects.
         /// </summary>
         /// <param name="attribute">The attribute to get.</param>
-        /// <param name="defaultValue">The default value, if the attribtue does not exist.</param>
+        /// <param name="defaultValue">The default value, if the attribute does not exist.</param>
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute, int defaultValue)
         {
-            if (!BaseAttributes.TryGetValue(attribute, out int value))
+            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
             {
-                return defaultValue;
+                value = defaultValue;
             }
 
-            return SafeSum(value, GetEffectsModifying(attribute).Select(x => x.AttributeEffect));
+            return SafeSum(value, this.GetAttributeEffectsModifying(attribute).Select(x => x.Manitude));
         }
 
         /// <summary>
@@ -126,12 +185,35 @@ namespace LegendsGenerator.Contracts.Things
         /// <returns>The effective attribute value.</returns>
         public int EffectiveAttribute(string attribute)
         {
-            if (!BaseAttributes.TryGetValue(attribute, out int value))
+            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
             {
                 throw new ArgumentException($"{ThingType} Type does not have attribute {attribute}", nameof(attribute));
             }
 
-            return SafeSum(value, GetEffectsModifying(attribute).Select(x => x.AttributeEffect));
+            return SafeSum(value, this.GetAttributeEffectsModifying(attribute).Select(x => x.Manitude));
+        }
+
+        /// <summary>
+        /// Calculates the effective aspect value based on the current effects.
+        /// </summary>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <param name="defaultValue">The default value, if the aspect does not exist.</param>
+        /// <returns>The effective aspect value.</returns>
+        public string EffectiveAspect(string aspect, string defaultValue)
+        {
+            if (!this.BaseAspects.TryGetValue(aspect, out string? value))
+            {
+                value = defaultValue;
+            }
+
+            var effect = this.GetCurrentAspectEffect(aspect);
+
+            if (effect != null)
+            {
+                return effect.Value;
+            }
+
+            return value;
         }
 
         /// <inheritdoc/>
@@ -140,9 +222,14 @@ namespace LegendsGenerator.Contracts.Things
             StringBuilder sb = new StringBuilder($"{ThingType} {Name}");
             sb.AppendLine();
 
-            foreach (Effect effect in Effects)
+            foreach (AttributeEffect effect in this.AttributeEffects)
             {
-                sb.AppendLine($"  {effect.Title} ({effect.Duration}): {effect.Attribute} {effect.AttributeEffect}");
+                sb.AppendLine($"  {effect.Title} ({effect.Duration}): {effect.Attribute} {effect.Manitude}");
+            }
+
+            foreach (AspectEffect effect in this.AspectEffects)
+            {
+                sb.AppendLine($"  {effect.Title} ({effect.Duration}): {effect.Aspect} {effect.Value}");
             }
 
             return sb.ToString();
