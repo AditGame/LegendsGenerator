@@ -25,6 +25,9 @@ namespace CompiledDefinitionSourceGenerator
             var attributeConstructorArguments = property
                 .GetAttributes("CompiledAttribute", "CompiledDictionaryAttribute")
                 .SelectMany(a => a.ConstructorArguments);
+            var attributeNamedArguments = property
+                .GetAttributes("CompiledAttribute", "CompiledDictionaryAttribute")
+                .SelectMany(a => a.NamedArguments);
 
             this.ReturnType = attributeConstructorArguments
                 .First(x => x.Type?.Name == "Type").Value?.ToString() ?? "void";
@@ -36,10 +39,12 @@ namespace CompiledDefinitionSourceGenerator
                     a.ConstructorArguments.First(x => x.Type?.Name.Equals("String", StringComparison.OrdinalIgnoreCase) == true).Value?.ToString() ?? "void",
                     a.ConstructorArguments.First(x => x.Type?.Name.Equals("Type", StringComparison.OrdinalIgnoreCase) == true).Value?.ToString() ?? "void")).ToList();
 
-            this.AsFormattedText = property
-                .GetAttributes("CompiledAttribute")
-                .SelectMany(a => a.NamedArguments)
+            this.AsFormattedText = attributeNamedArguments
                 .FirstOrDefault(a => a.Key.Equals("AsFormattedText"))
+                .Value.Value?.ToString().Equals(bool.TrueString) ?? false;
+
+            this.Protected = attributeNamedArguments
+                .FirstOrDefault(a => a.Key.Equals("Protected"))
                 .Value.Value?.ToString().Equals(bool.TrueString) ?? false;
         }
 
@@ -57,6 +62,11 @@ namespace CompiledDefinitionSourceGenerator
         /// Gets or sets a value indicating whether this should be compiled as formatted text.
         /// </summary>
         public bool AsFormattedText { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this should be generated as Protected, not Public.
+        /// </summary>
+        public bool Protected { get; set; }
 
         /// <summary>
         /// Gets or sets the variable names.

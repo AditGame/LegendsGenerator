@@ -13,14 +13,28 @@
       "Name": "Person",
       "Description": "A dude",
       "MaxEvents": "1",
-      "DefaultAttributes": {
-        "Empathy": "Rand.Next(0, 5000)",
-        "Linguistic": "Rand.Next(0, 5000)"
+      "Attributes": {
+        "Empathy": {
+          "BaseValue": "Rand.Next(0, 5000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        },
+        "Linguistic": {
+          "BaseValue": "Rand.Next(0, 5000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        },
+        "EmpathyClone": {
+          "BaseValue": "0",
+          "DynamicValue": "Rand.Next(0, 123)",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     }
   ],
   "WorldSquares": []

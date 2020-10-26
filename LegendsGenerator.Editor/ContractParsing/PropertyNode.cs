@@ -13,6 +13,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Linq;
     using System.Reflection;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Media;
 
     using LegendsGenerator.Contracts.Definitions;

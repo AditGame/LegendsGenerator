@@ -535,14 +535,22 @@
       "Name": "Population Center",
       "Description": "A center of population.",
       "MaxEvents": "1",
-      "DefaultAttributes": {
-        "Evil": "Rand.Next(-5, 5)",
-        "Population": "Rand.Next(0, 1000000)"
+      "Attributes": {
+        "Evil": {
+          "BaseValue": "Rand.Next(-5, 5)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        },
+        "Population": {
+          "BaseValue": "Rand.Next(0, 1000000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -550,18 +558,37 @@
       "Description": "A moderate sized settlement",
       "MaxEvents": "2",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(20000, 100000)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(20000, 100000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\"",
-        "WasVillage": "\"true\"",
-        "WasTown": "\"true\"",
-        "WasCity": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasVillage": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasTown": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasCity": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -569,31 +596,54 @@
       "Description": "A small sized settlement",
       "MaxEvents": "1",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(2000, 10000)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(2000, 10000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\"",
-        "WasVillage": "\"true\"",
-        "WasTown": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasVillage": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasTown": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
       "Name": "Tower",
       "Description": "Look, johnson!",
       "MaxEvents": "1",
-      "DefaultAttributes": {
-        "Evil": "Rand.Next(-20, 20)",
-        "Population": "Rand.Next(0, 10)"
+      "Attributes": {
+        "Evil": {
+          "BaseValue": "Rand.Next(-20, 20)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        },
+        "Population": {
+          "BaseValue": "Rand.Next(0, 10)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -601,14 +651,22 @@
       "Description": "Evil.",
       "MaxEvents": "1",
       "InheritsFrom": "Tower",
-      "DefaultAttributes": {
-        "Evil": "Rand.Next(-5, 5)",
-        "Population": "Rand.Next(0, 1000000)"
+      "Attributes": {
+        "Evil": {
+          "BaseValue": "Rand.Next(-5, 5)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        },
+        "Population": {
+          "BaseValue": "Rand.Next(0, 1000000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -616,16 +674,27 @@
       "Description": "A small collection of building forming a small community",
       "MaxEvents": "1",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(200, 2000)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(200, 2000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\"",
-        "WasVillage": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasVillage": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -633,15 +702,22 @@
       "Description": "A cluster of buildings, typically one extended family",
       "MaxEvents": "1",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(20, 200)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(20, 200)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -649,19 +725,42 @@
       "Description": "A very large city, a center of commerce",
       "MaxEvents": "3",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(100000, 1000000)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(100000, 1000000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\"",
-        "WasVillage": "\"true\"",
-        "WasTown": "\"true\"",
-        "WasCity": "\"true\"",
-        "WasMetropolis": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasVillage": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasTown": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasCity": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasMetropolis": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
@@ -669,31 +768,56 @@
       "Description": "A city the size of a normal country; a powerhouse of the world",
       "MaxEvents": "1",
       "InheritsFrom": "Population Center",
-      "DefaultAttributes": {
-        "Population": "Rand.Next(1000000,10000000)"
+      "Attributes": {
+        "Population": {
+          "BaseValue": "Rand.Next(1000000,10000000)",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
       },
-      "DefaultAspects": {
-        "WasHamlet": "\"true\"",
-        "WasVillage": "\"true\"",
-        "WasTown": "\"true\"",
-        "WasCity": "\"true\"",
-        "WasMetropolis": "\"true\"",
-        "WasMegaopolis": "\"true\""
+      "Aspects": {
+        "WasHamlet": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasVillage": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasTown": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasCity": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasMetropolis": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        },
+        "WasMegaopolis": {
+          "Value": "\"true\"",
+          "Dynamic": false,
+          "Value_IsComplex": false
+        }
       },
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "MaxEvents_IsComplex": false
     },
     {
       "ThingType": "Site",
       "Name": "Abandoned Population Center",
       "Description": "Now some decaying buildings",
       "MaxEvents": "1",
-      "DefaultAttributes": {},
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Attributes": {},
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     }
   ],
   "NotablePeople": [],

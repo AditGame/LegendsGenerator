@@ -30,5 +30,10 @@ namespace LegendsGenerator.Contracts.Compiler
         /// Gets or sets a value indicating whether this should be compiled as formatted text.
         /// </summary>
         public bool AsFormattedText { get; set; }
+
+        /// <summary>
+        /// Gets or sets if the generated method should be Protected, instead of Private.
+        /// </summary>
+        public bool Protected { get; set; }
     }
 }

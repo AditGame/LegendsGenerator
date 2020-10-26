@@ -30,8 +30,8 @@ namespace LegendsGenerator.Tests
                 Name = "Population Center",
                 Description = "A center of population.",
             };
-            popCenter.DefaultAttributes["Evil"] = "Rand.Next(-5, 5)";
-            popCenter.DefaultAttributes["Population"] = "Rand.Next(0, 1000000)";
+            popCenter.Attributes["Evil"] = new AttributeDefinition() { BaseValue = "Rand.Next(-5, 5)" };
+            popCenter.Attributes["Population"] = new AttributeDefinition() { BaseValue = "Rand.Next(0, 1000000)" };
 
             var cityDef = new SiteDefinition()
             {
@@ -39,7 +39,7 @@ namespace LegendsGenerator.Tests
                 Description = "A moderate sized settlement",
                 InheritsFrom = "Population Center",
             };
-            cityDef.DefaultAttributes["Population"] = "Rand.Next(20000, 100000)";
+            cityDef.Attributes["Population"] = new AttributeDefinition() { BaseValue = "Rand.Next(20000, 100000)" };
 
             IList<SiteDefinition> sites = new List<SiteDefinition>
             {
@@ -52,7 +52,10 @@ namespace LegendsGenerator.Tests
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
 
-            ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables());
+            ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables()
+            {
+                World = new Contracts.World(),
+            });
 
             definitions.Attach(processor);
             ThingFactory factory = new ThingFactory(definitions);
@@ -60,6 +63,7 @@ namespace LegendsGenerator.Tests
             for (int i = 0; i < 100; i++)
             {
                 Site city = factory.CreateSite(rdm, 0, 0, "City");
+                city.FinalizeConstruction(rdm);
                 Console.WriteLine($"City created: {city.EffectiveAttribute("Population")} {city.EffectiveAttribute("Evil")}");
 
                 Assert.AreEqual(ThingType.Site, city.ThingType);
@@ -86,7 +90,7 @@ namespace LegendsGenerator.Tests
                 Description = "A moderate sized settlement",
                 InheritsFrom = "Population Center",
             };
-            cityDef.DefaultAttributes["Population"] = "rand.Next(20000, 100000)";
+            cityDef.Attributes["Population"] = new AttributeDefinition() { BaseValue = "rand.Next(20000, 100000)" };
 
             IList<SiteDefinition> sites = new List<SiteDefinition>
             {
@@ -99,7 +103,7 @@ namespace LegendsGenerator.Tests
 
             ThingFactory factory = new ThingFactory(definitions);
 
-            factory.CreateSite(new Random(worldSeed), 0, 0, "City");
+            //factory.CreateSite(new Random(worldSeed), 0, 0, "City");
         }
     }
 }

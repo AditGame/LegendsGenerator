@@ -14,11 +14,9 @@
       "Description": "Travels between towns and tries to improve relations",
       "MaxEvents": "1",
       "InheritsFrom": "Person",
-      "DefaultAttributes": {},
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Attributes": {},
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     }
   ],
   "WorldSquares": []

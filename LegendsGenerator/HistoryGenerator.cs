@@ -129,7 +129,7 @@ namespace LegendsGenerator
                         continue;
                     }
 
-                    Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, thing.ThingId);
+                    Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, thing.ThingId, RandomStage.EventFinding);
 
                     if (!eventsBySubjectType.TryGetValue(thing.ThingType, out var availableEvents))
                     {
@@ -141,7 +141,7 @@ namespace LegendsGenerator
                     foreach (OccurredEvent occurredEvent in occurredEvents)
                     {
                         Log.Info($"Adding event {occurredEvent.Event.Description}");
-                        this.ApplyEvent(rdm, nextWorld, occurredEvent, newThing.Thing, stagedThings);
+                        this.ApplyEvent(rdm, nextWorld, occurredEvent, thing, newThing.Thing, stagedThings);
                     }
 
                     ProcessMovement(newThing.Thing, movementHandler, stagedThings);
@@ -150,6 +150,8 @@ namespace LegendsGenerator
 
             foreach (var stagedThing in stagedThings.Where(t => !t.Value.Destroyed))
             {
+                Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, stagedThing.Value.Thing.ThingId, RandomStage.Finalization);
+                stagedThing.Value.Thing.FinalizeConstruction(rdm);
                 nextWorld.Grid.AddThing(stagedThing.Value.Thing);
             }
 
@@ -331,15 +333,21 @@ namespace LegendsGenerator
         /// <param name="rdm">The random nubmer generator for this thing.</param>
         /// <param name="world">The world.</param>
         /// <param name="ev">The occurred event definition.</param>
-        /// <param name="thing">The thing to apply the event to.</param>
+        /// <param name="oldThing">The old thing.</param>
+        /// <param name="baseThing">The thing to apply the event to.</param>
         /// <param name="stagedThings">The staged things.</param>
-        private void ApplyEvent(Random rdm, World world, OccurredEvent ev, BaseThing thing, IDictionary<Guid, StagedThing> stagedThings)
+        private void ApplyEvent(Random rdm, World world, OccurredEvent ev, BaseThing oldThing, BaseThing baseThing, IDictionary<Guid, StagedThing> stagedThings)
         {
+            /*
+             * This is quite the method.
+             * The general philosophy is we should always read from the old object, and write to the new one.
+             */
+
             BaseThing? GetThing(string name)
             {
                 if (name.Equals("Subject"))
                 {
-                    return GetOrCreate(stagedThings, thing).Thing;
+                    return GetOrCreate(stagedThings, baseThing).Thing;
                 }
                 else if (ev.Objects.TryGetValue(name, out var @object))
                 {
@@ -355,7 +363,7 @@ namespace LegendsGenerator
             int minChance = rdm.Next(1, 100);
             EventResultDefinition? result = ev.Event.Results
                 .Shuffle(rdm)
-                .FirstOrDefault(e => Matches(minChance, () => e.EvalChance(rdm, thing, ev.Objects), () => e.EvalCondition(rdm, thing, ev.Objects)));
+                .FirstOrDefault(e => Matches(minChance, () => e.EvalChance(rdm, oldThing, ev.Objects), () => e.EvalCondition(rdm, oldThing, ev.Objects)));
 
             result ??= ev.Event.Results.FirstOrDefault(r => r.Default);
 
@@ -374,11 +382,11 @@ namespace LegendsGenerator
             {
                 AttributeEffect effect = new AttributeEffect()
                 {
-                    Title = effectDefinition.EvalTitle(rdm, thing, ev.Objects),
-                    Description = effectDefinition.EvalDescription(rdm, thing, ev.Objects),
+                    Title = effectDefinition.EvalTitle(rdm, oldThing, ev.Objects),
+                    Description = effectDefinition.EvalDescription(rdm, oldThing, ev.Objects),
                     Attribute = effectDefinition.AffectedAttribute,
-                    Manitude = effectDefinition.EvalMagnitude(rdm, thing, ev.Objects),
-                    Duration = effectDefinition.EvalDuration(rdm, thing, ev.Objects),
+                    Manitude = effectDefinition.EvalMagnitude(rdm, oldThing, ev.Objects),
+                    Duration = effectDefinition.EvalDuration(rdm, oldThing, ev.Objects),
                     TookEffect = world.StepCount,
                 };
 
@@ -394,13 +402,13 @@ namespace LegendsGenerator
 
             foreach (SpawnDefinition spawnDefinition in result.Spawns)
             {
-                int xPosition = spawnDefinition.EvalPositionX(rdm, thing, ev.Objects);
-                int yPosition = spawnDefinition.EvalPositionY(rdm, thing, ev.Objects);
+                int xPosition = spawnDefinition.EvalPositionX(rdm, oldThing, ev.Objects);
+                int yPosition = spawnDefinition.EvalPositionY(rdm, oldThing, ev.Objects);
 
                 if (spawnDefinition.PositionType == PositionType.RelativeAbsolute)
                 {
-                    xPosition += thing.X;
-                    yPosition += thing.Y;
+                    xPosition += oldThing.X;
+                    yPosition += oldThing.Y;
                 }
 
                 BaseThing spawnedThing = this.thingFactory.CreateThing(
@@ -538,8 +546,8 @@ namespace LegendsGenerator
                                 continue;
                             }
 
-                            movingThing.MoveToCoordX = moveDefinition.EvalCoordToMoveToX(rdm, thing, ev.Objects);
-                            movingThing.MoveToCoordY = moveDefinition.EvalCoordToMoveToY(rdm, thing, ev.Objects);
+                            movingThing.MoveToCoordX = moveDefinition.EvalCoordToMoveToX(rdm, oldThing, ev.Objects);
+                            movingThing.MoveToCoordY = moveDefinition.EvalCoordToMoveToY(rdm, oldThing, ev.Objects);
                             break;
                         case MoveType.ToThing:
                             if (moveDefinition.ThingToMoveTo == null)

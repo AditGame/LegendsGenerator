@@ -29,6 +29,11 @@ namespace LegendsGenerator.Contracts.Things
         public abstract ThingType ThingType { get; }
 
         /// <summary>
+        /// Gets the state of this thing.
+        /// </summary>
+        public ThingState State { get; private set; } = ThingState.Constructing;
+
+        /// <summary>
         /// Gets or sets the base definition of the thing.
         /// </summary>
         public BaseThingDefinition BaseDefinition { get; set; }
@@ -59,9 +64,19 @@ namespace LegendsGenerator.Contracts.Things
         public Dictionary<string, int> BaseAttributes { get; init; } = new Dictionary<string, int>();
 
         /// <summary>
+        /// Gets the Dynamic attribute values, calculated at the end of the generation process.
+        /// </summary>
+        public Dictionary<string, int> DynamicAttributes { get; init; } = new Dictionary<string, int>();
+
+        /// <summary>
         /// Gets the base Aspect on this object before Effects are applied.
         /// </summary>
         public Dictionary<string, string> BaseAspects { get; init; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Gets the Dynamic aspect values, calculated at the end of the generation process.
+        /// </summary>
+        public Dictionary<string, string> DynamicAspects { get; init; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets all attribute effects on this thing. Expired effects should be culled on Step.
@@ -79,6 +94,11 @@ namespace LegendsGenerator.Contracts.Things
         public IReadOnlyList<BaseEffect> Effects => this.AttributeEffects.OfType<BaseEffect>().Concat(this.AspectEffects).ToList();
 
         /// <summary>
+        /// Gets the random number generator to use during construction finalization.
+        /// </summary>
+        protected Random? FinalizationRandom { get; private set; }
+
+        /// <summary>
         /// Creates a clone of this thing incrementing the step count by one.
         /// </summary>
         /// <returns>A clone of this with everything aged by one step.</returns>
@@ -89,6 +109,9 @@ namespace LegendsGenerator.Contracts.Things
             {
                 AttributeEffects = new List<AttributeEffect>(),
                 AspectEffects = new List<AspectEffect>(),
+                DynamicAspects = new Dictionary<string, string>(),
+                DynamicAttributes = new Dictionary<string, int>(),
+                State = ThingState.Constructing,
             };
 
             foreach (AttributeEffect effect in this.AttributeEffects)
@@ -168,29 +191,34 @@ namespace LegendsGenerator.Contracts.Things
         /// <param name="attribute">The attribute to get.</param>
         /// <param name="defaultValue">The default value, if the attribute does not exist.</param>
         /// <returns>The effective attribute value.</returns>
-        public int EffectiveAttribute(string attribute, int defaultValue)
+        public int EffectiveAttribute(string attribute, int defaultValue = 0)
         {
+            if (this.State == ThingState.Constructing)
+            {
+                throw new InvalidOperationException("Can not read attributes when thing is being constructed.");
+            }
+
             if (!this.BaseAttributes.TryGetValue(attribute, out int value))
             {
                 value = defaultValue;
             }
 
-            return SafeSum(value, this.GetAttributeEffectsModifying(attribute).Select(x => x.Manitude));
-        }
-
-        /// <summary>
-        /// Calculates the effective attribute value based on the current effects.
-        /// </summary>
-        /// <param name="attribute">The attribute to get.</param>
-        /// <returns>The effective attribute value.</returns>
-        public int EffectiveAttribute(string attribute)
-        {
-            if (!this.BaseAttributes.TryGetValue(attribute, out int value))
+            if (!this.DynamicAttributes.TryGetValue(attribute, out int dynamic))
             {
-                throw new ArgumentException($"{ThingType} Type does not have attribute {attribute}", nameof(attribute));
+                dynamic = 0;
+                if (this.State == ThingState.FinalizingConstruction && this.FinalizationRandom != null)
+                {
+                    // We need to calculate and set the dynamic value, if it has one.
+                    // If there's no attribute definition for this thing, than we can't calculate the dynamic value at all.
+                    if (this.BaseDefinition.Attributes.TryGetValue(attribute, out AttributeDefinition? def))
+                    {
+                        dynamic = def.EvalDynamicValue(this.FinalizationRandom, this);
+                        this.DynamicAttributes[attribute] = dynamic;
+                    }
+                }
             }
 
-            return SafeSum(value, this.GetAttributeEffectsModifying(attribute).Select(x => x.Manitude));
+            return SafeSum(value + dynamic, this.GetAttributeEffectsModifying(attribute).Select(x => x.Manitude));
         }
 
         /// <summary>
@@ -201,19 +229,44 @@ namespace LegendsGenerator.Contracts.Things
         /// <returns>The effective aspect value.</returns>
         public string EffectiveAspect(string aspect, string defaultValue)
         {
+            return this.EffectiveAspect(aspect) ?? defaultValue;
+        }
+
+        /// <summary>
+        /// Calculates the effective aspect value based on the current effects.
+        /// </summary>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <returns>The effective aspect value.</returns>
+        public string? EffectiveAspect(string aspect)
+        {
+            if (this.State == ThingState.Constructing)
+            {
+                throw new InvalidOperationException("Can not read aspects when thing is being constructed.");
+            }
+
             if (!this.BaseAspects.TryGetValue(aspect, out string? value))
             {
-                value = defaultValue;
+                value = null;
+            }
+
+            if (!this.DynamicAspects.TryGetValue(aspect, out string? dynamic))
+            {
+                dynamic = null;
+                if (this.State == ThingState.FinalizingConstruction && this.FinalizationRandom != null)
+                {
+                    // We need to calculate and set the dynamic value, if it has one.
+                    // If there's no aspect definition for this thing, than we can't calculate the dynamic value at all.
+                    if (this.BaseDefinition.Aspects.TryGetValue(aspect, out AspectDefinition? def) && def.Dynamic)
+                    {
+                        dynamic = def.EvalDynamicValueSafe(this.FinalizationRandom, this);
+                        this.DynamicAspects[aspect] = dynamic;
+                    }
+                }
             }
 
             var effect = this.GetCurrentAspectEffect(aspect);
 
-            if (effect != null)
-            {
-                return effect.Value;
-            }
-
-            return value;
+            return effect?.Value ?? dynamic ?? value ?? null;
         }
 
         /// <inheritdoc/>
@@ -233,6 +286,39 @@ namespace LegendsGenerator.Contracts.Things
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Finalizes the construction of this object.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        public void FinalizeConstruction(Random rdm)
+        {
+            this.State = ThingState.FinalizingConstruction;
+            this.FinalizationRandom = rdm;
+
+            this.FinalizeConstruction();
+
+            this.State = ThingState.Finalized;
+            this.FinalizationRandom = null;
+        }
+
+        /// <summary>
+        /// Finalizes the construction of this object.
+        /// </summary>
+        protected virtual void FinalizeConstruction()
+        {
+            foreach (var (name, _) in this.BaseDefinition.Attributes)
+            {
+                // Getting the effective attribute will calculate and set it's dynamic value.
+                this.EffectiveAttribute(name);
+            }
+
+            foreach (var (name, _) in this.BaseDefinition.Aspects.Where(x => x.Value.Dynamic))
+            {
+                // Getting the effective aspect will calculate and set it's dynamic value.
+                this.EffectiveAspect(name);
+            }
         }
 
         /// <summary>

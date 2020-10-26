@@ -85,6 +85,11 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="definitions">The definitions.</param>
         public static void ReserializeToFiles(DefinitionCollection definitions)
         {
+            if (definitions.IsInheritanceCompiled)
+            {
+                throw new InvalidOperationException("Can not re-serialize after inheritance has been compiled.");
+            }
+
             IEnumerable<IGrouping<string, ITopLevelDefinition>> byFile = 
                 definitions.AllDefinitions.OfType<ITopLevelDefinition>().GroupBy(d => d.SourceFile);
 

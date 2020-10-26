@@ -32,19 +32,21 @@ namespace LegendsGenerator.Tests
                 World = new Contracts.World(),
             };
 
+            Random rdm = new Random(5);
+
             ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(globals);
 
             Site site = new Site(new SiteDefinition());
             site.BaseAttributes["Health"] = 5;
             site.BaseAttributes["Fear"] = 23;
             site.BaseAttributes["Strength"] = 1;
+            site.FinalizeConstruction(rdm);
 
             IDictionary<string, BaseThing> paramList = new Dictionary<string, BaseThing>()
             {
                 { "Subject", site },
             };
 
-            Random rdm = new Random(5);
 
             var variables = paramList.Select(x => new CompiledVariable(x.Key, x.Value.GetType())).ToList();
 

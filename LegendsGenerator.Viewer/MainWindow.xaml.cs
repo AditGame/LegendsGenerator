@@ -69,6 +69,7 @@ namespace LegendsGenerator.Viewer
                 int y = rdm.Next(0, height - 1);
                 Site cityInst = factory.CreateSite(rdm, x, y, "City");
                 world.Grid.AddThing(cityInst);
+                cityInst.FinalizeConstruction(rdm);
                 Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
             }
 

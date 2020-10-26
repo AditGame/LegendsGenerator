@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -57,6 +58,11 @@ namespace LegendsGenerator.Contracts.Definitions
         public IReadOnlyList<BaseDefinition> AllDefinitions { get; }
 
         /// <summary>
+        /// Gets a value indicating whether inheritance has been compiled.
+        /// </summary>
+        public bool IsInheritanceCompiled { get; private set; }
+
+        /// <summary>
         /// Creates a new collection by combining this collection with additional collection.
         /// </summary>
         /// <param name="additionalCollections">Collections to combine with this collection.</param>
@@ -82,6 +88,61 @@ namespace LegendsGenerator.Contracts.Definitions
             foreach (var def in this.AllDefinitions)
             {
                 def.Attach(compiler);
+            }
+        }
+
+        /// <summary>
+        /// Follows all inheritance to combine attribute and aspect lists.
+        /// </summary>
+        public void CompileInheritance()
+        {
+            this.IsInheritanceCompiled = true;
+
+            List<BaseThingDefinition> allThingDefinitions = this.AllDefinitions.OfType<BaseThingDefinition>().ToList();
+            foreach (BaseThingDefinition definition in allThingDefinitions)
+            {
+                IList<BaseThingDefinition> inheritanceList = new List<BaseThingDefinition>();
+
+                // Get the inheritance list, from top to bottom.
+                string? thingToSearchFor = definition.Name;
+                while (thingToSearchFor != null)
+                {
+                    BaseThingDefinition? matchingDef =
+                        allThingDefinitions.FirstOrDefault(d => d.Name.Equals(thingToSearchFor, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingDef == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"{definition.GetType().Name} missing definition for {thingToSearchFor} " +
+                            $"(required by {definition.GetType().Name} {definition.Name})");
+                    }
+
+                    inheritanceList.Add(matchingDef);
+
+                    thingToSearchFor = matchingDef.InheritsFrom;
+                }
+
+                // Iterate from the top of the inheritance list to the bottom, adding in all aspects and attributes.
+                foreach (BaseThingDefinition inherited in inheritanceList)
+                {
+                    foreach (var (name, attribute) in inherited.Attributes)
+                    {
+                        if (!definition.Attributes.ContainsKey(name))
+                        {
+                            definition.Attributes[name] = attribute;
+                        }
+                    }
+
+                    foreach (var (name, aspect) in inherited.Aspects)
+                    {
+                        if (!definition.Aspects.ContainsKey(name))
+                        {
+                            definition.Aspects[name] = aspect;
+                        }
+                    }
+                }
+
+                definition.InheritedDefinitionNames = inheritanceList.Select(x => x.Name).ToList();
             }
         }
     }

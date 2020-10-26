@@ -31,7 +31,7 @@ namespace CompiledDefinitionSourceGenerator
         };
 
         /// <summary>
-        /// Generates a comparible Compiled Definition from the class info.
+        /// Generates a compatible Compiled Definition from the class info.
         /// </summary>
         /// <param name="classInfo">The class info to generate.</param>
         /// <returns>The class's C# code.</returns>
@@ -343,7 +343,7 @@ namespace CompiledDefinitionSourceGenerator
                 {
                     SummaryDoc = $"Evalulates the expressions in the {info.Name} property with the given parameters.",
                     ReturnsDoc = "The result of evaluation.",
-                    Access = AccessLevel.Public,
+                    Access = info.Protected ? AccessLevel.Protected : AccessLevel.Public,
                     Type = info.ReturnType,
                     Parameters = allParameters,
                 });
@@ -389,7 +389,7 @@ namespace CompiledDefinitionSourceGenerator
 
             List<ParamDef> allParameters = new List<ParamDef>()
             {
-                new ParamDef("string", "key", "The key, in the condition dicitonary, to evalulate."),
+                new ParamDef("string", "key", "The key, in the condition dictionary, to evaluate."),
                 new ParamDef("Random", "rdm", "The random number generator"),
             };
 
@@ -407,9 +407,9 @@ namespace CompiledDefinitionSourceGenerator
             using var braces = sb.AddMethod(
                 new MethodDefinition($"Eval{info.Name}")
                 {
-                    SummaryDoc = $"Evalulates the expressions in the {info.Name} property with the given parameters.",
+                    SummaryDoc = $"Evaluates the expressions in the {info.Name} property with the given parameters.",
                     ReturnsDoc = "The result of evaluation.",
-                    Access = AccessLevel.Public,
+                    Access = info.Protected ? AccessLevel.Protected : AccessLevel.Public,
                     Type = info.ReturnType,
                     Parameters = allParameters,
                 });

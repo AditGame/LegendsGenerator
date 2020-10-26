@@ -189,11 +189,9 @@
       "Description": "In search of new lands to colonize",
       "MaxEvents": "1",
       "InheritsFrom": "Person",
-      "DefaultAttributes": {},
-      "DefaultAspects": {},
-      "MaxEvents_IsComplex": false,
-      "DefaultAttributes_IsComplex": false,
-      "DefaultAspects_IsComplex": false
+      "Attributes": {},
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
     }
   ],
   "WorldSquares": []

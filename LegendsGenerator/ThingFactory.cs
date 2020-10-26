@@ -24,6 +24,7 @@ namespace LegendsGenerator
             DefinitionCollection definitions)
         {
             this.Definitions = definitions;
+            this.Definitions.CompileInheritance();
         }
 
         /// <summary>
@@ -107,52 +108,33 @@ namespace LegendsGenerator
             where TDefinition : BaseThingDefinition
             where TThing : BaseThing
         {
-            IList<TDefinition> inheritanceList = new List<TDefinition>();
+            TDefinition? definition =
+                definitions.FirstOrDefault(d => d.Name.Equals(thingName, StringComparison.OrdinalIgnoreCase));
 
-            string? thingToSearchFor = thingName;
-            while (thingToSearchFor != null)
+            if (definition == null)
             {
-                TDefinition? definition =
-                    definitions.FirstOrDefault(d => d.Name.Equals(thingToSearchFor, StringComparison.OrdinalIgnoreCase));
-
-                if (definition == null)
-                {
-                    throw new InvalidOperationException(
-                        $"{typeof(TDefinition).Name} missing definition for {thingToSearchFor} " +
-                        $"(required by {typeof(TDefinition).Name} {thingName})");
-                }
-
-                inheritanceList.Add(definition);
-
-                thingToSearchFor = definition.InheritsFrom;
+                throw new InvalidOperationException(
+                    $"{typeof(TDefinition).Name} missing definition for {thingName}");
             }
 
-            TThing thing = createFunc(inheritanceList.First());
+            TThing thing = createFunc(definition);
 
             thing.X = x;
             thing.Y = y;
 
-            foreach (var inheritedDefinition in inheritanceList.Reverse())
+            foreach (var (attributeName, attributeDef) in definition.Attributes)
             {
-                foreach (var (attributeName, _) in inheritedDefinition.DefaultAttributes)
-                {
-                    int value = inheritedDefinition.EvalDefaultAttributes(attributeName, rdm);
+                int value = attributeDef.EvalBaseValue(rdm);
 
-                    thing.BaseAttributes[attributeName] = value;
-                }
+                thing.BaseAttributes[attributeName] = value;
             }
 
-            foreach (var inheritedDefinition in inheritanceList.Reverse())
+            foreach (var (aspectName, aspectDef) in definition.Aspects)
             {
-                foreach (var (aspectName, _) in inheritedDefinition.DefaultAspects)
-                {
-                    string value = inheritedDefinition.EvalDefaultAspects(aspectName, rdm);
+                string value = aspectDef.Dynamic ? string.Empty : aspectDef.EvalValueSafe(rdm);
 
-                    thing.BaseAspects[aspectName] = value;
-                }
+                thing.BaseAspects[aspectName] = value;
             }
-
-            thing.BaseDefinition.InheritedDefinitionNames = inheritanceList.Select(x => x.Name).ToList();
 
             return thing;
         }

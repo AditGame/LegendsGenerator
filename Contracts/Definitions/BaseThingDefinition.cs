@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events;
@@ -65,18 +66,16 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the name of the site this inherits from.
         /// </summary>
         public string? InheritsFrom { get; set; }
+        /// <summary>
+        /// Gets or sets the attributes on the thing.
+        /// </summary>
+        public Dictionary<string, AttributeDefinition> Attributes { get; set; } = new Dictionary<string, AttributeDefinition>();
 
         /// <summary>
-        /// Gets or sets the default attributes on a Thing.
+        /// Gets or sets the aspects on the thing.
         /// </summary>
-        [CompiledDictionary(typeof(int))]
-        public Dictionary<string, string> DefaultAttributes { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, AspectDefinition> Aspects { get; set; } = new Dictionary<string, AspectDefinition>();
 
-        /// <summary>
-        /// Gets or sets the default aspects on a Thing.
-        /// </summary>
-        [CompiledDictionary(typeof(string))]
-        public Dictionary<string, string> DefaultAspects { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets the type of Subject.

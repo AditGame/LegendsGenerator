@@ -50,7 +50,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <returns>True if successfully converted, false if no conversion is possible.</returns>
         public static bool TryConvertToPresentationType(object input, World world, [NotNullWhen(true)] out object? output)
         {
-            if (TryGetMapping(input.GetType(), out PresentationMapping? map))
+            if (input != null && TryGetMapping(input.GetType(), out PresentationMapping? map))
             {
                 output = map.WrapAsPresentation(input, world);
                 return true;
