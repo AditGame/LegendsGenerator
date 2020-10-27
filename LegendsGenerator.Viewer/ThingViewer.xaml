@@ -44,6 +44,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ValueStatement}" TextAlignment="Center"/>
                         <TextBlock Grid.Column="2" Text="{Binding Effective}"/>
                     </Grid>
                 </DataTemplate>
@@ -63,6 +64,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ValueStatement}" TextAlignment="Center"/>
                         <TextBlock Grid.Column="2" Text="{Binding Effective}"/>
                     </Grid>
                 </DataTemplate>
