@@ -76,9 +76,16 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <inheritdoc/>
         public ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<CompiledVariable> variables)
         {
-            return this.GenerateCompiledCondition<T>(
-                ConvertArrows(condition),
-                variables);
+            try
+            {
+                return this.GenerateCompiledCondition<T>(
+                    ConvertArrows(condition),
+                    variables);
+            }
+            catch (ApplicationException ex)
+            {
+                throw new ConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
+            }
         }
 
         /// <summary>
@@ -107,9 +114,16 @@ namespace LegendsGenerator.Compiler.CSharp
                 condition += ";";
             }
 
-            return this.GenerateCompiledCondition<T>(
-                $"return {ConvertArrows(condition)}",
-                variableNames);
+            try
+            {
+                return this.GenerateCompiledCondition<T>(
+                    $"return {ConvertArrows(condition)}",
+                    variableNames);
+            }
+            catch (ApplicationException ex)
+            {
+                throw new ConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
+            }
         }
 
         /// <summary>
@@ -132,9 +146,16 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <inheritdoc/>
         public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variableNames)
         {
-            return this.GenerateCompiledCondition<string>(
-                $"return $\"{ConvertArrows(format)}\";",
-                variableNames);
+            try
+            {
+                return this.GenerateCompiledCondition<string>(
+                    $"return $\"{ConvertArrows(format)}\";",
+                    variableNames);
+            }
+            catch (ApplicationException ex)
+            {
+                throw new ConditionException(format, ex.InnerException?.Message ?? "Unknown", ex);
+            }
         }
 
         /// <summary>
