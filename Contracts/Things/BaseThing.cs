@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Things
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Numerics;
     using System.Text;
@@ -227,9 +228,34 @@ namespace LegendsGenerator.Contracts.Things
         /// <param name="aspect">The aspect to get.</param>
         /// <param name="defaultValue">The default value, if the aspect does not exist.</param>
         /// <returns>The effective aspect value.</returns>
-        public string EffectiveAspect(string aspect, string defaultValue)
+        public T EffectiveAspect<T>(string aspect, T defaultValue)
         {
-            return this.EffectiveAspect(aspect) ?? defaultValue;
+            return this.EffectiveAspect<T>(aspect) ?? defaultValue;
+        }
+
+        /// <summary>
+        /// Calculates the effective aspect value based on the current effects, casting to the given type.
+        /// </summary>
+        /// <typeparam name="T">The type to coerce to.</typeparam>
+        /// <param name="aspect">The aspect to get the value for.</param>
+        /// <returns>The effective aspect.</returns>
+        public T? EffectiveAspect<T>(string aspect)
+        {
+            string? value = this.EffectiveAspect(aspect);
+            if (value == null)
+            {
+                return default(T);
+            }
+
+            try
+            {
+                TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof(T));
+                return (T)typeConverter.ConvertFromString(value);
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new InvalidOperationException($"Unable to convert aspect [{aspect}] value [{value}] to [{typeof(T).Name}]", ex);
+            }
         }
 
         /// <summary>

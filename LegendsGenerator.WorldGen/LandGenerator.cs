@@ -39,6 +39,8 @@ namespace LegendsGenerator.WorldGen
             float[,] evilMap = Noise.Calc2D(width, height, 0.05f);
             Noise.Seed = rdm.Next();
             float[,] savageMap = Noise.Calc2D(width, height, 0.05f);
+            Noise.Seed = rdm.Next();
+            float[,] materialsMap = Noise.Calc2D(width, height, 0.05f);
 
             for (int x = 0; x < width; x++)
             {
@@ -50,6 +52,7 @@ namespace LegendsGenerator.WorldGen
                     int temperture = (int)TempertureMask(tempertureMap[x, y], y, height);
                     int evil = (int)(evilMap[x, y] / 255f * 100f);
                     int savagery = (int)(savageMap[x, y] / 255f * 100f);
+                    int materials = (int)(materialsMap[x, y] / 255f * 100f);
 
                     world.Grid[x, y] = new GeneratedSquare()
                     {
@@ -59,6 +62,7 @@ namespace LegendsGenerator.WorldGen
                         Temperature = temperture,
                         Evil = evil,
                         Savagery = savagery,
+                        Materials = materials,
                         Water = elevation < 100,
                     };
                 }

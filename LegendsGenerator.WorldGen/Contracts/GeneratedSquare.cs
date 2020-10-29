@@ -42,6 +42,11 @@ namespace LegendsGenerator.WorldGen.Contracts
         public int Savagery { get; set; }
 
         /// <summary>
+        /// Gets or sets the amount of underground materials here.
+        /// </summary>
+        public int Materials { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this tile contains water.
         /// </summary>
         public bool Water { get; set; }

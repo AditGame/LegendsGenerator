@@ -17,14 +17,14 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Gets or sets the base value.
         /// </summary>
-        [Compiled(typeof(string), Protected = true)]
+        [Compiled(typeof(object), Protected = true)]
         [HideInEditor("value.Dynamic")]
         public string Value { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the base value.
         /// </summary>
-        [Compiled(typeof(string), Protected = true)]
+        [Compiled(typeof(object), Protected = true)]
         [CompiledVariable("Subject", typeof(BaseDefinition))]
         [HideInEditor("!value.Dynamic")]
         public string DynamicValue { get; set; } = UnsetString;
@@ -46,7 +46,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 throw new InvalidOperationException("Can only call EvalValue if not Dynamic.");
             }
 
-            return this.EvalValue(rdm);
+            return this.EvalValue(rdm).ToString() ?? string.Empty;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 throw new InvalidOperationException("Can only call EvalDynamicValue if Dynamic.");
             }
 
-            return this.EvalDynamicValue(rdm, thing);
+            return this.EvalDynamicValue(rdm, thing).ToString() ?? string.Empty;
         }
     }
 }

@@ -38,6 +38,7 @@
       "Name": "Mountain",
       "Description": "Awe inspiring very large hills",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -57,6 +58,7 @@
       "Name": "Sand Desert",
       "Description": "Endless sand, devoid of life",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -76,6 +78,7 @@
       "Name": "Rocky Wasteland",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -135,6 +138,7 @@
       "Name": "Badlands",
       "Description": "Steep slopes exposing beatuiful rock strata with some vegitation",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -154,6 +158,7 @@
       "Name": "Grasslands",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -213,6 +218,7 @@
       "Name": "Savanna",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -272,6 +278,7 @@
       "Name": "Marsh",
       "Description": "Water covered land with short grasses",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -311,6 +318,7 @@
       "Name": "Shrubland",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -350,6 +358,7 @@
       "Name": "Swamp",
       "Description": "Water covered land covered in trees",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -369,6 +378,7 @@
       "Name": "Forest",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -428,6 +438,7 @@
       "Name": "Water",
       "Description": "UNSET",
       "MaxEvents": "1",
+      "InheritsFrom": "Square",
       "Attributes": {},
       "Aspects": {},
       "MaxEvents_IsComplex": false
@@ -490,6 +501,40 @@
       "InheritsFrom": "Mountain",
       "Attributes": {},
       "Aspects": {},
+      "MaxEvents_IsComplex": false
+    },
+    {
+      "MovementCost": "1",
+      "IsWater": false,
+      "IsSaltWater": false,
+      "MinElevation": 0,
+      "MaxElevation": 0,
+      "MinRainfall": 0,
+      "MaxRainfall": 0,
+      "MinDrainage": 0,
+      "MaxDrainage": 0,
+      "ThingType": "WorldSquare",
+      "MovementCost_IsComplex": false,
+      "Name": "Square",
+      "Description": "BaseDefinition",
+      "MaxEvents": "1",
+      "Attributes": {
+        "TreeCoverage": {
+          "BaseValue": "0",
+          "DynamicValue": "float Lerp(float v0, float v1, float t)\r\n{\r\n       return v0 + (t * (v1 - v0));\r\n}\r\n\r\nif (Subject.IsWater)\r\n{\r\n\treturn 0;\r\n}\r\n\r\nreturn 5;",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": true
+        }
+      },
+      "Aspects": {
+        "HasAdjacentSite": {
+          "Value": "UNSET",
+          "DynamicValue": "bool hasSite(int x, int y)\r\n{\r\n\tif (x < 0 || y < 0 || x >= World.Grid.Width || y >= World.Grid.Height)\r\n\t{\r\n\t\treturn false;\r\n\t}\r\n\r\n\tforeach (var thing in World.Grid.GetSquare(x, y).GetThings())\r\n\t{\r\n\t\tif (thing is Site)\r\n\t\t{\r\n\t\t\treturn true;\r\n\t\t}\r\n\t}\r\n\r\n\treturn false;\r\n}\r\n\r\nreturn hasSite(Subject.Position.X, Subject.Position.Y) ||\r\n\thasSite(Subject.Position.X, Subject.Position.Y - 1) ||\r\n\thasSite(Subject.Position.X, Subject.Position.Y + 1) ||\r\n\thasSite(Subject.Position.X - 1, Subject.Position.Y) ||\r\n\thasSite(Subject.Position.X + 1, Subject.Position.Y) ||\r\n\thasSite(Subject.Position.X - 1, Subject.Position.Y - 1) ||\r\n\thasSite(Subject.Position.X - 1, Subject.Position.Y + 1) ||\r\n\thasSite(Subject.Position.X + 1, Subject.Position.Y - 1) ||\r\n\thasSite(Subject.Position.X + 1, Subject.Position.Y + 1);",
+          "Dynamic": true,
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": true
+        }
+      },
       "MaxEvents_IsComplex": false
     }
   ]

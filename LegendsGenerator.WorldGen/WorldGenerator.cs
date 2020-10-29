@@ -99,7 +99,7 @@ namespace LegendsGenerator.WorldGen
                     square.BaseAttributes[nameof(genSquare.Temperature)] = genSquare.Temperature;
                     square.BaseAttributes[nameof(genSquare.Evil)] = genSquare.Evil;
                     square.BaseAttributes[nameof(genSquare.Savagery)] = genSquare.Savagery;
-                    square.FinalizeConstruction(new Random());
+                    square.BaseAttributes[nameof(genSquare.Materials)] = genSquare.Materials;
 
                     world.Grid.GetSquare(x, y).SquareDefinition = square;
                 }

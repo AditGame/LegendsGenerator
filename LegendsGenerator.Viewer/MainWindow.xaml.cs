@@ -61,6 +61,7 @@ namespace LegendsGenerator.Viewer
             int width = 200;
             int height = 200;
             World world = worldGen.GenerateWorld(width, height);
+            processor.UpdateGlobalVariables(g => g.World = world);
 
             Random rdm = new Random(worldSeed);
             for (int i = 0; i < 100; i++)
@@ -69,8 +70,11 @@ namespace LegendsGenerator.Viewer
                 int y = rdm.Next(0, height - 1);
                 Site cityInst = factory.CreateSite(rdm, x, y, "City");
                 world.Grid.AddThing(cityInst);
-                cityInst.FinalizeConstruction(rdm);
-                Console.WriteLine($"City created: {cityInst.EffectiveAttribute("Population")} {cityInst.EffectiveAttribute("Evil")}");
+            }
+
+            foreach (var thing in world.Grid.GetAllGridEntries().SelectMany(x => x.Square.GetThings()))
+            {
+                thing.FinalizeConstruction(new Random());
             }
 
             Context.Instance.Attach(history, world, processor);

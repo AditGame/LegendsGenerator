@@ -9,9 +9,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Definitions.Events;
@@ -96,9 +93,18 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <summary>
         /// Calculates the effective attribute value based on the current effects.
         /// </summary>
+        /// <typeparam name="T">The type to convert to.</typeparam>
+        /// <param name="aspect">The aspect to get.</param>
+        /// <returns>The effective aspect value.</returns>
+        public T? EffectiveAspect<T>(string aspect) => this.Inner.EffectiveAspect<T>(aspect);
+
+        /// <summary>
+        /// Calculates the effective attribute value based on the current effects.
+        /// </summary>
+        /// <typeparam name="T">The type to convert to.</typeparam>
         /// <param name="aspect">The aspect to get.</param>
         /// <param name="defaultValue">The default value, if the aspect does not exist.</param>
         /// <returns>The effective aspect value.</returns>
-        public string EffectiveAspect(string aspect, string defaultValue) => this.Inner.EffectiveAspect(aspect, defaultValue);
+        public T EffectiveAspect<T>(string aspect, T defaultValue) => this.Inner.EffectiveAspect<T>(aspect, defaultValue);
     }
 }

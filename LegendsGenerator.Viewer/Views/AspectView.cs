@@ -31,12 +31,12 @@ namespace LegendsGenerator.Viewer.Views
             this.Title = name;
             this.Effective = thing.EffectiveAspect(name, "None");
 
-            if (thing.BaseAspects.TryGetValue(name, out string? @base))
+            if (thing.BaseAspects.TryGetValue(name, out string? @base) && !string.IsNullOrEmpty(@base))
             {
                 this.Base = @base;
             }
 
-            if (thing.DynamicAspects.TryGetValue(name, out string? dynamic))
+            if (thing.DynamicAspects.TryGetValue(name, out string? dynamic) && !string.IsNullOrEmpty(dynamic))
             {
                 this.Dynamic = dynamic;
             }

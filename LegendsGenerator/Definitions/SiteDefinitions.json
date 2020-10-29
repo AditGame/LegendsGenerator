@@ -547,6 +547,12 @@
           "DynamicValue": "0",
           "BaseValue_IsComplex": false,
           "DynamicValue_IsComplex": false
+        },
+        "Happiness": {
+          "BaseValue": "Rand.Next(-100, 100)",
+          "DynamicValue": "-(Subject->Population / 1000)",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "Aspects": {},
@@ -569,23 +575,31 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasVillage": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasTown": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasCity": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false
@@ -607,18 +621,24 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasVillage": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasTown": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false
@@ -685,13 +705,17 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasVillage": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false
@@ -713,8 +737,10 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false
@@ -736,28 +762,38 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasVillage": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasTown": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasCity": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasMetropolis": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false
@@ -779,33 +815,45 @@
       "Aspects": {
         "WasHamlet": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasVillage": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasTown": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasCity": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasMetropolis": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         },
         "WasMegaopolis": {
           "Value": "\"true\"",
+          "DynamicValue": "UNSET",
           "Dynamic": false,
-          "Value_IsComplex": false
+          "Value_IsComplex": false,
+          "DynamicValue_IsComplex": false
         }
       },
       "MaxEvents_IsComplex": false

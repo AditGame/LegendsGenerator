@@ -40,6 +40,9 @@ namespace LegendsGenerator.Tests
             site.BaseAttributes["Health"] = 5;
             site.BaseAttributes["Fear"] = 23;
             site.BaseAttributes["Strength"] = 1;
+            site.BaseAspects["Gender"] = "Male";
+            site.BaseAspects["IsInsane"] = "true";
+            site.BaseAspects["IsMoral"] = "false";
             site.FinalizeConstruction(rdm);
 
             IDictionary<string, BaseThing> paramList = new Dictionary<string, BaseThing>()
@@ -47,24 +50,43 @@ namespace LegendsGenerator.Tests
                 { "Subject", site },
             };
 
-
             var variables = paramList.Select(x => new CompiledVariable(x.Key, x.Value.GetType())).ToList();
 
-            var condition = processor.AsSimple<int>("(Subject->Health + Subject->Fear) / 2", variables);
+            // int conditions
+            new[]
+            {
+                new { condition = "(Subject->Health + Subject->Fear) / 2", output = 14 },
+                new { condition = "Subject->Health * Subject->Strength", output = 5 },
+            }.ToList().ForEach(a =>
+            {
+                var condition = processor.AsSimple<int>(a.condition, variables);
+                Assert.AreEqual(a.output, condition.Evaluate(rdm, paramList), a.condition);
+            });
 
-            Assert.AreEqual(14, condition.Evaluate(rdm, paramList));
+            // bool conditions
+            new[]
+            {
+                new { condition = "Subject->Health <= 0", output = false },
+                new { condition = "Subject-<bool>IsInsane", output = true },
+                new { condition = "Subject-<bool>IsMoral", output = false },
+            }.ToList().ForEach(a =>
+            {
+                var condition = processor.AsSimple<bool>(a.condition, variables);
+                Assert.AreEqual(a.output, condition.Evaluate(rdm, paramList), a.condition);
+            });
 
-            var condition2 = processor.AsSimple<int>("Subject->Health * Subject->Strength", variables);
-
-            Assert.AreEqual(5, condition2.Evaluate(rdm, paramList));
-            Stopwatch watch = Stopwatch.StartNew();
-            var boolCondition = processor.AsSimple<bool>("Subject->Health <= 0", variables);
-            watch.Stop();
-            Console.WriteLine($"Compiling took {watch.Elapsed} uncached.");
-
-            Assert.IsFalse(boolCondition.Evaluate(rdm, paramList));
+            // string conditions
+            new[]
+            {
+                new { condition = "Subject-<>Gender", output = "Male" },
+            }.ToList().ForEach(a =>
+            {
+                var condition = processor.AsSimple<string>(a.condition, variables);
+                Assert.AreEqual(a.output, condition.Evaluate(rdm, paramList), a.condition);
+            });
 
             var conditions = new List<ICompiledCondition<bool>>();
+            Stopwatch watch = new Stopwatch();
             for (int i = 0; i < 500; i++)
             {
                 watch = Stopwatch.StartNew();

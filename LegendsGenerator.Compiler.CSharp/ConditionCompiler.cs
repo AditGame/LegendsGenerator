@@ -27,6 +27,12 @@ namespace LegendsGenerator.Compiler.CSharp
             new Regex("->([A-Za-z0-9_]*)(:[0-9])?");
 
         /// <summary>
+        /// The regex used to turn aspect arrows to their code equivilent.
+        /// </summary>
+        private static readonly Regex AspectArrowRegex =
+            new Regex("-<([A-Za-z0-9_]*)>([A-Za-z0-9_]*)(:[0-9])?");
+
+        /// <summary>
         /// The list of variables that should be exposed to all conditions.
         /// </summary>
         private readonly TGlobals globalVariables;
@@ -71,7 +77,7 @@ namespace LegendsGenerator.Compiler.CSharp
         public ICompiledCondition<T> AsComplex<T>(string condition, IEnumerable<CompiledVariable> variables)
         {
             return this.GenerateCompiledCondition<T>(
-                ConvertAttributeArrow(condition),
+                ConvertArrows(condition),
                 variables);
         }
 
@@ -102,7 +108,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
 
             return this.GenerateCompiledCondition<T>(
-                $"return {ConvertAttributeArrow(condition)}",
+                $"return {ConvertArrows(condition)}",
                 variableNames);
         }
 
@@ -127,7 +133,7 @@ namespace LegendsGenerator.Compiler.CSharp
         public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variableNames)
         {
             return this.GenerateCompiledCondition<string>(
-                $"return $\"{ConvertAttributeArrow(format)}\";",
+                $"return $\"{ConvertArrows(format)}\";",
                 variableNames);
         }
 
@@ -165,6 +171,16 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <summary>
+        /// Converts a string with out special shorthand to normal C#.
+        /// </summary>
+        /// <param name="condition">The condition to convert.</param>
+        /// <returns>The pure C#.</returns>
+        private static string ConvertArrows(string condition)
+        {
+            return ConvertAspectArrow(ConvertAttributeArrow(condition));
+        }
+
+        /// <summary>
         /// Converts an arrow to a call to get an effective attribute.
         /// </summary>
         /// <param name="condition">The condition to modify.</param>
@@ -176,10 +192,42 @@ namespace LegendsGenerator.Compiler.CSharp
                 string defaultVal = "0";
                 if (!string.IsNullOrEmpty(match.Groups[2].ToString()))
                 {
-                    defaultVal = match.Groups[2].ToString();
+                    defaultVal = new string(match.Groups[2].ToString().Skip(1).ToArray());
                 }
 
                 return $".{nameof(BaseThing.EffectiveAttribute)}(\"{match.Groups[1]}\", {defaultVal})";
+            });
+        }
+
+        /// <summary>
+        /// Converts an arrow to a call to get an effective aspect.
+        /// </summary>
+        /// <param name="condition">The condition to modify.</param>
+        /// <returns>The condition with aspect arrows fixed.</returns>
+        private static string ConvertAspectArrow(string condition)
+        {
+            return AspectArrowRegex.Replace(condition, match =>
+            {
+                string? typeparam = "string";
+                if (!string.IsNullOrEmpty(match.Groups[1].ToString()))
+                {
+                    typeparam = match.Groups[1].ToString();
+                }
+
+                string? defaultVal = null;
+                if (!string.IsNullOrEmpty(match.Groups[3].ToString()))
+                {
+                    defaultVal = new string(match.Groups[3].ToString().Skip(1).ToArray());
+                }
+
+                if (defaultVal != null)
+                {
+                    return $".{nameof(BaseThing.EffectiveAspect)}<{typeparam}>(\"{match.Groups[2]}\", {defaultVal})";
+                }
+                else
+                {
+                    return $".{nameof(BaseThing.EffectiveAspect)}<{typeparam}>(\"{match.Groups[2]}\")";
+                }
             });
         }
 

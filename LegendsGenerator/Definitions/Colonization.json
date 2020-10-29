@@ -69,11 +69,11 @@
         "ColonizationSite": {
           "Optional": false,
           "Distance": 10,
-          "Condition": "bool hasSite(int x, int y)\r\n{\r\n\tforeach (var thing in World.Grid.GetSquare(x, y).GetThings())\r\n\t{\r\n\t\tif (thing is Site)\r\n\t\t{\r\n\t\t\treturn true;\r\n\t\t}\r\n\t}\r\n\r\n\treturn false;\r\n}\r\n\r\nreturn !Object.IsWater && \r\n\tObject.Position.X != Subject.Position.X && Object.Position.Y != Subject.Position.Y && \r\n\t!hasSite(Object.Position.X, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X, Object.Position.Y + 1) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X - 1, Object.Position.Y + 1) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y - 1) &&\r\n\t!hasSite(Object.Position.X + 1, Object.Position.Y + 1);",
+          "Condition": "!Object.IsWater && !Object-<bool>HasAdjacentSite",
           "Maximize": "-Object->Evil + Object->Rainfall",
           "Type": "WorldSquare",
           "Definitions": [],
-          "Condition_IsComplex": true,
+          "Condition_IsComplex": false,
           "Maximize_IsComplex": false
         }
       },
