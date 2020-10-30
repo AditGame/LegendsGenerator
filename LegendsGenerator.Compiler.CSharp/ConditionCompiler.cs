@@ -84,7 +84,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
             catch (ApplicationException ex)
             {
-                throw new ConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
+                throw new CompiledConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
             }
         }
 
@@ -122,7 +122,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
             catch (ApplicationException ex)
             {
-                throw new ConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
+                throw new CompiledConditionException(condition, ex.InnerException?.Message ?? "Unknown", ex);
             }
         }
 
@@ -154,7 +154,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
             catch (ApplicationException ex)
             {
-                throw new ConditionException(format, ex.InnerException?.Message ?? "Unknown", ex);
+                throw new CompiledConditionException(format, ex.InnerException?.Message ?? "Unknown", ex);
             }
         }
 

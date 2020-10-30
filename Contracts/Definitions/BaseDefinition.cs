@@ -127,5 +127,47 @@ namespace LegendsGenerator.Contracts.Definitions
                 return this.Compiler.AsSimple<T>(condition, parameters);
             }
         }
+
+        /// <summary>
+        /// Converts an exception to a condition exception if possible.
+        /// </summary>
+        /// <param name="conditionName">The condition name.</param>
+        /// <param name="ex">The inner exception.</param>
+        /// <returns>The condition exception.</returns>
+        protected ConditionException GetConditionException(string conditionName, Exception ex)
+        {
+            // Find the compiler exception
+            Exception inner = ex;
+            while (ex is not ICompilerErrorException && inner.InnerException != null)
+            {
+                inner = inner.InnerException;
+            }
+
+            ICompilerErrorException? errorException = inner as ICompilerErrorException;
+
+            // Find the top-level definition
+            BaseDefinition upstream = this;
+            while (upstream is not ITopLevelDefinition && upstream.UpsteamDefinition != null)
+            {
+                upstream = upstream.UpsteamDefinition;
+            }
+
+            ITopLevelDefinition? topLevel = upstream as ITopLevelDefinition;
+
+            if (topLevel == null)
+            {
+                // No idea how to handle this.
+                return new ConditionException("Unknown", conditionName, ex);
+            }
+
+            if (errorException != null && errorException.Error != null)
+            {
+                return new ConditionException(topLevel.DefinitionName, conditionName, errorException.Error, ex);
+            }
+            else
+            {
+                return new ConditionException(topLevel.DefinitionName, conditionName, ex);
+            }
+        }
     }
 }

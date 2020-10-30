@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="CompilerException.cs" company="Tom Luppi">
+// <copyright file="CompiledConditionException.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 // -------------------------------------------------------------------------------------------------
@@ -9,45 +9,47 @@ namespace LegendsGenerator.Compiler.CSharp
     using System;
     using System.Runtime.Serialization;
 
+    using LegendsGenerator.Contracts.Compiler;
+
     /// <summary>
     /// Exception from the compilation process.
     /// </summary>
     [Serializable]
-    public class ConditionException : Exception
+    public class CompiledConditionException : Exception, ICompilerErrorException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionException"/> class.
+        /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
         /// </summary>
-        public ConditionException()
+        public CompiledConditionException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionException"/> class.
+        /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
-        public ConditionException(string message)
+        public CompiledConditionException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionException"/> class.
+        /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public ConditionException(string message, Exception innerException)
+        public CompiledConditionException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionException"/> class.
+        /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
         /// </summary>
         /// <param name="condition">The condition which failed.</param>
         /// <param name="error">The error text.</param>
         /// <param name="inner">The inner exception.</param>
-        public ConditionException(
+        public CompiledConditionException(
             string condition,
             string error,
             Exception inner)
@@ -58,11 +60,11 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionException"/> class.
+        /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
         /// </summary>
         /// <param name="serializationInfo">The serialization info.</param>
         /// <param name="streamingContext">The streaming context.</param>
-        protected ConditionException(
+        protected CompiledConditionException(
             SerializationInfo serializationInfo,
             StreamingContext streamingContext)
         {

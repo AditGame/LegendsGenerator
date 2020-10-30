@@ -368,7 +368,14 @@ namespace CompiledDefinitionSourceGenerator
                 sb.AppendLine();
             }
 
+            sb.AppendLine("try");
+            sb.StartBrace();
             sb.AppendLine($"return this.compiledCondition{info.Name}.Value.Evaluate(rdm, param);");
+            sb.EndBrace();
+            sb.AppendLine("catch (Exception ex)");
+            sb.StartBrace();
+            sb.AppendLine($"throw this.GetConditionException(\"{info.Name}\", ex);");
+            sb.EndBrace();
         }
 
         /// <summary>
@@ -434,11 +441,18 @@ namespace CompiledDefinitionSourceGenerator
                 sb.AppendLine();
             }
 
+            sb.AppendLine("try");
+            sb.StartBrace();
             sb.AppendLine($"return this.compiledCondition{info.Name}[key].Value.Evaluate(rdm, param);");
+            sb.EndBrace();
+            sb.AppendLine("catch (Exception ex)");
+            sb.StartBrace();
+            sb.AppendLine($"throw this.GetConditionException($\"{info.Name}{{key}}\", ex);");
+            sb.EndBrace();
         }
 
         /// <summary>
-        /// Constructs a method which gets the parameters lsit for the specified property.
+        /// Constructs a method which gets the parameters list for the specified property.
         /// </summary>
         /// <param name="sb">The class writer.</param>
         /// <param name="info">The property info.</param>
