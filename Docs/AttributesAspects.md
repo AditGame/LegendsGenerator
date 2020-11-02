@@ -21,7 +21,7 @@ Their differences:
 |------|-----------|--------|
 | Type | Integer | String |
 | Value | Base + Dynamic + Sum(Effects) | Newest Effect, or Static/Dynamic value if no Effect.
-| Operator | Variable->Name | Variable-->Name
+| Operator | Variable->Name | Variable-<>Name
 | Default | 0 | `null`
 
 ## Technical Description
