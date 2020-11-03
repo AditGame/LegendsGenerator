@@ -52,6 +52,12 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         public List<string> Definitions { get; set; } = new List<string>();
 
         /// <summary>
+        /// Gets or sets the list of quests the Object must have to match (Must have all quests).
+        /// If empty, quests are not considered when matching.
+        /// </summary>
+        public List<string> Quests { get; set; } = new List<string>();
+
+        /// <summary>
         /// Gets the type of the Object variable.
         /// </summary>
         /// <returns>The actual type of Object.</returns>

@@ -43,7 +43,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                     info = InOrderPropertyList(type.BaseType);
                 }
 
-                info.AddRange(type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => x.CanWrite && !info.Any(y => y.Name.Equals(x.Name))));
+                info.AddRange(type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => !info.Any(y => y.Name.Equals(x.Name))));
+                info = info.Where(x => x.CanWrite || typeof(IDictionary).IsAssignableFrom(x.PropertyType) || typeof(IList).IsAssignableFrom(x.PropertyType)).ToList();
 
                 return info;
             }

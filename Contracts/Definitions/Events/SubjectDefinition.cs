@@ -29,5 +29,11 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// If empty, any Definition is allowed.
         /// </summary>
         public List<string> Definitions { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the list of quests the Subject must have to match (Must have all quests).
+        /// If empty, quests are not considered when matching.
+        /// </summary>
+        public List<string> Quests { get; set; } = new List<string>();
     }
 }
