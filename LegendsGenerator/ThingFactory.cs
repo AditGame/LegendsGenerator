@@ -40,6 +40,8 @@ namespace LegendsGenerator
                 ThingType.Site => this.CreateSite(rdm, x, y, definitionName),
                 ThingType.NotablePerson => this.CreateNotablePerson(rdm, x, y, definitionName),
                 ThingType.WorldSquare => this.CreateWorldSquare(rdm, x, y, definitionName),
+                ThingType.World => this.CreateWorld(rdm, x, y, definitionName),
+                ThingType.Quest => this.CreateQuest(rdm, x, y, definitionName),
                 _ => throw new InvalidOperationException($"Can not handle {type}."),
             };
         }
@@ -83,6 +85,48 @@ namespace LegendsGenerator
                 this.Definitions.WorldSquareDefinitions,
                 worldSquareDefinitionName);
             square.Name = $"{x},{y}";
+            return square;
+        }
+
+        /// <inheritdoc/>
+        public WorldThing CreateWorld(Random rdm, int x, int y, string worldDefinitionName)
+        {
+            WorldThing square = CreateThing<WorldThing, WorldDefinition>(
+                rdm,
+                x,
+                y,
+                d => new WorldThing(d),
+                this.Definitions.WorldDefinitions,
+                worldDefinitionName);
+            square.Name = $"The World";
+            return square;
+        }
+
+        /// <inheritdoc/>
+        public Quest CreateQuest(Random rdm, int x, int y, string questDefinitionName)
+        {
+            Quest square = CreateThing<Quest, QuestDefinition>(
+                rdm,
+                x,
+                y,
+                d => new Quest(d),
+                this.Definitions.QuestDefinitions,
+                questDefinitionName);
+            square.Name = $"The World";
+            return square;
+        }
+
+        /// <inheritdoc/>
+        public Unit CreateUnit(Random rdm, int x, int y, string unitDefinitionName)
+        {
+            Unit square = CreateThing<Unit, UnitDefinition>(
+                rdm,
+                x,
+                y,
+                d => new Unit(d),
+                this.Definitions.UnitDefinitions,
+                unitDefinitionName);
+            square.Name = $"lol my unit";
             return square;
         }
 

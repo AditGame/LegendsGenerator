@@ -60,5 +60,15 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets whatever moves as a result.
         /// </summary>
         public List<MoveDefinition> Moves { get; set; } = new List<MoveDefinition>();
+
+        /// <summary>
+        /// Gets or sets quests which are started.
+        /// </summary>
+        public List<StartQuestDefinition> StartQuests { get; set; } = new List<StartQuestDefinition>();
+
+        /// <summary>
+        /// Gets or sets quests which are ended.
+        /// </summary>
+        public List<EndQuestDefinition> EndQuests { get; set; } = new List<EndQuestDefinition>();
     }
 }

@@ -30,6 +30,9 @@ namespace LegendsGenerator.Contracts.Definitions
             this.SiteDefinitions = byType[typeof(SiteDefinition)].OfType<SiteDefinition>().ToList();
             this.NotablePersonDefinitions = byType[typeof(NotablePersonDefinition)].OfType<NotablePersonDefinition>().ToList();
             this.WorldSquareDefinitions = byType[typeof(WorldSquareDefinition)].OfType<WorldSquareDefinition>().ToList();
+            this.WorldDefinitions = byType[typeof(WorldDefinition)].OfType<WorldDefinition>().ToList();
+            this.QuestDefinitions = byType[typeof(QuestDefinition)].OfType<QuestDefinition>().ToList();
+            this.UnitDefinitions = byType[typeof(UnitDefinition)].OfType<UnitDefinition>().ToList();
         }
 
         /// <summary>
@@ -51,6 +54,21 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets the list of all world square definitions.
         /// </summary>
         public IReadOnlyList<WorldSquareDefinition> WorldSquareDefinitions { get; }
+
+        /// <summary>
+        /// Gets the list of all world definitions (only one should really be needed).
+        /// </summary>
+        public IReadOnlyList<WorldDefinition> WorldDefinitions { get; }
+
+        /// <summary>
+        /// Gets the list of all quest definitions.
+        /// </summary>
+        public IReadOnlyList<QuestDefinition> QuestDefinitions { get; }
+
+        /// <summary>
+        /// Gets the list of all unit definitions.
+        /// </summary>
+        public IReadOnlyList<UnitDefinition> UnitDefinitions { get; }
 
         /// <summary>
         /// Gets the list of all definitions.

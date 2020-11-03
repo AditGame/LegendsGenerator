@@ -113,5 +113,56 @@ namespace LegendsGenerator.Contracts.Definitions
                 this.AllDefinitions.AddRange(value);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the list of world definitions.
+        /// </summary>
+        public List<WorldDefinition> World
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<WorldDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(WorldDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of quest definitions.
+        /// </summary>
+        public List<QuestDefinition> Quests
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<QuestDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(QuestDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of unit definitions.
+        /// </summary>
+        public List<UnitDefinition> Units
+        {
+            get
+            {
+                return this.AllDefinitions.OfType<UnitDefinition>().ToList();
+            }
+
+            set
+            {
+                this.AllDefinitions = this.AllDefinitions.Where(x => x.GetType() != typeof(UnitDefinition)).ToList();
+                this.AllDefinitions.AddRange(value);
+            }
+        }
     }
 }

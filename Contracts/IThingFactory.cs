@@ -57,7 +57,37 @@ namespace LegendsGenerator
         /// <param name="x">The X coordinate of the person.</param>
         /// <param name="y">The Y coordinate of the person.</param>
         /// <param name="worldSquareDefinitionName">The name of the world square's definition.</param>
-        /// <returns>The notable person.</returns>
+        /// <returns>The world square.</returns>
         WorldSquare CreateWorldSquare(Random rdm, int x, int y, string worldSquareDefinitionName);
+
+        /// <summary>
+        /// Creates a world.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        /// <param name="x">The X coordinate of the person.</param>
+        /// <param name="y">The Y coordinate of the person.</param>
+        /// <param name="worldDefinitionName">The name of the world definition.</param>
+        /// <returns>The world.</returns>
+        WorldThing CreateWorld(Random rdm, int x, int y, string worldDefinitionName);
+
+        /// <summary>
+        /// Creates a quest.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        /// <param name="x">The X coordinate of the person.</param>
+        /// <param name="y">The Y coordinate of the person.</param>
+        /// <param name="questDefinitionName">The name of the quest definition.</param>
+        /// <returns>The quest.</returns>
+        Quest CreateQuest(Random rdm, int x, int y, string questDefinitionName);
+
+        /// <summary>
+        /// Creates a unit.
+        /// </summary>
+        /// <param name="rdm">The random number generator.</param>
+        /// <param name="x">The X coordinate of the person.</param>
+        /// <param name="y">The Y coordinate of the person.</param>
+        /// <param name="unitDefinitionName">The name of the unit definition.</param>
+        /// <returns>The unit.</returns>
+        Unit CreateUnit(Random rdm, int x, int y, string unitDefinitionName);
     }
 }

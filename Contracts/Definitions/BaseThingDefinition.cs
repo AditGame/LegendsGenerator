@@ -68,6 +68,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the name of the site this inherits from.
         /// </summary>
         public string? InheritsFrom { get; set; }
+
         /// <summary>
         /// Gets or sets the attributes on the thing.
         /// </summary>
@@ -77,7 +78,6 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the aspects on the thing.
         /// </summary>
         public Dictionary<string, AspectDefinition> Aspects { get; set; } = new Dictionary<string, AspectDefinition>();
-
 
         /// <summary>
         /// Gets the type of Subject.

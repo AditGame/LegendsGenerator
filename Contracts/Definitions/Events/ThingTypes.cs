@@ -39,6 +39,16 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// A square on the world map.
         /// </summary>
         WorldSquare,
+
+        /// <summary>
+        /// A quest a Thing is on.
+        /// </summary>
+        Quest,
+
+        /// <summary>
+        /// The world!
+        /// </summary>
+        World,
     }
 
     /// <summary>

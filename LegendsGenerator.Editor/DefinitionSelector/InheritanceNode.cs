@@ -248,7 +248,10 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                 new { name = "Events", type = typeof(EventDefinition) },
                 new { name = "Sites", type = typeof(SiteDefinition) },
                 new { name = "NotablePersons", type = typeof(NotablePersonDefinition) },
+                new { name = "Units", type = typeof(UnitDefinition) },
+                new { name = "Quests", type = typeof(QuestDefinition) },
                 new { name = "WorldSquares", type = typeof(WorldSquareDefinition) },
+                new { name = "World", type = typeof(WorldDefinition) },
             }.Select(e =>
             {
                 return new SectionInheritanceNode(
