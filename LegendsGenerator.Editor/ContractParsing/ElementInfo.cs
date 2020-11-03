@@ -37,6 +37,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="getCompiledParameters">A method which gets the parameters to pass into a compiled method.</param>
         /// <param name="compiled">The compiled attribute, if it exists.</param>
         /// <param name="hiddenInEditorCondition">A string condition to eval if this should be shown in the editor.</param>
+        /// <param name="icons">The icons to show alongside the property.</param>
         public ElementInfo(
             string name,
             string description,
@@ -46,7 +47,8 @@ namespace LegendsGenerator.Editor.ContractParsing
             Action<PropertyNode, object?> setValue,
             Func<PropertyNode, IList<CompiledVariable>>? getCompiledParameters,
             CompiledAttribute? compiled,
-            (object OutterObject, string Condition)? hiddenInEditorCondition)
+            (object OutterObject, string Condition)? hiddenInEditorCondition,
+            InfoIcon[] icons)
         {
             this.Name = name;
             this.Description = description;
@@ -56,6 +58,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.SetValue = setValue;
             this.GetCompiledParameters = getCompiledParameters ?? (prop => Array.Empty<CompiledVariable>());
             this.Compiled = compiled;
+            this.Icons = icons;
 
             if (hiddenInEditorCondition != null)
             {
@@ -125,14 +128,14 @@ namespace LegendsGenerator.Editor.ContractParsing
         public bool NameCreatesVariableName { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the Contents of this element represents an existing variable.
-        /// </summary>
-        public bool ContentsConsumeVariableName { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether a change to the contents of this property causes the definition name to change.
         /// </summary>
         public bool ControlsDefinitionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the icons on this thing.
+        /// </summary>
+        public InfoIcon[] Icons { get; set; }
 
         /// <summary>
         /// Gets a method delegate for the specified condition.

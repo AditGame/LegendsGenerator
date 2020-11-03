@@ -125,7 +125,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                 setValue: (prop, value) => this.HandleSetValue(prop.Name, value),
                 getCompiledParameters: this.info.GetCompiledParameters,
                 compiled: this.info.Compiled,
-                hiddenInEditorCondition: null)
+                hiddenInEditorCondition: null,
+                icons: Array.Empty<InfoIcon>())
             {
                 ChangeName = (prop, newName) => this.ChangeName(prop.Name, newName),
                 NameCreatesVariableName = true, // This is currently always true, should plumb in correctly with attribute for auto-magic.

@@ -142,7 +142,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                 setValue: (prop, value) => this.HandleSetValue(i, value),
                 getCompiledParameters: this.info.GetCompiledParameters,
                 compiled: this.info.Compiled,
-                hiddenInEditorCondition: null);
+                hiddenInEditorCondition: null,
+                icons: Array.Empty<InfoIcon>());
 
             return DefinitionParser.ToNode(this.underlyingObject, kvpInfo);
         }

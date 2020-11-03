@@ -13,6 +13,7 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Reflection;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Validation;
 
@@ -58,6 +59,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             CompiledAttribute? compiled = property.GetCustomAttribute<CompiledAttribute>();
             HideInEditorAttribute? hideInEditor = property.GetCustomAttribute<HideInEditorAttribute>();
+            InfoIcon[] icons = property.GetCustomAttributes<EditorIconAttribute>().Select(a => InfoIcon.Get(a.Icon)).ToArray();
             ElementInfo info = new ElementInfo(
                 name: property.Name.Split("_").Last(),
                 description: DescriptionProvider.GetDescription(property),
@@ -67,7 +69,8 @@ namespace LegendsGenerator.Editor.ContractParsing
                 setValue: (prop, value) => property.SetValue(thing, value),
                 getCompiledParameters: getParameters != null ? prop => getParameters?.Invoke(thing, null) as IList<CompiledVariable> ?? new List<CompiledVariable>() : (Func<PropertyNode, IList<CompiledVariable>>?)null,
                 compiled: compiled,
-                hiddenInEditorCondition: (hideInEditor == null || thing == null) ? null : (thing, hideInEditor.Condition))
+                hiddenInEditorCondition: (hideInEditor == null || thing == null) ? null : (thing, hideInEditor.Condition),
+                icons: icons)
             {
                 ControlsDefinitionName = property.GetCustomAttribute<ControlsDefinitionNameAttribute>() != null,
             };

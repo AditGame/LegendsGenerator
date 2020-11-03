@@ -9,6 +9,7 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Linq;
     using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Definitions.Validation;
     using LegendsGenerator.Contracts.Things;
@@ -60,6 +61,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(int))]
         [CompiledVariable("Subject", typeof(BaseThing))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string MaxEvents { get; set; } = "1";
 
         /// <summary>

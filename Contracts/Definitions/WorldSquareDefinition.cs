@@ -11,6 +11,7 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Threading.Tasks;
 
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
 
@@ -24,6 +25,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(float))]
         [CompiledVariable("Subject", typeof(WorldSquare))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string MovementCost { get; set; } = UnsetString;
 
         /// <summary>

@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions
 {
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Definitions.Validation;
     using LegendsGenerator.Contracts.Things;
     using System;
@@ -19,6 +20,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(object), Protected = true)]
         [HideInEditor("value.Dynamic")]
+        [EditorIcon(EditorIcon.CompiledStatic)]
         public string Value { get; set; } = UnsetString;
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace LegendsGenerator.Contracts.Definitions
         [Compiled(typeof(object), Protected = true)]
         [CompiledVariable("Subject", typeof(BaseDefinition))]
         [HideInEditor("!value.Dynamic")]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string DynamicValue { get; set; } = UnsetString;
 
         /// <summary>

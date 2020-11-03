@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions
 {
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
 
     /// <summary>
     /// The definition of an attribute.
@@ -15,6 +16,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets the base value.
         /// </summary>
         [Compiled(typeof(int))]
+        [EditorIcon(EditorIcon.CompiledStatic)]
         public string BaseValue { get; set; } = "0";
 
         /// <summary>
@@ -22,6 +24,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(int))]
         [CompiledVariable("Subject", typeof(BaseDefinition))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string DynamicValue { get; set; } = "0";
     }
 }

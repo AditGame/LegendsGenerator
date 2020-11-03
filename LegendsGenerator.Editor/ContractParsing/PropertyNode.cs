@@ -65,6 +65,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.ControlsDefinitionName = property.ControlsDefinitionName;
             this.ContentsType = property.PropertyType;
             this.hiddenInEditor = property.HiddenInEditor;
+            this.Icons = property.Icons;
 
             if (!readOnly)
             {
@@ -192,6 +193,11 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets a value indicating whether a change to the contents should cause the definition name to change.
         /// </summary>
         public bool ControlsDefinitionName { get; }
+
+        /// <summary>
+        /// Gets the info icons on this thing.
+        /// </summary>
+        public InfoIcon[] Icons { get; }
 
         /// <summary>
         /// Gets or sets the contents of the node; null if there's no contents beyond sub nodes.

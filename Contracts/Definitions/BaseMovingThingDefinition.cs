@@ -5,6 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions
 {
     using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
@@ -17,6 +18,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(bool))]
         [CompiledVariable("Subject", typeof(BaseMovingThing))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string Flies { get; set; } = "false";
 
         /// <summary>
@@ -24,6 +26,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(float))]
         [CompiledVariable("Subject", typeof(BaseMovingThing))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string LandSpeed { get; set; } = "1";
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         [Compiled(typeof(float))]
         [CompiledVariable("Subject", typeof(BaseMovingThing))]
+        [EditorIcon(EditorIcon.CompiledDynamic)]
         public string WaterSpeed { get; set; } = "0";
     }
 }

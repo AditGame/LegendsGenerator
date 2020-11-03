@@ -8,7 +8,18 @@
 
   <ItemGroup>
     <None Remove="Resources\Add_grey_8x_16x.png" />
+    <None Remove="Resources\Dynamic.png" />
     <None Remove="Resources\Remove_8x_16x.png" />
+    <None Remove="Resources\Static.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Dynamic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Static.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>
