@@ -30,7 +30,25 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <returns>A lsit of all nodes on the definition.</returns>
         public static IList<PropertyNode> ParseToNodes(Type type, object? definition)
         {
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance);
+            List<PropertyInfo> InOrderPropertyList(Type type)
+            {
+                List<PropertyInfo> info;
+                if (type.BaseType == null)
+                {
+                    // Bottom of the hierarchy.
+                    info = new List<PropertyInfo>();
+                }
+                else
+                {
+                    info = InOrderPropertyList(type.BaseType);
+                }
+
+                info.AddRange(type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => x.CanWrite && !info.Any(y => y.Name.Equals(x.Name))));
+
+                return info;
+            }
+
+            var properties = InOrderPropertyList(type);
             ILookup<string, PropertyInfo> options = properties.Where(p => p.Name.Contains("_")).ToLookup(p => p.Name.Split("_").First());
 
             List<PropertyNode> nodes = new List<PropertyNode>();
