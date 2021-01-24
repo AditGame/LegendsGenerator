@@ -23,8 +23,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Jot" Version="2.1.7" />
-    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+    <PackageReference Include="Jot" Version="2.1.8" />
+    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>

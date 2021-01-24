@@ -1,17 +1,18 @@
 <Project>
 	<PropertyGroup>
 		<DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
 	</PropertyGroup>
 	
     <!-- Stylecop and FxCop -->
     <ItemGroup Condition=" $(DisableAnalyzers) != 'true'">
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-            <Version>3.3.0</Version>
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+            <Version>5.0.3</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="StyleCop.Analyzers">
-            <Version>1.2.0-beta.205</Version>
+            <Version>1.2.0-beta.321</Version>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
