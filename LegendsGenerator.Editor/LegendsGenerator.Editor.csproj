@@ -14,17 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Dynamic.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Static.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Jot" Version="2.1.8" />
-    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.2.1" />
+    <PackageReference Include="Jot" Version="2.1.7" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
