@@ -7,17 +7,14 @@
 namespace LegendsGenerator.Viewer
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using Gu.Wpf.DataGrid2D;
+
     using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts;
-    using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
-    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
     using LegendsGenerator.Viewer.Views;
 
@@ -174,30 +171,6 @@ namespace LegendsGenerator.Viewer
             else
             {
                 this.context.SelectedThing = null;
-            }
-        }
-
-        /// <summary>
-        /// Handles the user clicking a cell on the map.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The args.</param>
-        private void DataGrid_SelectedCellsChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
-        {
-            DataGrid grid = sender as DataGrid ?? throw new InvalidOperationException("Unable to convert sender to a datagrid.");
-
-            if (grid.SelectedCells.Any())
-            {
-                Array2DRowView row =
-                    grid.SelectedCells.FirstOrDefault().Item as Gu.Wpf.DataGrid2D.Array2DRowView ?? throw new InvalidOperationException("Unable to convert row to a Array2DRowView.");
-
-                int x = grid.SelectedCells.FirstOrDefault().Column.DisplayIndex;
-                int y = row.Index;
-                this.context.SelectedSquare = this.context.CurrentWorld.Grid.GetSquare(y, x);
-            }
-            else
-            {
-                this.context.SelectedSquare = null;
             }
         }
 

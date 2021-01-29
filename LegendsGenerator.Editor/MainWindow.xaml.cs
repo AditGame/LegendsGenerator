@@ -9,7 +9,6 @@ namespace LegendsGenerator.Editor
     using System;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Forms;
     using Jot;
     using LegendsGenerator.Contracts.Definitions;
@@ -17,13 +16,13 @@ namespace LegendsGenerator.Editor
 
     /// <summary>
     /// Interaction logic for MainWindow.
-    /// </summary>
+    /// </summary>s
     public partial class MainWindow : Window
     {
         /// <summary>
         /// The tracker for state.
         /// </summary>
-        private static Tracker tracker = new Tracker();
+        private static readonly Tracker Tracker = new Tracker();
 
         /// <summary>
         /// The context with all the data in it.
@@ -37,13 +36,13 @@ namespace LegendsGenerator.Editor
         {
             this.InitializeComponent();
 
-            tracker.Configure<Window>()
+            Tracker.Configure<Window>()
                 .Id(w => w.Name, SystemInformation.VirtualScreen.Size)
                 .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
                 .PersistOn(nameof(Window.Closing))
                 .StopTrackingOn(nameof(Window.Closing));
 
-            tracker.Configure<Context>()
+            Tracker.Configure<Context>()
                 .Properties(c => new
                 {
                     c.OpenedDirectory,
@@ -54,8 +53,8 @@ namespace LegendsGenerator.Editor
             this.context = new Context();
             this.DataContext = this.context;
 
-            tracker.Track(this);
-            tracker.Track(this.context);
+            Tracker.Track(this);
+            Tracker.Track(this.context);
         }
 
         /// <summary>
