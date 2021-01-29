@@ -1,4 +1,4 @@
-﻿// <copyright file="DefinitionCollections.cs" company="Tom Luppi">
+﻿// <copyright file="Definitionss.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
@@ -14,13 +14,13 @@ namespace LegendsGenerator.Contracts.Definitions
     /// <summary>
     /// A collection of all definitions.
     /// </summary>
-    public class DefinitionCollection
+    public class Definitions
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefinitionCollection"/> class.
+        /// Initializes a new instance of the <see cref="Definitions"/> class.
         /// </summary>
         /// <param name="definitions">The list of definitions.</param>
-        public DefinitionCollection(IEnumerable<BaseDefinition> definitions)
+        public Definitions(IEnumerable<BaseDefinition> definitions)
         {
             // We store all definitions in case a new one is added and we forget to add it to the below lists.
             this.AllDefinitions = definitions.ToList();
@@ -31,8 +31,8 @@ namespace LegendsGenerator.Contracts.Definitions
             this.NotablePersonDefinitions = byType[typeof(NotablePersonDefinition)].OfType<NotablePersonDefinition>().ToList();
             this.WorldSquareDefinitions = byType[typeof(WorldSquareDefinition)].OfType<WorldSquareDefinition>().ToList();
             this.WorldDefinitions = byType[typeof(WorldDefinition)].OfType<WorldDefinition>().ToList();
-            this.QuestDefinitions = byType[typeof(QuestDefinition)].OfType<QuestDefinition>().ToList();
             this.UnitDefinitions = byType[typeof(UnitDefinition)].OfType<UnitDefinition>().ToList();
+            this.QuestDefinitions = byType[typeof(QuestDefinition)].OfType<QuestDefinition>().ToList();
         }
 
         /// <summary>
@@ -85,16 +85,16 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         /// <param name="additionalCollections">Collections to combine with this collection.</param>
         /// <returns>A combination of the two collections.</returns>
-        public DefinitionCollection Combine(params DefinitionCollection[] additionalCollections)
+        public Definitions Combine(params Definitions[] additionalCollections)
         {
             IEnumerable<BaseDefinition> combinedDefinitions = this.AllDefinitions;
 
-            foreach (DefinitionCollection collection in additionalCollections)
+            foreach (Definitions collection in additionalCollections)
             {
                 combinedDefinitions = combinedDefinitions.Concat(collection.AllDefinitions);
             }
 
-            return new DefinitionCollection(combinedDefinitions);
+            return new Definitions(combinedDefinitions);
         }
 
         /// <summary>

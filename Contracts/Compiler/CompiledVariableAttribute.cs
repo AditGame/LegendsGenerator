@@ -7,7 +7,7 @@ namespace LegendsGenerator.Contracts.Compiler
     using System;
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class CompiledVariableAttribute : Attribute
+    public sealed class CompiledVariableAttribute : Attribute
     {
         public CompiledVariableAttribute(string name, Type type)
         {

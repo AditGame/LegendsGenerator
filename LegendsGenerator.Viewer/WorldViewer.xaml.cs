@@ -42,7 +42,7 @@ namespace LegendsGenerator.Viewer
 
             Context.Instance.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName?.Equals(nameof(Context.Squares)) == true)
+                if (e.PropertyName?.Equals(nameof(Context.Squares), StringComparison.Ordinal) == true)
                 {
                     this.InvalidateVisual();
                 }
@@ -83,7 +83,7 @@ namespace LegendsGenerator.Viewer
             int gridX = (int)(clicked.X / GridSize);
             int gridY = (int)(clicked.Y / GridSize);
 
-            Context.Instance.Squares.ForEach(s =>
+            foreach (SquareView s in Context.Instance.Squares)
             {
                 if (s.X == gridX && s.Y == gridY)
                 {
@@ -93,7 +93,7 @@ namespace LegendsGenerator.Viewer
                 {
                     s.Selected = false;
                 }
-            });
+            }
 
             Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(gridX, gridY);
         }

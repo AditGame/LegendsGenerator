@@ -107,7 +107,7 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <inheritdoc/>
-        public ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<CompiledVariable> variableNames)
+        public ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<CompiledVariable> variables)
         {
             if (!condition.EndsWith(";"))
             {
@@ -118,7 +118,7 @@ namespace LegendsGenerator.Compiler.CSharp
             {
                 return this.GenerateCompiledCondition<T>(
                     $"return {ConvertArrows(condition)}",
-                    variableNames);
+                    variables);
             }
             catch (ApplicationException ex)
             {
@@ -144,13 +144,13 @@ namespace LegendsGenerator.Compiler.CSharp
         }
 
         /// <inheritdoc/>
-        public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variableNames)
+        public ICompiledCondition<string> AsFormattedText(string format, IEnumerable<CompiledVariable> variables)
         {
             try
             {
                 return this.GenerateCompiledCondition<string>(
                     $"return $\"{ConvertArrows(format)}\";",
-                    variableNames);
+                    variables);
             }
             catch (ApplicationException ex)
             {

@@ -1,6 +1,7 @@
 ﻿using LegendsGenerator.Contracts.Definitions.Validation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// Gets or sets the list of quests (by name) to end.
         /// </summary>
         [HideInEditor("value.AllQuests")]
-        public List<string> Quests { get; set; } = new List<string>();
+        public Collection<string> Quests { get; set; } = new Collection<string>();
 
         /// <summary>
         /// Gets or sets a value indicating whether to end all quests.

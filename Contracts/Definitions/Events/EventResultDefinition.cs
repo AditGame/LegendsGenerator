@@ -6,7 +6,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System.Collections.Generic;
-
+    using System.Collections.ObjectModel;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events.Effects;
     using LegendsGenerator.Contracts.Things;
@@ -39,36 +39,36 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the effects of this result.
         /// </summary>
-        public List<AttributeEffectDefinition> Effects { get; set; } = new List<AttributeEffectDefinition>();
+        public Collection<AttributeEffectDefinition> Effects { get; set; } = new Collection<AttributeEffectDefinition>();
 
         /// <summary>
         /// Gets or sets the spawns of this result.
         /// </summary>
-        public List<SpawnDefinition> Spawns { get; set; } = new List<SpawnDefinition>();
+        public Collection<SpawnDefinition> Spawns { get; set; } = new Collection<SpawnDefinition>();
 
         /// <summary>
         /// Gets or sets the transforms of this result.
         /// </summary>
-        public List<TransformDefinition> Transforms { get; set; } = new List<TransformDefinition>();
+        public Collection<TransformDefinition> Transforms { get; set; } = new Collection<TransformDefinition>();
 
         /// <summary>
         /// Gets or sets the things destroyed in this result.
         /// </summary>
-        public List<DestroyDefinition> Destroys { get; set; } = new List<DestroyDefinition>();
+        public Collection<DestroyDefinition> Destroys { get; set; } = new Collection<DestroyDefinition>();
 
         /// <summary>
         /// Gets or sets whatever moves as a result.
         /// </summary>
-        public List<MoveDefinition> Moves { get; set; } = new List<MoveDefinition>();
+        public Collection<MoveDefinition> Moves { get; set; } = new Collection<MoveDefinition>();
 
         /// <summary>
         /// Gets or sets quests which are started.
         /// </summary>
-        public List<StartQuestDefinition> StartQuests { get; set; } = new List<StartQuestDefinition>();
+        public Collection<StartQuestDefinition> StartQuests { get; set; } = new Collection<StartQuestDefinition>();
 
         /// <summary>
         /// Gets or sets quests which are ended.
         /// </summary>
-        public List<EndQuestDefinition> EndQuests { get; set; } = new List<EndQuestDefinition>();
+        public Collection<EndQuestDefinition> EndQuests { get; set; } = new Collection<EndQuestDefinition>();
     }
 }

@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
     /// An attribute which allows dynamically hiding properties in the editor.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class HideInEditorAttribute : Attribute
+    public sealed class HideInEditorAttribute : Attribute
     {
         /// <summary>
         /// 

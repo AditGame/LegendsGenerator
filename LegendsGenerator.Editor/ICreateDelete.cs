@@ -28,6 +28,7 @@ namespace LegendsGenerator.Editor
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
+#pragma warning disable CA2109 // Review visible event handlers. This library is not externally exposed.
         void HandleCreate(object sender, RoutedEventArgs e);
 
         /// <summary>
@@ -36,5 +37,6 @@ namespace LegendsGenerator.Editor
         /// <param name="sender">The sender.</param>
         /// <param name="e">The args.</param>
         void HandleDelete(object sender, RoutedEventArgs e);
+#pragma warning restore CA2109 // Review visible event handlers
     }
 }

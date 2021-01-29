@@ -29,7 +29,7 @@ namespace LegendsGenerator
         /// <summary>
         /// The collection of definitions.
         /// </summary>
-        private readonly DefinitionCollection definitions;
+        private readonly Definitions definitions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
@@ -47,7 +47,7 @@ namespace LegendsGenerator
         /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
         /// </summary>
         /// <param name="definitions">The definitions collection to use.</param>
-        public HistoryGenerator(DefinitionCollection definitions)
+        public HistoryGenerator(Definitions definitions)
         {
             this.definitions = definitions;
             this.thingFactory = new ThingFactory(definitions);
@@ -58,7 +58,7 @@ namespace LegendsGenerator
         /// </summary>
         /// <param name="thingFactory">The thing factory to use.</param>
         /// <param name="definitions">The definitions collection to use.</param>
-        public HistoryGenerator(ThingFactory thingFactory, DefinitionCollection definitions)
+        public HistoryGenerator(ThingFactory thingFactory, Definitions definitions)
         {
             this.definitions = definitions;
             this.thingFactory = thingFactory;
@@ -83,14 +83,12 @@ namespace LegendsGenerator
                 throw new ArgumentNullException(nameof(currWorld));
             }
 
-#pragma warning disable SA1101 // Prefix local calls with this. Stylecop has not been updated with support for Records.
             World nextWorld = currWorld with
             {
                 StepCount = currWorld.StepCount + 1,
                 Grid = currWorld.Grid.CloneWithoutThings(),
                 OccurredEvents = new List<OccurredEvent>(),
             };
-#pragma warning restore SA1101 // Prefix local calls with this
 
             IDictionary<ThingType, List<EventDefinition>> eventsBySubjectType =
                 this.definitions.Events.GroupBy(ev => ev.Subject.Type).ToDictionary(kv => kv.Key, kv => kv.ToList());
@@ -100,7 +98,7 @@ namespace LegendsGenerator
             MovementHandler movementHandler = new MovementHandler(RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, Guid.Empty), currWorld);
 
             // Iterate through every gridsquare to create the new world.
-            foreach (var (x, y, square) in currWorld.Grid.GetAllGridEntries())
+            foreach (var (x, y, square) in currWorld.Grid.AllGridEntries)
             {
                 foreach (BaseThing thing in square.GetThings())
                 {
@@ -109,14 +107,7 @@ namespace LegendsGenerator
                     // Allows easy debugging if a thing isn't working as expected.
                     if (this.OpenDebuggerAtThing == thing.ThingId)
                     {
-                        if (Debugger.IsAttached)
-                        {
-                            Debugger.Break();
-                        }
-                        else
-                        {
-                            Debugger.Launch();
-                        }
+                        Debugger.Break();
                     }
 #endif
 
@@ -345,7 +336,7 @@ namespace LegendsGenerator
 
             BaseThing? GetThing(string name)
             {
-                if (name.Equals("Subject"))
+                if (name.Equals("Subject", StringComparison.OrdinalIgnoreCase))
                 {
                     return GetOrCreate(stagedThings, baseThing).Thing;
                 }
@@ -374,9 +365,7 @@ namespace LegendsGenerator
                 return;
             }
 
-#pragma warning disable SA1101 // Prefix local calls with this. False positive due to C#9 feature.
             world.OccurredEvents.Add(ev with { Result = result });
-#pragma warning restore SA1101 // Prefix local calls with this
 
             foreach (AttributeEffectDefinition effectDefinition in result.Effects)
             {

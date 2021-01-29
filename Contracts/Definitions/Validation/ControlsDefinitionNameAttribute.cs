@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
     /// If put on a property, this informs the editor that the property modifies the definition name.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ControlsDefinitionNameAttribute : Attribute
+    public sealed class ControlsDefinitionNameAttribute : Attribute
     {
     }
 }

@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
     /// If on a property, the property will not be dispalyed on the object in the editor.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class EditorIgnoreAttribute : Attribute
+    public sealed class EditorIgnoreAttribute : Attribute
     {
     }
 }

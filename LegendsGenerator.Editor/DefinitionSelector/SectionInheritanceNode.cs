@@ -65,25 +65,25 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                 throw new InvalidOperationException("Activator returned a null instance.");
             }
 
-            if (Context.Instance?.SelectedDefinition?.BaseDefinition != null)
+            if (Context.LastLoadedInstance?.SelectedDefinition?.BaseDefinition != null)
             {
                 if (newObj is ITopLevelDefinition topLevel &&
-                    Context.Instance.SelectedDefinition.BaseDefinition is ITopLevelDefinition currentToplevel)
+                    Context.LastLoadedInstance.SelectedDefinition.BaseDefinition is ITopLevelDefinition currentToplevel)
                 {
                     topLevel.SourceFile = currentToplevel.SourceFile;
                 }
             }
 
             Definition newDef = new Definition(newObj);
-            Context.Instance?.AddDefinition(newDef);
+            Context.LastLoadedInstance?.AddDefinition(newDef);
             DefinitionInheritanceNode node = new DefinitionInheritanceNode(GetHeader(newObj), newDef, null);
             this.AddNode(node);
             Context.FixInheritanceNode(node);
 
-            if (Context.Instance != null)
+            if (Context.LastLoadedInstance != null)
             {
-                Context.Instance.SelectedDefinition = newDef;
-                Context.Instance.SelectedNode = null;
+                Context.LastLoadedInstance.SelectedDefinition = newDef;
+                Context.LastLoadedInstance.SelectedNode = null;
             }
         }
     }

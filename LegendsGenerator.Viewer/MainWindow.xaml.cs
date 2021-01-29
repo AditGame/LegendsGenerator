@@ -52,7 +52,7 @@ namespace LegendsGenerator.Viewer
 
             ConditionCompiler<BaseGlobalVariables> processor =
                 new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables() { World = new World(), });
-            DefinitionCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
+            Definitions definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
 
             HistoryGenerator history = new HistoryGenerator(factory, definitions);
@@ -72,7 +72,7 @@ namespace LegendsGenerator.Viewer
                 world.Grid.AddThing(cityInst);
             }
 
-            foreach (var thing in world.Grid.GetAllGridEntries().SelectMany(x => x.Square.GetThings()))
+            foreach (var thing in world.Grid.AllGridEntries.SelectMany(x => x.Square.GetThings()))
             {
                 thing.FinalizeConstruction(new Random());
             }

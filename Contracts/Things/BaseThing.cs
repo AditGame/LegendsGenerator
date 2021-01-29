@@ -19,7 +19,7 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseThing
     {
-        public BaseThing(BaseThingDefinition definition)
+        protected BaseThing(BaseThingDefinition definition)
         {
             this.BaseDefinition = definition;
         }
@@ -155,7 +155,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <returns>The list of all effects which are modifying this specified attribute.</returns>
         public IEnumerable<AttributeEffect> GetAttributeEffectsModifying(string attribute)
         {
-            return this.AttributeEffects.Where(a => a.Attribute.Equals(attribute));
+            return this.AttributeEffects.Where(a => a.Attribute.Equals(attribute, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <returns>The list of all effects which are modifying this specified aspect.</returns>
         public IEnumerable<AspectEffect> GetAspectEffectsModifying(string aspect)
         {
-            return this.AspectEffects.Where(a => a.Aspect.Equals(aspect));
+            return this.AspectEffects.Where(a => a.Aspect.Equals(aspect, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace LegendsGenerator.Contracts.Things
             string? value = this.EffectiveAspect(aspect);
             if (value == null)
             {
-                return default(T);
+                return default;
             }
 
             try

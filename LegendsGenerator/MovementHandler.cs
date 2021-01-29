@@ -18,7 +18,7 @@ namespace LegendsGenerator
     /// <summary>
     /// State machine to handle movement.
     /// </summary>
-    public partial class MovementHandler
+    public class MovementHandler
     {
         /// <summary>
         /// The world.

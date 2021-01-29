@@ -6,7 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Collections.ObjectModel;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
@@ -28,12 +28,12 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the applicable Definition names which this relates to.
         /// If empty, any Definition is allowed.
         /// </summary>
-        public List<string> Definitions { get; set; } = new List<string>();
+        public Collection<string> Definitions { get; set; } = new Collection<string>();
 
         /// <summary>
         /// Gets or sets the list of quests the Subject must have to match (Must have all quests).
         /// If empty, quests are not considered when matching.
         /// </summary>
-        public List<string> Quests { get; set; } = new List<string>();
+        public Collection<string> Quests { get; set; } = new Collection<string>();
     }
 }

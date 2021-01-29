@@ -44,7 +44,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Failed compiling code: " + content, ex);
+                throw new InvalidOperationException("Failed compiling code: " + content, ex);
             }
         }
     }

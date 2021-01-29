@@ -6,6 +6,7 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using LegendsGenerator.Contracts.Definitions;
@@ -29,9 +30,9 @@ namespace LegendsGenerator.Editor.ContractParsing
         }
 
         /// <inheritdoc/>
-        protected override List<ValidationIssue> GetLevelIssues()
+        protected override ICollection<ValidationIssue> GetLevelIssues()
         {
-            List<ValidationIssue> output = base.GetLevelIssues();
+            ICollection<ValidationIssue> output = base.GetLevelIssues();
 
             if (string.IsNullOrWhiteSpace(this.Content as string) && !this.Nullable)
             {
@@ -39,7 +40,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                     ValidationLevel.Error,
                     "Can not be null, empty, or whitespace."));
             }
-            else if (this.Content?.ToString()?.Equals(BaseDefinition.UnsetString) == true)
+            else if (this.Content?.ToString()?.Equals(BaseDefinition.UnsetString, StringComparison.Ordinal) == true)
             {
                 output.Add(new ValidationIssue(
                     ValidationLevel.Error,

@@ -53,6 +53,24 @@ namespace LegendsGenerator.Contracts
         public GridSquare[,] Squares { get; }
 
         /// <summary>
+        /// Gets all grid entries with their coordinates.
+        /// </summary>
+        /// <returns>Every grid entry.</returns>
+        public IEnumerable<(int X, int Y, GridSquare Square)> AllGridEntries
+        {
+            get
+            {
+                for (int x = 0; x < this.Width; x++)
+                {
+                    for (int y = 0; y < this.Height; y++)
+                    {
+                        yield return (x, y, this.Squares[x, y]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Clones this grid, without any Things.
         /// </summary>
         /// <returns>A matching grid, devoid of life.</returns>
@@ -128,27 +146,12 @@ namespace LegendsGenerator.Contracts
             }
         }
 
-        /// <summary>
-        /// Gets all grid entries with their coordinates.
-        /// </summary>
-        /// <returns>Every grid entry.</returns>
-        public IEnumerable<(int X, int Y, GridSquare Square)> GetAllGridEntries()
-        {
-            for (int x = 0; x < this.Width; x++)
-            {
-                for (int y = 0; y < this.Height; y++)
-                {
-                    yield return (x, y, this.Squares[x, y]);
-                }
-            }
-        }
-
         /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (var (x, y, square) in this.GetAllGridEntries())
+            foreach (var (x, y, square) in this.AllGridEntries)
             {
                 sb.AppendLine($"Grid ({x},{y}):");
                 sb.AppendLine(square.ToString());

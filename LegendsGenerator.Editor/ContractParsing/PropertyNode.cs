@@ -47,7 +47,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="property">The property info.</param>
         /// <param name="options">The options for this node.</param>
         /// <param name="readOnly">If this instance should be read only.</param>
-        public PropertyNode(
+        protected PropertyNode(
             object? thing,
             ElementInfo property,
             IEnumerable<PropertyInfo> options,
@@ -84,7 +84,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             // Set up that changes to Content or underlying nodes causes validation changes.
             this.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName?.Equals(nameof(this.Content)) ?? false)
+                if (e.PropertyName?.Equals(nameof(this.Content), StringComparison.Ordinal) ?? false)
                 {
                     this.OnPropertyChanged(nameof(this.ValidationFailures));
                 }
@@ -94,7 +94,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 node.PropertyChanged += (s, e) =>
                 {
-                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures), StringComparison.Ordinal) ?? false)
                     {
                         this.OnPropertyChanged(nameof(this.ValidationFailures));
                     }
@@ -105,7 +105,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 node.PropertyChanged += (s, e) =>
                 {
-                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                    if (e.PropertyName?.Equals(nameof(node.ValidationFailures), StringComparison.Ordinal) ?? false)
                     {
                         this.OnPropertyChanged(nameof(this.ValidationFailures));
                     }
@@ -138,7 +138,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
                 string oldName = this.name;
                 string newName = value;
-                Context.Instance?.SelectedDefinition?.History.AddHistoryItem(new ActionHistoryItem(
+                Context.LastLoadedInstance?.SelectedDefinition?.History.AddHistoryItem(new ActionHistoryItem(
                     $"{this.FullName}::Name",
                     this.name,
                     value,
@@ -212,7 +212,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             set
             {
                 // TODO: Better way to get the definition that owns this.
-                Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+                Context.LastLoadedInstance?.SelectedDefinition?.History.AddHistoryItem(
                     new PropertyNodeHistoryItem(this, this.Content, value));
                 this.SetContentBypassingHistory(value);
             }
@@ -470,7 +470,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// Gets the issues present on this specific level of definition.
         /// </summary>
         /// <returns>The list of issues on this level.</returns>
-        protected virtual List<ValidationIssue> GetLevelIssues()
+        protected virtual ICollection<ValidationIssue> GetLevelIssues()
         {
             List<ValidationIssue> issues = new List<ValidationIssue>();
 
@@ -478,7 +478,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 issues.Add(new ValidationIssue(ValidationLevel.Error, "Name can not be null, empty, or whitespace."));
             }
-            else if (this.Name.Equals(BaseDefinition.UnsetString))
+            else if (this.Name.Equals(BaseDefinition.UnsetString, StringComparison.OrdinalIgnoreCase))
             {
                 issues.Add(new ValidationIssue(
                     ValidationLevel.Error,
@@ -517,17 +517,20 @@ namespace LegendsGenerator.Editor.ContractParsing
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
             // If the validation changed, than the text color changed as well.
-            if (propertyName.Equals(nameof(this.ValidationFailures)))
+            if (propertyName.Equals(nameof(this.ValidationFailures), StringComparison.Ordinal))
             {
                 this.OnPropertyChanged(nameof(this.GetTextColor));
             }
 
             // If property change will cause the whole tree to recalc if IsHidden is different.
-            if (!propertyName.Equals(nameof(this.IsVisible)))
+            if (!propertyName.Equals(nameof(this.IsVisible), StringComparison.Ordinal))
             {
-                foreach (PropertyNode node in Context.Instance?.SelectedDefinition?.Nodes ?? new ObservableCollection<PropertyNode>())
+                if (Context.InstanceEverLoaded)
                 {
-                    node.NotifyHiddenMayHaveChanged();
+                    foreach (PropertyNode node in Context.LastLoadedInstance.SelectedDefinition?.Nodes ?? new ObservableCollection<PropertyNode>())
+                    {
+                        node.NotifyHiddenMayHaveChanged();
+                    }
                 }
             }
         }
@@ -569,7 +572,7 @@ namespace LegendsGenerator.Editor.ContractParsing
                 {
                     node.PropertyChanged += (s, e) =>
                     {
-                        if (e.PropertyName?.Equals(nameof(node.ValidationFailures)) ?? false)
+                        if (e.PropertyName?.Equals(nameof(node.ValidationFailures), StringComparison.Ordinal) ?? false)
                         {
                             this.OnPropertyChanged(nameof(this.ValidationFailures));
                         }

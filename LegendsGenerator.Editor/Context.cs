@@ -31,6 +31,11 @@ namespace LegendsGenerator.Editor
         private const string AllDefinitionFiles = "<All>";
 
         /// <summary>
+        /// The last loaded instance.
+        /// </summary>
+        private static Context? lastLoadedInstance;
+
+        /// <summary>
         /// The currently selected definition.
         /// </summary>
         private Definition? selectedDefinition;
@@ -63,9 +68,31 @@ namespace LegendsGenerator.Editor
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
+        /// Gets a value indicating whether Context has ever been loaded.
+        /// </summary>
+        public static bool InstanceEverLoaded
+        {
+            get
+            {
+                return lastLoadedInstance != null;
+            }
+        }
+
+        /// <summary>
         /// Gets the current instance if one exists.
         /// </summary>
-        public static Context? Instance { get; private set; }
+        public static Context LastLoadedInstance
+        {
+            get
+            {
+                return lastLoadedInstance ?? throw new InvalidOperationException("Context has never been loaded.");
+            }
+
+            private set
+            {
+                lastLoadedInstance = value;
+            }
+        }
 
         /// <summary>
         /// Gets the list of all definitions.
@@ -157,7 +184,6 @@ namespace LegendsGenerator.Editor
 
                 if (value != null)
                 {
-                    string fullPath = $"{this.OpenedDirectory}\\{value}.json";
                     foreach (var def in this.Definitions)
                     {
                         if (this.MatchesFileFilter(def))
@@ -310,7 +336,7 @@ namespace LegendsGenerator.Editor
         {
             foreach (InheritanceNode subNode in from.Nodes)
             {
-                if (subNode.Name.Equals(name))
+                if (subNode.Name.Equals(name, StringComparison.Ordinal))
                 {
                     return subNode;
                 }
@@ -337,7 +363,7 @@ namespace LegendsGenerator.Editor
 
             if (path != null)
             {
-                DefinitionCollection? definitions =
+                Definitions? definitions =
                     DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
 
                 foreach (var def in definitions.AllDefinitions)
@@ -359,7 +385,7 @@ namespace LegendsGenerator.Editor
             // This will fill the filtered list with entries.
             this.DefinitionFileFilter = null;
 
-            Instance = this;
+            LastLoadedInstance = this;
 
             this.RegenerateInheritanceGraph();
             this.Attach();
@@ -386,7 +412,7 @@ namespace LegendsGenerator.Editor
         /// <param name="args">The args.</param>
         private void HandleInheritanceNodeChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName?.Equals("InheritsFrom") == true && sender is InheritanceNode node)
+            if (args.PropertyName?.Equals("InheritsFrom", StringComparison.Ordinal) == true && sender is InheritanceNode node)
             {
                 FixInheritanceNode(node);
             }
@@ -400,7 +426,7 @@ namespace LegendsGenerator.Editor
         private bool MatchesFileFilter(Definition def)
         {
             string fullPath = $"{this.OpenedDirectory}\\{this.DefinitionFileFilter}.json";
-            return def.BaseDefinition is ITopLevelDefinition topLevelDef && topLevelDef.SourceFile.Equals(fullPath);
+            return def.BaseDefinition is ITopLevelDefinition topLevelDef && topLevelDef.SourceFile.Equals(fullPath, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

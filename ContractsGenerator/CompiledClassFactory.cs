@@ -4,6 +4,7 @@
 
 namespace CompiledDefinitionSourceGenerator
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -38,7 +39,7 @@ namespace CompiledDefinitionSourceGenerator
         public static string Generate(ClassInfo classInfo)
         {
             bool additionalParametersForClassDefined =
-                classInfo.AdditionalParametersForMethods.Any(x => x.Equals(ClassInfo.AdditionalParamtersForClassMethod));
+                classInfo.AdditionalParametersForMethods.Any(x => x.Equals(ClassInfo.AdditionalParamtersForClassMethod, StringComparison.Ordinal));
 
             bool classAddParams = additionalParametersForClassDefined || classInfo.UsesAdditionalParametersForHoldingClass;
 
@@ -128,7 +129,7 @@ namespace CompiledDefinitionSourceGenerator
                     ReturnsDoc = "All class-wide additional parameters.",
                     Access = AccessLevel.Protected,
                     Override = true,
-                    Type = "List<CompiledVariable>",
+                    Type = "ICollection<CompiledVariable>",
                 });
 
             sb.AppendLine($"var addParams = base.CombinedAdditionalParametersForClass();");
@@ -320,7 +321,7 @@ namespace CompiledDefinitionSourceGenerator
             bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
-                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
+                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}", StringComparison.Ordinal));
 
             List<ParamDef> allParameters = new List<ParamDef>()
             {
@@ -392,7 +393,7 @@ namespace CompiledDefinitionSourceGenerator
             bool classAddParams)
         {
             string? matchingAdditionalParamtersMethod =
-                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
+                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}", StringComparison.Ordinal));
 
             List<ParamDef> allParameters = new List<ParamDef>()
             {
@@ -464,13 +465,13 @@ namespace CompiledDefinitionSourceGenerator
             IReadOnlyCollection<string> additionParameterMethods,
             bool classAddParams)
         {
-            string VarToString((string Name, string Type) var)
+            static string VarToString((string Name, string Type) var)
             {
                 return $"new CompiledVariable({SurroundInQuotes(var.Name)}, typeof({var.Type}))";
             }
 
             string? matchingAdditionalParamtersMethod =
-                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}"));
+                additionParameterMethods.FirstOrDefault(x => x.Equals($"{ClassInfo.AdditionalParamtersMethodPrefix}{info.Name}", StringComparison.Ordinal));
 
             using var braces = sb.AddMethod(
                    new MethodDefinition($"GetParameters{info.Name}")

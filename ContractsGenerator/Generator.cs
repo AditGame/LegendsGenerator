@@ -30,7 +30,7 @@ namespace CompiledDefinitionSourceGenerator
         {
             SyntaxReceiver receiver =
                 context.SyntaxReceiver as SyntaxReceiver ??
-                throw new ApplicationException("Unexpected syntax receiver registered.");
+                throw new InvalidOperationException("Unexpected syntax receiver registered.");
             var compilation = context.Compilation;
 
             foreach (var classSyntax in receiver.Classes)

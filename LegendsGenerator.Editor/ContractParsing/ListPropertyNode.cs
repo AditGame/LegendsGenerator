@@ -80,7 +80,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             PropertyNode? node = this.HandleSetValue(index, def);
 
             // TODO: Better way to get the definition that owns this.
-            Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+            Context.LastLoadedInstance?.SelectedDefinition?.History.AddHistoryItem(
                 new ActionHistoryItem(
                     $"{this.FullName}.Items",
                     $"Item Count {this.AsList().Count - 1}",

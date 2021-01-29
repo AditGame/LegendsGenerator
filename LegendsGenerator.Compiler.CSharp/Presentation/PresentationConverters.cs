@@ -34,7 +34,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// </summary>
         /// <param name="input">The input normal type.</param>
         /// <param name="world">The world object.</param>
-        /// <param name="output">The output, if applicable.</param>
         /// <returns>True if successfully converted, false if no conversion is possible.</returns>
         public static object ConvertToPresentationType(object input, World world)
         {

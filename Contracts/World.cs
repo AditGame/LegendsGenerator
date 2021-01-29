@@ -71,7 +71,7 @@ namespace LegendsGenerator.Contracts
 
             // Re-search the grid for things. This is good in case things got added to the grid in the meantime somehow.
             this.searchByGuidHash.Clear();
-            foreach (var (_, _, square) in this.Grid.GetAllGridEntries())
+            foreach (var (_, _, square) in this.Grid.AllGridEntries)
             {
                 foreach (BaseThing thing in square.GetThings())
                 {

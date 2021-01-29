@@ -6,7 +6,7 @@ namespace LegendsGenerator.Contracts.Compiler
     /// Indicates the property's values should be compiled.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class CompiledDictionaryAttribute : CompiledAttribute
+    public sealed class CompiledDictionaryAttribute : CompiledAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledDictionaryAttribute"/> class.

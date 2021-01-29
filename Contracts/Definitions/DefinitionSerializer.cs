@@ -25,26 +25,17 @@ namespace LegendsGenerator.Contracts.Definitions
         /// The options for JSON serialization.
         /// </summary>
         /// <remarks>Initialized in static constructor.</remarks>
-        private static readonly JsonSerializerOptions JsonOptions;
-
-        /// <summary>
-        /// Initializes static members of the <see cref="DefinitionSerializer"/> class.
-        /// </summary>
-        static DefinitionSerializer()
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions()
         {
-            JsonOptions = new JsonSerializerOptions()
-            {
-                AllowTrailingCommas = true,
-                IgnoreNullValues = true,
-                PropertyNameCaseInsensitive = true,
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                ReadCommentHandling = JsonCommentHandling.Skip,
-            };
-
+            AllowTrailingCommas = true,
+            IgnoreNullValues = true,
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            ReadCommentHandling = JsonCommentHandling.Skip,
             // The Editor will have null entries in lists so this will remove them at serialization time.
-            JsonOptions.Converters.Add(new NullListEntryConverterFactory());
-        }
+            Converters = { new NullListEntryConverterFactory() },
+        };
 
         /// <summary>
         /// Deserializes all definitions and events from the specified directory.
@@ -52,7 +43,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="compiler">The condition compiler to use.</param>
         /// <param name="path">The path to the directory.</param>
         /// <returns>A tuple of definitions and events from the directory.</returns>
-        public static DefinitionCollection DeserializeFromDirectory(IConditionCompiler compiler, string path)
+        public static Definitions DeserializeFromDirectory(IConditionCompiler compiler, string path)
         {
             List<BaseDefinition> defs = new List<BaseDefinition>();
             foreach (string file in Directory.EnumerateFiles(path, "*.json", SearchOption.AllDirectories))
@@ -74,7 +65,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 }
             }
 
-            var definitions = new DefinitionCollection(defs);
+            var definitions = new Definitions(defs);
             definitions.Attach(compiler);
             return definitions;
         }
@@ -83,7 +74,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Reserializes all definitions to files based on the SoureFile property.
         /// </summary>
         /// <param name="definitions">The definitions.</param>
-        public static void ReserializeToFiles(DefinitionCollection definitions)
+        public static void ReserializeToFiles(Definitions definitions)
         {
             if (definitions.IsInheritanceCompiled)
             {
@@ -94,7 +85,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 definitions.AllDefinitions.OfType<ITopLevelDefinition>().GroupBy(d => d.SourceFile);
 
             // Alert early if any definition is invalid.
-            IGrouping<string, ITopLevelDefinition>? unsetGroup = byFile.FirstOrDefault(x => x.Key.Equals(BaseDefinition.UnsetString));
+            IGrouping<string, ITopLevelDefinition>? unsetGroup = byFile.FirstOrDefault(x => x.Key.Equals(BaseDefinition.UnsetString, StringComparison.OrdinalIgnoreCase));
             if (unsetGroup != null)
             {
                 throw new InvalidOperationException(
@@ -103,7 +94,7 @@ namespace LegendsGenerator.Contracts.Definitions
 
             foreach (IGrouping<string, ITopLevelDefinition> file in byFile)
             {
-                SerializeToFile(new DefinitionCollection(file.OfType<BaseDefinition>()), file.Key);
+                SerializeToFile(new Definitions(file.OfType<BaseDefinition>()), file.Key);
             }
         }
 
@@ -112,7 +103,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         /// <param name="definitions">The definitions to serialize.</param>
         /// <param name="filename">The filename to serialize to.</param>
-        public static void SerializeToFile(DefinitionCollection definitions, string filename)
+        public static void SerializeToFile(Definitions definitions, string filename)
         {
             var definitionFile = new DefinitionFile(definitions);
             string serialized = JsonSerializer.Serialize(definitionFile, JsonOptions);
@@ -155,7 +146,9 @@ namespace LegendsGenerator.Contracts.Definitions
             /// The inner converter type for lists which have null entries.
             /// </summary>
             /// <typeparam name="T">The list value type.</typeparam>
+#pragma warning disable CA1812 // Remove unused code. False positive, used via reflection.
             private class NullListEntryConverter<T> : JsonConverter<List<T>>
+#pragma warning restore CA1812
             {
                 /// <summary>
                 /// The value converter for the list elements.
@@ -187,7 +180,9 @@ namespace LegendsGenerator.Contracts.Definitions
 
                     foreach (T entry in value)
                     {
+#pragma warning disable CA1508 // Avoid dead conditional code. The intent of this is to remove nulls in unexpected places.
                         if (entry == null)
+#pragma warning restore CA1508 // Avoid dead conditional code
                         {
                             // The whole point of this, skip null entries.
                             continue;

@@ -43,17 +43,17 @@ namespace LegendsGenerator.Editor.ContractParsing
                     info = InOrderPropertyList(type.BaseType);
                 }
 
-                info.AddRange(type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => !info.Any(y => y.Name.Equals(x.Name))));
+                info.AddRange(type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => !info.Any(y => y.Name.Equals(x.Name, StringComparison.Ordinal))));
                 info = info.Where(x => x.CanWrite || typeof(IDictionary).IsAssignableFrom(x.PropertyType) || typeof(IList).IsAssignableFrom(x.PropertyType)).ToList();
 
                 return info;
             }
 
             var properties = InOrderPropertyList(type);
-            ILookup<string, PropertyInfo> options = properties.Where(p => p.Name.Contains("_")).ToLookup(p => p.Name.Split("_").First());
+            ILookup<string, PropertyInfo> options = properties.Where(p => p.Name.Contains("_", StringComparison.Ordinal)).ToLookup(p => p.Name.Split("_").First());
 
             List<PropertyNode> nodes = new List<PropertyNode>();
-            foreach (var property in properties.Where(p => !p.Name.Contains("_")))
+            foreach (var property in properties.Where(p => !p.Name.Contains("_", StringComparison.Ordinal)))
             {
                 var node = ToNode(definition, property, options);
                 if (node != null)
@@ -170,7 +170,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             }
             else
             {
-                Console.WriteLine("asdf");
+                // Unsupported
             }
 
             return null;

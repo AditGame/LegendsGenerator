@@ -25,7 +25,7 @@ namespace LegendsGenerator.Contracts.Definitions
 
         /// <inheritdoc/>
         [JsonIgnore]
-        string ITopLevelDefinition.DefinitionName
+        public string DefinitionName
         {
             get => this.Name;
             set => this.Name = value;
@@ -49,7 +49,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Gets or sets the name of the thing, such as Scholar.
         /// </summary>
         [ControlsDefinitionName]
-        public string Name { get; set; } = UnsetString;
+        public virtual string Name { get; set; } = UnsetString;
 
         /// <summary>
         /// Gets or sets the description of the thing.

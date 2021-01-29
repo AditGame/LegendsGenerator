@@ -86,7 +86,7 @@ namespace LegendsGenerator.Editor
             try
             {
                 DefinitionSerializer.ReserializeToFiles(
-                    new DefinitionCollection(this.context.Definitions.Select(x => x.BaseDefinition)));
+                    new Definitions(this.context.Definitions.Select(x => x.BaseDefinition)));
             }
 #pragma warning disable CA1031 // Do not catch general exception types. Intentional to ensure data is not lost.
             catch (Exception ex)

@@ -47,7 +47,7 @@ namespace LegendsGenerator.Tests
                 cityDef,
             };
 
-            var definitions = new DefinitionCollection(sites);
+            var definitions = new Definitions(sites);
 
             int worldSeed = 915434125;
             Random rdm = new Random(worldSeed);
@@ -97,13 +97,9 @@ namespace LegendsGenerator.Tests
                 cityDef,
             };
 
-            var definitions = new DefinitionCollection(sites);
+            var definitions = new Definitions(sites);
 
-            int worldSeed = 915434125;
-
-            ThingFactory factory = new ThingFactory(definitions);
-
-            //factory.CreateSite(new Random(worldSeed), 0, 0, "City");
+            _ = new ThingFactory(definitions);
         }
     }
 }

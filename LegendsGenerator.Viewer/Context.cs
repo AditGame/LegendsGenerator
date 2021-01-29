@@ -213,7 +213,8 @@ namespace LegendsGenerator.Viewer
 
                     Guid? selectedThingId = this.SelectedThing?.ThingId;
 
-                    this.Squares = this.CurrentWorld.Grid.GetAllGridEntries().Select(x => new SquareView(x.Square)).ToList();
+                    this.squares = this.CurrentWorld.Grid.AllGridEntries.Select(x => new SquareView(x.Square)).ToList();
+                    this.OnPropertyChanged(nameof(this.Squares));
 
                     this.OnPropertyChanged(nameof(this.CurrentStep));
                     this.OnPropertyChanged(nameof(this.CurrentWorld));
@@ -404,26 +405,20 @@ namespace LegendsGenerator.Viewer
         public ObservableCollection<ThingView> ThingsInSquare { get; } = new ObservableCollection<ThingView>();
 
         /// <summary>
-        /// Gets or sets all squares currently visible.
+        /// Gets all squares currently visible.
         /// </summary>
-        public List<SquareView> Squares
+        public IReadOnlyCollection<SquareView> Squares
         {
             get
             {
                 return this.squares;
-            }
-
-            set
-            {
-                this.squares = value;
-                this.OnPropertyChanged(nameof(this.Squares));
             }
         }
 
         /// <summary>
         /// Gets all lines currently visible.
         /// </summary>
-        public List<LineView> Lines
+        public IReadOnlyCollection<LineView> Lines
         {
             get
             {
@@ -439,9 +434,9 @@ namespace LegendsGenerator.Viewer
         }
 
         /// <summary>
-        /// Gets all lines currently visible.
+        /// Gets all lines currenstly visible.
         /// </summary>
-        public List<PathSquareView> PathSquares
+        public IReadOnlyCollection<PathSquareView> PathSquares
         {
             get
             {

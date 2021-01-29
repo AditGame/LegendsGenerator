@@ -5,7 +5,7 @@
 namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
     using System.Collections.Generic;
-
+    using System.Collections.ObjectModel;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
@@ -15,7 +15,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// <summary>
         /// Gets or sets the members this effect effects.
         /// </summary>
-        public List<string> AppliedTo { get; set; } = new List<string>() { "Subject" };
+        public Collection<string> AppliedTo { get; set; } = new Collection<string>() { "Subject" };
 
         /// <summary>
         /// Gets or sets the title of the effect.

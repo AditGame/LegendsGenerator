@@ -40,12 +40,12 @@ namespace CompiledDefinitionSourceGenerator
                     a.ConstructorArguments.First(x => x.Type?.Name.Equals("Type", StringComparison.OrdinalIgnoreCase) == true).Value?.ToString() ?? "void")).ToList();
 
             this.AsFormattedText = attributeNamedArguments
-                .FirstOrDefault(a => a.Key.Equals("AsFormattedText"))
-                .Value.Value?.ToString().Equals(bool.TrueString) ?? false;
+                .FirstOrDefault(a => a.Key.Equals("AsFormattedText", StringComparison.Ordinal))
+                .Value.Value?.ToString()?.Equals(bool.TrueString, StringComparison.Ordinal) ?? false;
 
             this.Protected = attributeNamedArguments
-                .FirstOrDefault(a => a.Key.Equals("Protected"))
-                .Value.Value?.ToString().Equals(bool.TrueString) ?? false;
+                .FirstOrDefault(a => a.Key.Equals("Protected", StringComparison.Ordinal))
+                .Value.Value?.ToString()?.Equals(bool.TrueString, StringComparison.Ordinal) ?? false;
         }
 
         /// <summary>

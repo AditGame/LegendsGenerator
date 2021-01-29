@@ -67,7 +67,7 @@ namespace LegendsGenerator.Editor
             node.HandleCreate(sender, e);
 
             // Reattach all nodes so things work.
-            Context.Instance?.Attach();
+            Context.LastLoadedInstance?.Attach();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace LegendsGenerator.Editor
             node.HandleDelete(sender, e);
 
             // Reattach all nodes so things work.
-            Context.Instance?.Attach();
+            Context.LastLoadedInstance?.Attach();
         }
 
         /// <summary>

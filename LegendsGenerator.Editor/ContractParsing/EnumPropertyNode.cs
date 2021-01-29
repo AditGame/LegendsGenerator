@@ -64,9 +64,9 @@ namespace LegendsGenerator.Editor.ContractParsing
         public IList<string> EnumValues { get; }
 
         /// <inheritdoc/>
-        protected override List<ValidationIssue> GetLevelIssues()
+        protected override ICollection<ValidationIssue> GetLevelIssues()
         {
-            List<ValidationIssue> output = base.GetLevelIssues();
+            ICollection<ValidationIssue> output = base.GetLevelIssues();
 
             if (this.type.GetMember(this.EnumValue).FirstOrDefault()?.GetCustomAttribute<InvalidEnumValueAttribute>() != null)
             {

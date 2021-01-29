@@ -86,7 +86,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Returns all additional class-wide parameters, cluding upstream parameters.
         /// </summary>
         /// <returns>The list of upstream parameters.</returns>
-        protected virtual List<CompiledVariable> CombinedAdditionalParametersForClass()
+        protected virtual ICollection<CompiledVariable> CombinedAdditionalParametersForClass()
         {
             List<CompiledVariable> param = new List<CompiledVariable>();
 
@@ -111,7 +111,7 @@ namespace LegendsGenerator.Contracts.Definitions
         {
             if (this.Compiler == null)
             {
-                throw new ApplicationException("Compiler must be attached before this method is called.");
+                throw new InvalidOperationException("Compiler must be attached before this method is called.");
             }
 
             if (complex)
@@ -138,12 +138,12 @@ namespace LegendsGenerator.Contracts.Definitions
         {
             // Find the compiler exception
             Exception inner = ex;
-            while (ex is not ICompilerErrorException && inner.InnerException != null)
+            while (ex is not ICompilerError && inner.InnerException != null)
             {
                 inner = inner.InnerException;
             }
 
-            ICompilerErrorException? errorException = inner as ICompilerErrorException;
+            ICompilerError? errorException = inner as ICompilerError;
 
             // Find the top-level definition
             BaseDefinition upstream = this;
@@ -160,9 +160,9 @@ namespace LegendsGenerator.Contracts.Definitions
                 return new ConditionException("Unknown", conditionName, ex);
             }
 
-            if (errorException != null && errorException.Error != null)
+            if (errorException != null && errorException.ErrorMessage != null)
             {
-                return new ConditionException(topLevel.DefinitionName, conditionName, errorException.Error, ex);
+                return new ConditionException(topLevel.DefinitionName, conditionName, errorException.ErrorMessage, ex);
             }
             else
             {

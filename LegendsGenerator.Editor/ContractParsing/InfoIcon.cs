@@ -84,7 +84,9 @@ namespace LegendsGenerator.Editor.ContractParsing
             {
                 lock (mapInitLock)
                 {
+#pragma warning disable CA1508 // Avoid dead conditional code. False positive.
                     if (mapping == null)
+#pragma warning restore CA1508 // Avoid dead conditional code
                     {
                         IDictionary<EditorIcon, InfoIcon> map = new Dictionary<EditorIcon, InfoIcon>();
                         foreach (PropertyInfo prop in typeof(InfoIcon)

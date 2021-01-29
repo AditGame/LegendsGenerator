@@ -48,7 +48,12 @@ namespace LegendsGenerator.PathFinding
         /// <summary>
         /// The options to the pathfinding process.
         /// </summary>
-        private PathFinderOptions options;
+        private readonly PathFinderOptions options;
+
+        /// <summary>
+        /// The object to lock on.
+        /// </summary>
+        private readonly object lockObj = new object();
 
         /// <summary>
         /// The value to use to indicate a node is in the open list. This will be incremented in every run to avoid needed to reallocate between runs.
@@ -59,11 +64,6 @@ namespace LegendsGenerator.PathFinding
         /// The value to use to indicate a node is in the closed list. This will be incremented in every run to avoid needed to reallocate between runs.
         /// </summary>
         private byte closeNodeValue = 2;
-
-        /// <summary>
-        /// The object to lock on.
-        /// </summary>
-        private object lockObj = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathFinder"/> class.
@@ -121,7 +121,7 @@ namespace LegendsGenerator.PathFinding
         /// <param name="end">The end point.</param>
         /// <param name="waterCostRatio">The amount water costs based on normal movement.</param>
         /// <returns>The list of path points from start to end, or null if none is possible.</returns>
-        public List<PathFinderNode>? FindPath(Point start, Point end, float waterCostRatio)
+        public ICollection<PathFinderNode>? FindPath(Point start, Point end, float waterCostRatio)
         {
             lock (this.lockObj)
             {

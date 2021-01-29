@@ -43,7 +43,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
             this.Upstream?.Nodes.Remove(this);
 
             // Remove itself from the list of definitions
-            Context.Instance?.RemoveDefinition(this.Definition);
+            Context.LastLoadedInstance?.RemoveDefinition(this.Definition);
         }
     }
 }

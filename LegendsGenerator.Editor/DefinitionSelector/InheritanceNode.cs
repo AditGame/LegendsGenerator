@@ -6,6 +6,7 @@
 
 namespace LegendsGenerator.Editor.DefinitionSelector
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -50,7 +51,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// </summary>
         /// <param name="name">The name of this node.</param>
         /// <param name="nodes">The underlying nodes.</param>
-        public InheritanceNode(string name, IEnumerable<InheritanceNode> nodes)
+        protected InheritanceNode(string name, IEnumerable<InheritanceNode> nodes)
         {
             this.name = name;
 
@@ -66,7 +67,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// <param name="name">The name of this node.</param>
         /// <param name="definitions">The underlying definitions.</param>
         /// <param name="inheritanceList">The inheritance list.</param>
-        public InheritanceNode(string name, IEnumerable<Definition> definitions, ILookup<string?, Definition>? inheritanceList)
+        protected InheritanceNode(string name, IEnumerable<Definition> definitions, ILookup<string?, Definition>? inheritanceList)
         {
             this.name = name;
 
@@ -91,7 +92,7 @@ namespace LegendsGenerator.Editor.DefinitionSelector
         /// <param name="name">The name of this node.</param>
         /// <param name="definition">The definition of this node.</param>
         /// <param name="inheritanceList">The inheritance list.</param>
-        public InheritanceNode(string name, Definition? definition, ILookup<string?, Definition>? inheritanceList)
+        protected InheritanceNode(string name, Definition? definition, ILookup<string?, Definition>? inheritanceList)
         {
             this.name = name;
             this.Definition = definition;
@@ -103,19 +104,19 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                 {
                     node.PropertyChanged += (s, e) =>
                     {
-                        if (e.PropertyName?.Equals("Content") == true)
+                        if (e.PropertyName?.Equals("Content", StringComparison.Ordinal) == true)
                         {
                             this.Name = GetHeader(definition.BaseDefinition);
                         }
                     };
                 }
 
-                PropertyNode? inheritsNode = definition.Nodes.FirstOrDefault(n => n.Name.Equals("InheritsFrom"));
+                PropertyNode? inheritsNode = definition.Nodes.FirstOrDefault(n => n.Name.Equals("InheritsFrom", StringComparison.Ordinal));
                 if (inheritsNode != null)
                 {
                     inheritsNode.PropertyChanged += (s, e) =>
                     {
-                        if (e.PropertyName?.Equals("Content") == true)
+                        if (e.PropertyName?.Equals("Content", StringComparison.Ordinal) == true)
                         {
                             this.InheritsFrom = inheritsNode.Content as string;
                         }
@@ -286,9 +287,9 @@ namespace LegendsGenerator.Editor.DefinitionSelector
                     continue;
                 }
 
-                if (!thingDefs.Any(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key)))
+                if (!thingDefs.Any(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key, StringComparison.Ordinal)))
                 {
-                    var matchingInactiveEntry = inactiveThingDefs.FirstOrDefault(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key));
+                    var matchingInactiveEntry = inactiveThingDefs.FirstOrDefault(x => (x.BaseDefinition as BaseThingDefinition)!.Name.Equals(item.Key, StringComparison.Ordinal));
                     if (matchingInactiveEntry == null)
                     {
                         orphans.AddRange(item);

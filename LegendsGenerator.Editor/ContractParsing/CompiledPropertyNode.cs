@@ -6,13 +6,13 @@
 
 namespace LegendsGenerator.Editor.ContractParsing
 {
-    using LegendsGenerator.Contracts;
-    using LegendsGenerator.Contracts.Compiler;
-    using LegendsGenerator.Editor.Views;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using LegendsGenerator.Contracts;
+    using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Editor.Views;
 
     /// <summary>
     /// A node of compiled text.
@@ -67,7 +67,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             this.getParametersFunc = property.GetCompiledParameters;
 
-            PropertyNode? isComplexNode = this.Options.FirstOrDefault(o => o.Name.Equals("IsComplex"));
+            PropertyNode? isComplexNode = this.Options.FirstOrDefault(o => o.Name.Equals("IsComplex", StringComparison.Ordinal));
             if (isComplexNode != null)
             {
                 this.isComplexFunc = () => (bool)(isComplexNode.Content ?? false);

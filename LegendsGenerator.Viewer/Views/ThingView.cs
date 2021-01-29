@@ -149,7 +149,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the lines relevant to this Thing.
         /// </summary>
-        public List<LineView> ReleventLines
+        public IReadOnlyCollection<LineView> ReleventLines
         {
             get
             {
@@ -166,7 +166,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets the path parts relevant to this Thing.
         /// </summary>
-        public List<PathSquareView> ReleventPathParts
+        public IReadOnlyCollection<PathSquareView> ReleventPathParts
         {
             get
             {

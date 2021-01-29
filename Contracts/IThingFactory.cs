@@ -17,7 +17,7 @@ namespace LegendsGenerator
         /// <summary>
         /// The definitions.
         /// </summary>
-        DefinitionCollection Definitions { get; }
+        Definitions Definitions { get; }
 
         /// <summary>
         /// Creates a thing.

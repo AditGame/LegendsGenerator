@@ -21,6 +21,6 @@ namespace LegendsGenerator.Contracts.Definitions
         [ControlsDefinitionName]
         [Compiled(typeof(string), AsFormattedText = true)]
         [CompiledVariable("Subject", typeof(BaseThing))]
-        public string Name { get; set; } = UnsetString;
+        public override string Name { get; set; } = UnsetString;
     }
 }

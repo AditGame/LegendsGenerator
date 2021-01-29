@@ -49,7 +49,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         /// <param name="e">The event args.</param>
         private void HandlePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName?.Equals(nameof(this.Content)) == true)
+            if (e.PropertyName?.Equals(nameof(this.Content), StringComparison.Ordinal) == true)
             {
                 this.AddInnerDefinition(this.ContentsType, this.Content);
             }

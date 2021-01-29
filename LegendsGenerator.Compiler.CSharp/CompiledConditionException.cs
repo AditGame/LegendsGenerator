@@ -15,7 +15,7 @@ namespace LegendsGenerator.Compiler.CSharp
     /// Exception from the compilation process.
     /// </summary>
     [Serializable]
-    public class CompiledConditionException : Exception, ICompilerErrorException
+    public class CompiledConditionException : Exception, ICompilerError
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledConditionException"/> class.
@@ -56,7 +56,7 @@ namespace LegendsGenerator.Compiler.CSharp
             : base($"Condition [{condition}] failed with [{error}]", inner)
         {
             this.Condition = condition;
-            this.Error = error;
+            this.ErrorMessage = error;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace LegendsGenerator.Compiler.CSharp
             StreamingContext streamingContext)
         {
             this.Condition = serializationInfo.GetString(nameof(this.Condition));
-            this.Error = serializationInfo.GetString(nameof(this.Error));
+            this.ErrorMessage = serializationInfo.GetString(nameof(this.ErrorMessage));
         }
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <summary>
         /// Gets the text of the error.
         /// </summary>
-        public string? Error { get; }
+        public string? ErrorMessage { get; }
 
         /// <inheritdoc/>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(this.Condition), this.Condition);
-            info.AddValue(nameof(this.Error), this.Error);
+            info.AddValue(nameof(this.ErrorMessage), this.ErrorMessage);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class EditorIconAttribute : Attribute
+    public sealed class EditorIconAttribute : Attribute
     {
         /// <summary>
         /// Constructor yay.

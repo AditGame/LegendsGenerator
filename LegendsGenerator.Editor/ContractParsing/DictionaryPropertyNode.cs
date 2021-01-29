@@ -51,14 +51,9 @@ namespace LegendsGenerator.Editor.ContractParsing
 
             this.Nodes.Clear();
 
-            foreach (DictionaryEntry? kvp in this.AsDictionary())
+            foreach (DictionaryEntry kvp in this.AsDictionary())
             {
-                if (kvp == null)
-                {
-                    continue;
-                }
-
-                PropertyNode? node = this.CreateNode(kvp.Value.Key);
+                PropertyNode? node = this.CreateNode(kvp.Key);
                 if (node != null)
                 {
                     this.AddNode(node);
@@ -100,7 +95,7 @@ namespace LegendsGenerator.Editor.ContractParsing
             PropertyNode? node = this.HandleSetValue(BaseDefinition.UnsetString, def);
 
             // TODO: Better way to get the definition that owns this.
-            Context.Instance?.SelectedDefinition?.History.AddHistoryItem(
+            Context.LastLoadedInstance?.SelectedDefinition?.History.AddHistoryItem(
                 new ActionHistoryItem(
                     $"{this.FullName}.Items",
                     $"Item Count {this.AsDictionary().Count - 1}",

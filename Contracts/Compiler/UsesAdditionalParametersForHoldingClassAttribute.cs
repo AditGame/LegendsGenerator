@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Compiler
     /// If set on a class, the AdditionalParametersForClass on any holding class will be used in this class as well.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class UsesAdditionalParametersForHoldingClassAttribute : Attribute
+    public sealed class UsesAdditionalParametersForHoldingClassAttribute : Attribute
     {
     }
 }

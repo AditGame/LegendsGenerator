@@ -8,7 +8,7 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
 {
     public abstract class BaseTypeMember
     {
-        public BaseTypeMember(string name, Type returnType)
+        protected BaseTypeMember(string name, Type returnType)
         {
             this.Name = name;
             this.ReturnType = returnType;

@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
     /// Represents an enum value that can't actually be used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class InvalidEnumValueAttribute : Attribute
+    public sealed class InvalidEnumValueAttribute : Attribute
     {
     }
 }

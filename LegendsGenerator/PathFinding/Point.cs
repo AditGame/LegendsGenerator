@@ -67,9 +67,9 @@ namespace LegendsGenerator.PathFinding
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? other)
+        public override bool Equals(object? obj)
         {
-            if (other is Point point)
+            if (obj is Point point)
             {
                 return this.Equals(point);
             }

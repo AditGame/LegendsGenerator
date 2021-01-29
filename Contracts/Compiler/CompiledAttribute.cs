@@ -10,7 +10,9 @@ namespace LegendsGenerator.Contracts.Compiler
     /// Indicates the proeperty should be compiled.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
+#pragma warning disable CA1813 // Avoid unsealed attributes. Required, performance is purely build time so it's not a major concern.
     public class CompiledAttribute : Attribute
+#pragma warning restore CA1813 // Avoid unsealed attributes
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledAttribute"/> class.

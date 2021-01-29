@@ -4,20 +4,14 @@
 
 namespace LegendsGenerator.Contracts.Compiler
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Interface for exceptions with compiler errors.
     /// </summary>
-    public interface ICompilerErrorException
+    public interface ICompilerError
     {
         /// <summary>
         /// Gets the error of this compilation.
         /// </summary>
-        public string? Error { get; }
+        public string? ErrorMessage { get; }
     }
 }

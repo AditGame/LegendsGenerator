@@ -6,6 +6,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text.Json.Serialization;
 
@@ -94,7 +95,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// <summary>
         /// Gets or sets the results of this event.
         /// </summary>
-        public List<EventResultDefinition> Results { get; set; } = new List<EventResultDefinition>();
+        public Collection<EventResultDefinition> Results { get; set; } = new Collection<EventResultDefinition>();
 
         /// <summary>
         /// Gets additional variable names for the Description method.

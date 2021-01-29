@@ -6,6 +6,7 @@ using LegendsGenerator.Contracts.Compiler;
 using LegendsGenerator.Contracts.Things;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
@@ -49,13 +50,13 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         /// Gets or sets the applicable Definition names which this relates to.
         /// If empty, any Definition is allowed.
         /// </summary>
-        public List<string> Definitions { get; set; } = new List<string>();
+        public Collection<string> Definitions { get; set; } = new Collection<string>();
 
         /// <summary>
         /// Gets or sets the list of quests the Object must have to match (Must have all quests).
         /// If empty, quests are not considered when matching.
         /// </summary>
-        public List<string> Quests { get; set; } = new List<string>();
+        public Collection<string> Quests { get; set; } = new Collection<string>();
 
         /// <summary>
         /// Gets the type of the Object variable.
