@@ -14,6 +14,10 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record WorldSquare : BaseThing
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorldSquare"/> class.
+        /// </summary>
+        /// <param name="definition">The world square definition.</param>
         public WorldSquare(WorldSquareDefinition definition)
             : base(definition)
         {
@@ -22,7 +26,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets the site definition.
         /// </summary>
-        public WorldSquareDefinition Definition => BaseDefinition as WorldSquareDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
+        public WorldSquareDefinition Definition => this.BaseDefinition as WorldSquareDefinition ?? throw new InvalidOperationException("Definition is wrong type.");
 
         /// <inheritdoc/>
         public override ThingType ThingType => ThingType.WorldSquare;

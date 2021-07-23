@@ -21,7 +21,7 @@ namespace LegendsGenerator
         /// </summary>
         /// <param name="definitions">The definitions.</param>
         public ThingFactory(
-            Definitions definitions)
+            DefinitionsCollection definitions)
         {
             this.Definitions = definitions;
             this.Definitions.CompileInheritance();
@@ -30,7 +30,7 @@ namespace LegendsGenerator
         /// <summary>
         /// Gets the definitions.
         /// </summary>
-        public Definitions Definitions { get; }
+        public DefinitionsCollection Definitions { get; }
 
         /// <inheritdoc/>
         public BaseThing CreateThing(Random rdm, int x, int y, ThingType type, string definitionName)

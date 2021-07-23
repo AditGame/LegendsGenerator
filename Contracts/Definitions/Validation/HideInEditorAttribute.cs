@@ -13,7 +13,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
     public sealed class HideInEditorAttribute : Attribute
     {
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="HideInEditorAttribute"/> class.
         /// </summary>
         /// <param name="condition">The condition to process. 'value' is the only supported variable, and it is the object holding this property.</param>
         public HideInEditorAttribute(string condition)
@@ -22,7 +22,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
         }
 
         /// <summary>
-        /// Gets or sets the string C# condition to hide attributes.
+        /// Gets the string C# condition to hide attributes.
         /// </summary>
         /// <remarks>One property is passed in, value, which is the holding property.</remarks>
         public string Condition { get; }

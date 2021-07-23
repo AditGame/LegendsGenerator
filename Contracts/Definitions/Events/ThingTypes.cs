@@ -4,9 +4,9 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using LegendsGenerator.Contracts.Things;
     using System;
     using System.Text.Json.Serialization;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The types of things.
@@ -46,7 +46,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         Quest,
 
         /// <summary>
-        /// The world!
+        /// The world!.
         /// </summary>
         World,
     }
@@ -54,7 +54,9 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     /// <summary>
     /// Extensions for the ThingType enum.
     /// </summary>
+#pragma warning disable SA1649 // File name should match first type name. This preferred.
     public static class ThingTypeExtensions
+#pragma warning restore SA1649 // File name should match first type name
     {
         /// <summary>
         /// Gets the C# type associated with this thing type.
@@ -65,7 +67,10 @@ namespace LegendsGenerator.Contracts.Definitions.Events
         {
             ThingType.Site => typeof(Site),
             ThingType.NotablePerson => typeof(NotablePerson),
+            ThingType.Unit => typeof(Unit),
             ThingType.WorldSquare => typeof(WorldSquare),
+            ThingType.Quest => typeof(Quest),
+            ThingType.World => typeof(World),
             _ => typeof(BaseThing),
         };
     }

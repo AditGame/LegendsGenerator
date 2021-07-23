@@ -7,7 +7,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>
-    /// A definition of a result which destroys something
+    /// A definition of a result which destroys something.
     /// </summary>
     [UsesAdditionalParametersForHoldingClass]
     public partial class DestroyDefinition : BaseEffectDefinition

@@ -14,6 +14,10 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseMovingThing : BaseThing
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseMovingThing"/> class.
+        /// </summary>
+        /// <param name="definition">The thing definition.</param>
         protected BaseMovingThing(BaseThingDefinition definition)
             : base(definition)
         {
@@ -22,7 +26,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets the definition as a moving thing definition.
         /// </summary>
-        public BaseMovingThingDefinition MovingThingDefinition => 
+        public BaseMovingThingDefinition MovingThingDefinition =>
             this.BaseDefinition as BaseMovingThingDefinition ?? throw new InvalidOperationException("Unable to cast definition to MovingThing definition.");
 
         /// <summary>

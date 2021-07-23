@@ -33,6 +33,7 @@ namespace LegendsGenerator.Contracts.Definitions
             WriteIndented = true,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             ReadCommentHandling = JsonCommentHandling.Skip,
+
             // The Editor will have null entries in lists so this will remove them at serialization time.
             Converters = { new NullListEntryConverterFactory() },
         };
@@ -43,7 +44,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <param name="compiler">The condition compiler to use.</param>
         /// <param name="path">The path to the directory.</param>
         /// <returns>A tuple of definitions and events from the directory.</returns>
-        public static Definitions DeserializeFromDirectory(IConditionCompiler compiler, string path)
+        public static DefinitionsCollection DeserializeFromDirectory(IConditionCompiler compiler, string path)
         {
             List<BaseDefinition> defs = new List<BaseDefinition>();
             foreach (string file in Directory.EnumerateFiles(path, "*.json", SearchOption.AllDirectories))
@@ -65,7 +66,7 @@ namespace LegendsGenerator.Contracts.Definitions
                 }
             }
 
-            var definitions = new Definitions(defs);
+            var definitions = new DefinitionsCollection(defs);
             definitions.Attach(compiler);
             return definitions;
         }
@@ -74,14 +75,14 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Reserializes all definitions to files based on the SoureFile property.
         /// </summary>
         /// <param name="definitions">The definitions.</param>
-        public static void ReserializeToFiles(Definitions definitions)
+        public static void ReserializeToFiles(DefinitionsCollection definitions)
         {
             if (definitions.IsInheritanceCompiled)
             {
                 throw new InvalidOperationException("Can not re-serialize after inheritance has been compiled.");
             }
 
-            IEnumerable<IGrouping<string, ITopLevelDefinition>> byFile = 
+            IEnumerable<IGrouping<string, ITopLevelDefinition>> byFile =
                 definitions.AllDefinitions.OfType<ITopLevelDefinition>().GroupBy(d => d.SourceFile);
 
             // Alert early if any definition is invalid.
@@ -94,7 +95,7 @@ namespace LegendsGenerator.Contracts.Definitions
 
             foreach (IGrouping<string, ITopLevelDefinition> file in byFile)
             {
-                SerializeToFile(new Definitions(file.OfType<BaseDefinition>()), file.Key);
+                SerializeToFile(new DefinitionsCollection(file.OfType<BaseDefinition>()), file.Key);
             }
         }
 
@@ -103,7 +104,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         /// <param name="definitions">The definitions to serialize.</param>
         /// <param name="filename">The filename to serialize to.</param>
-        public static void SerializeToFile(Definitions definitions, string filename)
+        public static void SerializeToFile(DefinitionsCollection definitions, string filename)
         {
             var definitionFile = new DefinitionFile(definitions);
             string serialized = JsonSerializer.Serialize(definitionFile, JsonOptions);

@@ -13,6 +13,10 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record NotablePerson : BaseMovingThing, ICanEnterSites
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotablePerson"/> class.
+        /// </summary>
+        /// <param name="definition">The definition.</param>
         public NotablePerson(NotablePersonDefinition definition)
             : base(definition)
         {

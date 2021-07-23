@@ -1,7 +1,13 @@
-﻿using System;
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="CompiledDictionaryAttribute.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Contracts.Compiler
 {
+    using System;
+
     /// <summary>
     /// Indicates the property's values should be compiled.
     /// </summary>

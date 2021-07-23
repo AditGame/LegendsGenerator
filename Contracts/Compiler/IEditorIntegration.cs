@@ -6,9 +6,9 @@
 
 namespace LegendsGenerator.Compiler.CSharp
 {
-    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using System;
     using System.Collections.Generic;
+    using LegendsGenerator.Contracts.Compiler.EditorIntegration;
 
     /// <summary>
     /// Integration for the editor from the compiler info.

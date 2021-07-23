@@ -23,6 +23,11 @@ namespace LegendsGenerator.Contracts
         /// </summary>
         private float? movementCost;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GridSquare"/> class.
+        /// </summary>
+        /// <param name="x">The X coord.</param>
+        /// <param name="y">The Y coord.</param>
         public GridSquare(int x, int y)
         {
             this.X = x;
@@ -30,24 +35,24 @@ namespace LegendsGenerator.Contracts
         }
 
         /// <summary>
-        /// Gets the things in this grid square.
-        /// </summary>
-        private IList<BaseThing> ThingsInSquare { get; } = new List<BaseThing>();
-
-        /// <summary>
         /// Gets or sets the terrain of this square.
         /// </summary>
         public WorldSquare? SquareDefinition { get; set; }
 
         /// <summary>
-        /// The X coord of this square.
+        /// Gets the X coord of this square.
         /// </summary>
         public int X { get; }
 
         /// <summary>
-        /// The Y coord of this square.
+        /// Gets the Y coord of this square.
         /// </summary>
         public int Y { get; }
+
+        /// <summary>
+        /// Gets the things in this grid square.
+        /// </summary>
+        private IList<BaseThing> ThingsInSquare { get; } = new List<BaseThing>();
 
         /// <summary>
         /// Gets the random number generator for this square.
@@ -101,7 +106,7 @@ namespace LegendsGenerator.Contracts
         /// <returns>All thing matching type.</returns>
         public IEnumerable<BaseThing> GetThings(ThingType type)
         {
-            return GetThings().Where(x => x.ThingType == type);
+            return this.GetThings().Where(x => x.ThingType == type);
         }
 
         /// <summary>

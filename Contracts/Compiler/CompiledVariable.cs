@@ -16,7 +16,7 @@ namespace LegendsGenerator.Contracts.Compiler
     public class CompiledVariable
     {
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="CompiledVariable"/> class.
         /// </summary>
         /// <param name="name">The name of the variable.</param>
         /// <param name="type">The type of the variable.</param>
@@ -36,6 +36,7 @@ namespace LegendsGenerator.Contracts.Compiler
         /// </summary>
         public Type Type { get; }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"{this.Name} ({this.Type.Name})";

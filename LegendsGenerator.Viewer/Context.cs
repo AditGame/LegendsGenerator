@@ -30,6 +30,11 @@ namespace LegendsGenerator.Viewer
         private static Context instance = new Context();
 
         /// <summary>
+        /// backing field for SelectedTabIndex.
+        /// </summary>
+        private int selectedTabIndex;
+
+        /// <summary>
         /// The backing field for current step.
         /// </summary>
         private int currentStep;
@@ -211,6 +216,10 @@ namespace LegendsGenerator.Viewer
                     this.OccurredEvents.Clear();
                     this.CurrentWorld.OccurredEvents.ToList().ForEach(this.OccurredEvents.Add);
 
+                    // We reverse the graveyard so the newest deaths are on top.
+                    this.Graveyard.Clear();
+                    this.CurrentWorld.Graveyard.Reverse().ToList().ForEach(g => this.Graveyard.Add(new GraveyardEntryView(g, this.CurrentWorld)));
+
                     Guid? selectedThingId = this.SelectedThing?.ThingId;
 
                     this.squares = this.CurrentWorld.Grid.AllGridEntries.Select(x => new SquareView(x.Square)).ToList();
@@ -264,6 +273,23 @@ namespace LegendsGenerator.Viewer
                 this.isGeneratingHistory = value;
                 this.OnPropertyChanged(nameof(this.IsGeneratingHistory));
                 this.OnPropertyChanged(nameof(this.IsNotGeneratingHistory));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the currently selected tab on the sidebar.
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return this.selectedTabIndex;
+            }
+
+            set
+            {
+                this.selectedTabIndex = value;
+                this.OnPropertyChanged(nameof(this.SelectedTabIndex));
             }
         }
 
@@ -398,6 +424,11 @@ namespace LegendsGenerator.Viewer
         /// Gets the list of occurred events for the previous step.
         /// </summary>
         public ObservableCollection<OccurredEvent> OccurredEvents { get; } = new ObservableCollection<OccurredEvent>();
+
+        /// <summary>
+        /// Gets the list of everything that has been destroyed in this world.
+        /// </summary>
+        public ObservableCollection<GraveyardEntryView> Graveyard { get; } = new ObservableCollection<GraveyardEntryView>();
 
         /// <summary>
         /// Gets the list of things in an event.

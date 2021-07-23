@@ -1,14 +1,26 @@
-﻿using System.Collections.Generic;
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="ValidationIssue.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Contracts.Definitions.Validation
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents an issue with validation.
     /// </summary>
     public class ValidationIssue
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationIssue"/> class.
+        /// </summary>
+        /// <param name="level">The level of issue (error, warning, etc).</param>
+        /// <param name="description">A description of the issue.</param>
+        /// <param name="stack">The stack of definitions to the issue.</param>
         public ValidationIssue(
-            ValidationLevel level, 
+            ValidationLevel level,
             string description,
             params string[] stack)
         {
@@ -35,7 +47,7 @@ namespace LegendsGenerator.Contracts.Definitions.Validation
         /// <summary>
         /// Gets a nice display string of the validaiton failure.
         /// </summary>
-        public string DisplayString => $"{this.Level} {string.Join(".", this.Stack)}: {Description}";
+        public string DisplayString => $"{this.Level} {string.Join(".", this.Stack)}: {this.Description}";
 
         /// <summary>
         /// Clones this validation issue with additional stack.

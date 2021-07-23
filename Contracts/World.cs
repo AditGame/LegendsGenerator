@@ -7,6 +7,7 @@ namespace LegendsGenerator.Contracts
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
@@ -30,7 +31,7 @@ namespace LegendsGenerator.Contracts
         public int WorldSeed { get; init; } = new Random().Next();
 
         /// <summary>
-        /// Gets the step which this world is currently in. Starts at 1.
+        /// Gets or sets the step which this world is currently in. Starts at 1.
         /// </summary>
         public int StepCount
         {
@@ -57,7 +58,12 @@ namespace LegendsGenerator.Contracts
         public IList<OccurredEvent> OccurredEvents { get; init; } = new List<OccurredEvent>();
 
         /// <summary>
-        /// Gets a thing in the world.
+        /// Gets the graveyard, a listing of all things which have been destroyed so far.
+        /// </summary>
+        public IList<GraveyardEntry> Graveyard { get; init; } = new List<GraveyardEntry>();
+
+        /// <summary>
+        /// Gets a thing, either the world, in the world, or in the graveyard.
         /// </summary>
         /// <param name="thingId">The thing ID.</param>
         /// <param name="result">The thing, if found.</param>
@@ -71,12 +77,12 @@ namespace LegendsGenerator.Contracts
 
             // Re-search the grid for things. This is good in case things got added to the grid in the meantime somehow.
             this.searchByGuidHash.Clear();
-            foreach (var (_, _, square) in this.Grid.AllGridEntries)
+
+            var allThings = this.Grid.AllGridEntries.SelectMany(x => x.Square.GetThings());
+            allThings = allThings.Concat(this.Graveyard.Select(x => x.Thing));
+            foreach (BaseThing thing in allThings)
             {
-                foreach (BaseThing thing in square.GetThings())
-                {
-                    this.searchByGuidHash[thing.ThingId] = thing;
-                }
+                this.searchByGuidHash[thing.ThingId] = thing;
             }
 
             if (this.searchByGuidHash.TryGetValue(thingId, out result))

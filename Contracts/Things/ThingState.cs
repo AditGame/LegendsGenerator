@@ -4,14 +4,8 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
-    /// THe state of a thing.
+    /// The state of a thing while being created.
     /// </summary>
     public enum ThingState
     {

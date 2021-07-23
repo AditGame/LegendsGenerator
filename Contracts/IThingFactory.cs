@@ -1,6 +1,8 @@
-﻿// <copyright file="ThingFactory.cs" company="Tom Luppi">
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="IThingFactory.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator
 {
@@ -15,9 +17,9 @@ namespace LegendsGenerator
     public interface IThingFactory
     {
         /// <summary>
-        /// The definitions.
+        /// Gets the definitions which will be searched through to create things.
         /// </summary>
-        Definitions Definitions { get; }
+        DefinitionsCollection Definitions { get; }
 
         /// <summary>
         /// Creates a thing.

@@ -10,6 +10,9 @@ namespace LegendsGenerator.Contracts.Definitions.Events
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
+    /// <summary>
+    /// A subject is what an event acts on, this lets you select the subject.
+    /// </summary>
     public partial class SubjectDefinition : BaseDefinition
     {
         /// <summary>

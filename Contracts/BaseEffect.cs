@@ -1,4 +1,4 @@
-﻿// <copyright file="Effect.cs" company="Tom Luppi">
+﻿// <copyright file="BaseEffect.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 

@@ -4,9 +4,9 @@
 
 namespace LegendsGenerator.Contracts.Compiler
 {
-    using LegendsGenerator.Contracts.Things;
     using System;
     using System.Collections.Generic;
+    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// Interface for compiled conditions.

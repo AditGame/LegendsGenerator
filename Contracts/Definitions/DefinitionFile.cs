@@ -26,7 +26,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// Initializes a new instance of the <see cref="DefinitionFile"/> class.
         /// </summary>
         /// <param name="definitions">The list of definitions.</param>
-        public DefinitionFile(Definitions definitions)
+        public DefinitionFile(DefinitionsCollection definitions)
         {
             this.AllDefinitions = definitions.AllDefinitions.ToCollection();
         }
@@ -63,7 +63,6 @@ namespace LegendsGenerator.Contracts.Definitions
                 this.AllDefinitions = defs.ToCollection();
             }
         }
-            
 
         /// <summary>
         /// Gets or sets the list of site definitions.

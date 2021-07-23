@@ -8,6 +8,7 @@ namespace LegendsGenerator.Viewer.Views
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace LegendsGenerator.Viewer.Views
         /// </summary>
         public string AttributeEffect => this.effect switch
         {
-            AttributeEffect attr => attr.Manitude.ToString(),
+            AttributeEffect attr => attr.Manitude.ToString(CultureInfo.CurrentCulture),
             AspectEffect aspect => aspect.Value,
             _ => string.Empty,
         };
@@ -70,7 +71,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Gets a string versino of the duration.
         /// </summary>
-        public string DurationString => this.Duration == -1 ? "Never" : this.Duration.ToString();
+        public string DurationString => this.Duration == -1 ? "Never" : this.Duration.ToString(CultureInfo.CurrentCulture);
 
         /// <summary>
         /// Gets the string version of the effect.

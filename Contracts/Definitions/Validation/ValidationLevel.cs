@@ -1,4 +1,10 @@
-﻿namespace LegendsGenerator.Contracts.Definitions.Validation
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="ValidationLevel.cs" company="Tom Luppi">
+//     Copyright (c) Tom Luppi.  All rights reserved.
+// </copyright>
+// -------------------------------------------------------------------------------------------------
+
+namespace LegendsGenerator.Contracts.Definitions.Validation
 {
     /// <summary>
     /// The level of validation issue.
@@ -23,6 +29,6 @@
         /// <summary>
         /// Issue.
         /// </summary>
-        Error
+        Error,
     }
 }

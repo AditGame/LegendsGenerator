@@ -14,6 +14,10 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public record Site : BaseThing
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Site"/> class.
+        /// </summary>
+        /// <param name="definition">The definition.</param>
         public Site(SiteDefinition definition)
             : base(definition)
         {
@@ -22,7 +26,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets the site definition.
         /// </summary>
-        public SiteDefinition Definition => BaseDefinition as SiteDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
+        public SiteDefinition Definition => this.BaseDefinition as SiteDefinition ?? throw new InvalidOperationException("Definition time is wrong type.");
 
         /// <summary>
         /// Gets the name of this Thing Type.

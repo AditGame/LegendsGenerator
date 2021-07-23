@@ -86,7 +86,9 @@ namespace LegendsGenerator.ContractsGenerator.Writer
             }
             else
             {
+#pragma warning disable CA1508 // Avoid dead conditional code. False positive.
                 if (!string.IsNullOrWhiteSpace(this.SummaryDoc) && this.SummaryDoc != null)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     cw.SummaryDoc(this.SummaryDoc);
                 }

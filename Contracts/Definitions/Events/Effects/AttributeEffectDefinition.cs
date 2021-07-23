@@ -1,6 +1,8 @@
-﻿// <copyright file="EffectDefinition.cs" company="Tom Luppi">
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="AttributeEffectDefinition.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {

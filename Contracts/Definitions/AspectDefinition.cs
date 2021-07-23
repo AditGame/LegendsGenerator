@@ -4,11 +4,11 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
+    using System;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Compiler.EditorIntegration;
     using LegendsGenerator.Contracts.Definitions.Validation;
     using LegendsGenerator.Contracts.Things;
-    using System;
 
     /// <summary>
     /// The definition of an Aspect.
@@ -40,7 +40,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Evaluates the expressions in the Value property with the given parameters.
         /// </summary>
-        /// <param name="rdm">The random number generator</param>
+        /// <param name="rdm">The random number generator.</param>
         /// <returns>The result of evaluation.</returns>
         public string EvalValueSafe(Random rdm)
         {
@@ -55,7 +55,7 @@ namespace LegendsGenerator.Contracts.Definitions
         /// <summary>
         /// Evaluates the expressions in the Value property with the given parameters.
         /// </summary>
-        /// <param name="rdm">The random number generator</param>
+        /// <param name="rdm">The random number generator.</param>
         /// <param name="thing">The thing.</param>
         /// <returns>The result of evaluation.</returns>
         public string EvalDynamicValueSafe(Random rdm, BaseThing thing)

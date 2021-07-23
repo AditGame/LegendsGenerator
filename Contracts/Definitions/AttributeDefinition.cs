@@ -13,14 +13,14 @@ namespace LegendsGenerator.Contracts.Definitions
     public partial class AttributeDefinition : BaseDefinition
     {
         /// <summary>
-        /// Gets the base value.
+        /// Gets or sets the base value.
         /// </summary>
         [Compiled(typeof(int))]
         [EditorIcon(EditorIcon.CompiledStatic)]
         public string BaseValue { get; set; } = "0";
 
         /// <summary>
-        /// Gets the dynamic value.
+        /// Gets or sets the dynamic value.
         /// </summary>
         [Compiled(typeof(int))]
         [CompiledVariable("Subject", typeof(BaseDefinition))]

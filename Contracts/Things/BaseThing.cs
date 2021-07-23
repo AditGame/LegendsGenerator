@@ -19,6 +19,10 @@ namespace LegendsGenerator.Contracts.Things
     /// </summary>
     public abstract record BaseThing
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseThing"/> class.
+        /// </summary>
+        /// <param name="definition">Thing definition.</param>
         protected BaseThing(BaseThingDefinition definition)
         {
             this.BaseDefinition = definition;
@@ -182,7 +186,7 @@ namespace LegendsGenerator.Contracts.Things
                 return null;
             }
 
-            int maxAge = aspectEffects.Max(X => X.TookEffect);
+            int maxAge = aspectEffects.Max(x => x.TookEffect);
             return aspectEffects.First(x => x.TookEffect == maxAge);
         }
 
@@ -225,6 +229,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Calculates the effective aspect value based on the current effects.
         /// </summary>
+        /// <typeparam name="T">The type to coerce to.</typeparam>
         /// <param name="aspect">The aspect to get.</param>
         /// <param name="defaultValue">The default value, if the aspect does not exist.</param>
         /// <returns>The effective aspect value.</returns>
@@ -298,7 +303,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder($"{ThingType} {Name}");
+            StringBuilder sb = new StringBuilder($"{this.ThingType} {this.Name}");
             sb.AppendLine();
 
             foreach (AttributeEffect effect in this.AttributeEffects)

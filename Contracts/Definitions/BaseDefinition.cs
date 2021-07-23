@@ -22,7 +22,7 @@ namespace LegendsGenerator.Contracts.Definitions
         public static readonly string UnsetString = "UNSET";
 
         /// <summary>
-        /// Gets the condition compiler
+        /// Gets the condition compiler.
         /// </summary>
         protected IConditionCompiler? Compiler { get; private set; }
 
@@ -103,10 +103,10 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         /// <typeparam name="T">The return type of the condition.</typeparam>
         /// <param name="condition">The condition to process.</param>
-        /// <param name="formattedText">True to represent it as formatted text (complex overrules)</param>
+        /// <param name="formattedText">True to represent it as formatted text (complex overrules).</param>
         /// <param name="complex">True to represent as a complex condition.</param>
         /// <param name="parameters">The parameters list of the strings.</param>
-        /// <returns></returns>
+        /// <returns>A compiled condition.</returns>
         protected ICompiledCondition<T> CreateCondition<T>(string condition, bool formattedText, bool complex, IList<CompiledVariable> parameters)
         {
             if (this.Compiler == null)
@@ -143,8 +143,6 @@ namespace LegendsGenerator.Contracts.Definitions
                 inner = inner.InnerException;
             }
 
-            ICompilerError? errorException = inner as ICompilerError;
-
             // Find the top-level definition
             BaseDefinition upstream = this;
             while (upstream is not ITopLevelDefinition && upstream.UpsteamDefinition != null)
@@ -152,15 +150,13 @@ namespace LegendsGenerator.Contracts.Definitions
                 upstream = upstream.UpsteamDefinition;
             }
 
-            ITopLevelDefinition? topLevel = upstream as ITopLevelDefinition;
-
-            if (topLevel == null)
+            if (upstream is not ITopLevelDefinition topLevel)
             {
                 // No idea how to handle this.
                 return new ConditionException("Unknown", conditionName, ex);
             }
 
-            if (errorException != null && errorException.ErrorMessage != null)
+            if (inner is ICompilerError errorException && errorException.ErrorMessage != null)
             {
                 return new ConditionException(topLevel.DefinitionName, conditionName, errorException.ErrorMessage, ex);
             }

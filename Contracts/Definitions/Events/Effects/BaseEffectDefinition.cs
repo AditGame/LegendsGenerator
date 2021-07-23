@@ -9,6 +9,9 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
+    /// <summary>
+    /// Base definition of an effect.
+    /// </summary>
     [UsesAdditionalParametersForHoldingClass]
     public partial class BaseEffectDefinition : BaseDefinition
     {

@@ -109,7 +109,7 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <inheritdoc/>
         public ICompiledCondition<T> AsSimple<T>(string condition, IEnumerable<CompiledVariable> variables)
         {
-            if (!condition.EndsWith(";"))
+            if (!condition.EndsWith(";", StringComparison.Ordinal))
             {
                 condition += ";";
             }

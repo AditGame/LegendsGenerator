@@ -2,7 +2,6 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
     using System.Collections.Generic;

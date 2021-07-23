@@ -5,11 +5,10 @@
 namespace LegendsGenerator.Contracts.Things
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
+    /// <summary>
+    /// Indicates that a Thing can enter a site.
+    /// </summary>
     public interface ICanEnterSites
     {
         /// <summary>

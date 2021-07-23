@@ -29,7 +29,7 @@ namespace LegendsGenerator
         /// <summary>
         /// The collection of definitions.
         /// </summary>
-        private readonly Definitions definitions;
+        private readonly DefinitionsCollection definitions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
@@ -47,7 +47,7 @@ namespace LegendsGenerator
         /// Initializes a new instance of the <see cref="HistoryGenerator"/> class.
         /// </summary>
         /// <param name="definitions">The definitions collection to use.</param>
-        public HistoryGenerator(Definitions definitions)
+        public HistoryGenerator(DefinitionsCollection definitions)
         {
             this.definitions = definitions;
             this.thingFactory = new ThingFactory(definitions);
@@ -58,7 +58,7 @@ namespace LegendsGenerator
         /// </summary>
         /// <param name="thingFactory">The thing factory to use.</param>
         /// <param name="definitions">The definitions collection to use.</param>
-        public HistoryGenerator(ThingFactory thingFactory, Definitions definitions)
+        public HistoryGenerator(ThingFactory thingFactory, DefinitionsCollection definitions)
         {
             this.definitions = definitions;
             this.thingFactory = thingFactory;
@@ -88,6 +88,7 @@ namespace LegendsGenerator
                 StepCount = currWorld.StepCount + 1,
                 Grid = currWorld.Grid.CloneWithoutThings(),
                 OccurredEvents = new List<OccurredEvent>(),
+                Graveyard = new List<GraveyardEntry>(currWorld.Graveyard), // Graveyard is appended to, never removed from.
             };
 
             IDictionary<ThingType, List<EventDefinition>> eventsBySubjectType =
@@ -139,11 +140,19 @@ namespace LegendsGenerator
                 }
             }
 
-            foreach (var stagedThing in stagedThings.Where(t => !t.Value.Destroyed))
+            foreach (var stagedThing in stagedThings)
             {
                 Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, stagedThing.Value.Thing.ThingId, RandomStage.Finalization);
                 stagedThing.Value.Thing.FinalizeConstruction(rdm);
-                nextWorld.Grid.AddThing(stagedThing.Value.Thing);
+
+                if (stagedThing.Value.Destroyed)
+                {
+                    nextWorld.Graveyard.Add(new GraveyardEntry(stagedThing.Value.Thing, nextWorld.StepCount));
+                }
+                else
+                {
+                    nextWorld.Grid.AddThing(stagedThing.Value.Thing);
+                }
             }
 
             return nextWorld;

@@ -2,14 +2,14 @@
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 
-using LegendsGenerator.Contracts.Compiler;
-using LegendsGenerator.Contracts.Things;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using LegendsGenerator.Contracts.Compiler;
+    using LegendsGenerator.Contracts.Things;
+
     /// <summary>
     /// The definition of an object in an event.
     /// </summary>

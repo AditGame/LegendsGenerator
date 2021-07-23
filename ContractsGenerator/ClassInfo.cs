@@ -95,14 +95,14 @@ namespace CompiledDefinitionSourceGenerator
             this.AdditionalParametersForMethods = type
                 .GetMembersRecursive()
                 .OfType<IMethodSymbol>()
-                .Where(x => x.Name.StartsWith(AdditionalParamtersMethodPrefix))
+                .Where(x => x.Name.StartsWith(AdditionalParamtersMethodPrefix, System.StringComparison.Ordinal))
                 .Select(x => x.Name)
                 .ToArray();
 
             this.TypeOfMethods = type
                 .GetMembersRecursive()
                 .OfType<IMethodSymbol>()
-                .Where(x => x.Name.StartsWith(TypeOfMethodPrefix))
+                .Where(x => x.Name.StartsWith(TypeOfMethodPrefix, System.StringComparison.Ordinal))
                 .Select(x => x.Name)
                 .ToArray();
         }

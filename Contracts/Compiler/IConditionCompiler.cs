@@ -4,8 +4,8 @@
 
 namespace LegendsGenerator.Contracts.Compiler
 {
-    using LegendsGenerator.Compiler.CSharp;
     using System.Collections.Generic;
+    using LegendsGenerator.Compiler.CSharp;
 
     /// <summary>
     /// Compiles a condition into something the system can understand.

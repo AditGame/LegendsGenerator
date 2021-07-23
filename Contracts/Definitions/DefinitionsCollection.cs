@@ -1,10 +1,13 @@
-﻿// <copyright file="Definitionss.cs" company="Tom Luppi">
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="DefinitionsCollection.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
+// -------------------------------------------------------------------------------------------------
 
 namespace LegendsGenerator.Contracts.Definitions
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -14,13 +17,15 @@ namespace LegendsGenerator.Contracts.Definitions
     /// <summary>
     /// A collection of all definitions.
     /// </summary>
-    public class Definitions
+#pragma warning disable CA1010 // Generic interface should also be implemented. Only RO collection.
+    public sealed class DefinitionsCollection : ICollection, IReadOnlyCollection<BaseDefinition>
+#pragma warning restore CA1010 // Generic interface should also be implemented
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Definitions"/> class.
+        /// Initializes a new instance of the <see cref="DefinitionsCollection"/> class.
         /// </summary>
         /// <param name="definitions">The list of definitions.</param>
-        public Definitions(IEnumerable<BaseDefinition> definitions)
+        public DefinitionsCollection(IEnumerable<BaseDefinition> definitions)
         {
             // We store all definitions in case a new one is added and we forget to add it to the below lists.
             this.AllDefinitions = definitions.ToList();
@@ -80,21 +85,30 @@ namespace LegendsGenerator.Contracts.Definitions
         /// </summary>
         public bool IsInheritanceCompiled { get; private set; }
 
+        /// <inheritdoc/>
+        public int Count => this.AllDefinitions.Count;
+
+        /// <inheritdoc/>
+        bool ICollection.IsSynchronized => true;
+
+        /// <inheritdoc/>
+        object ICollection.SyncRoot { get; } = new object();
+
         /// <summary>
         /// Creates a new collection by combining this collection with additional collection.
         /// </summary>
         /// <param name="additionalCollections">Collections to combine with this collection.</param>
         /// <returns>A combination of the two collections.</returns>
-        public Definitions Combine(params Definitions[] additionalCollections)
+        public DefinitionsCollection Combine(params DefinitionsCollection[] additionalCollections)
         {
             IEnumerable<BaseDefinition> combinedDefinitions = this.AllDefinitions;
 
-            foreach (Definitions collection in additionalCollections)
+            foreach (DefinitionsCollection collection in additionalCollections)
             {
                 combinedDefinitions = combinedDefinitions.Concat(collection.AllDefinitions);
             }
 
-            return new Definitions(combinedDefinitions);
+            return new DefinitionsCollection(combinedDefinitions);
         }
 
         /// <summary>
@@ -162,6 +176,24 @@ namespace LegendsGenerator.Contracts.Definitions
 
                 definition.InheritedDefinitionNames = inheritanceList.Select(x => x.Name).ToList();
             }
+        }
+
+        /// <inheritdoc/>
+        void ICollection.CopyTo(Array array, int index)
+        {
+            ((ICollection)this.AllDefinitions).CopyTo(array, index);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<BaseDefinition> GetEnumerator()
+        {
+            return this.AllDefinitions.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.AllDefinitions.GetEnumerator();
         }
     }
 }

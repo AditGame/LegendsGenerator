@@ -49,7 +49,7 @@ namespace LegendsGenerator.Viewer
 
             ConditionCompiler<BaseGlobalVariables> processor =
                 new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables() { World = new World(), });
-            Definitions definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
+            DefinitionsCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
 
             HistoryGenerator history = new HistoryGenerator(factory, definitions);
@@ -182,6 +182,36 @@ namespace LegendsGenerator.Viewer
         private void CancelGeneration_Click(object sender, RoutedEventArgs e)
         {
             Context.Instance.HistoryGenerationCancellationRequested = true;
+        }
+
+        /// <summary>
+        /// Handles when a graveyard entry is clicked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The args.</param>
+        private void GraveyardClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var item = ItemsControl.ContainerFromElement(sender as ItemsControl, e.OriginalSource as DependencyObject) as ListBoxItem;
+            if (item?.Content is GraveyardEntryView entry)
+            {
+                foreach (SquareView s in Context.Instance.Squares)
+                {
+                    if (s.X == entry.Thing.X && s.Y == entry.Thing.Y)
+                    {
+                        s.Selected = true;
+                    }
+                    else
+                    {
+                        s.Selected = false;
+                    }
+                }
+
+                Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(entry.Thing.X, entry.Thing.Y);
+                Context.Instance.SelectedThing = entry.Thing;
+                Context.Instance.SelectedTabIndex = 0;
+
+                e.Handled = true;
+            }
         }
     }
 }

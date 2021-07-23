@@ -1,4 +1,4 @@
-﻿// <copyright file="IConditionCompiler`1.cs" company="Tom Luppi">
+﻿// <copyright file="IConditionCompiler{TGlobals}.cs" company="Tom Luppi">
 //     Copyright (c) Tom Luppi.  All rights reserved.
 // </copyright>
 

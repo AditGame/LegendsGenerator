@@ -7,6 +7,9 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
+    /// <summary>
+    /// Base effect which has duration.
+    /// </summary>
     [UsesAdditionalParametersForHoldingClass]
     public partial class BaseEffectDefinitionWithDuration : BaseEffectDefinition
     {

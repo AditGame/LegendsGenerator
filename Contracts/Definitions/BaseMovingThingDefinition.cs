@@ -9,7 +9,7 @@ namespace LegendsGenerator.Contracts.Definitions
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>
-    /// Base definition for things which MOVE!
+    /// Base definition for things which MOVE!.
     /// </summary>
     public abstract partial class BaseMovingThingDefinition : BaseThingDefinition
     {

@@ -363,7 +363,7 @@ namespace LegendsGenerator.Editor
 
             if (path != null)
             {
-                Definitions? definitions =
+                DefinitionsCollection? definitions =
                     DefinitionSerializer.DeserializeFromDirectory(this.Compiler, path);
 
                 foreach (var def in definitions.AllDefinitions)

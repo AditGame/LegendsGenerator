@@ -47,7 +47,7 @@
               Width="5"
               />
             <DataGridCell Grid.Column="2">
-                <TabControl TabStripPlacement="Bottom">
+                <TabControl TabStripPlacement="Bottom" SelectedIndex="{Binding Path=SelectedTabIndex, Mode=TwoWay}">
                     <TabItem Header="Thing Info">
                         <local:ThingViewPanel />
                     </TabItem>
@@ -57,6 +57,17 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Description}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
+                    <TabItem Header="Graveyard">
+                        <ListBox ItemsSource="{Binding Graveyard}" PreviewMouseDown="GraveyardClicked">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

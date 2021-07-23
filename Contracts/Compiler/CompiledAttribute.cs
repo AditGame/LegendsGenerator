@@ -34,7 +34,7 @@ namespace LegendsGenerator.Contracts.Compiler
         public bool AsFormattedText { get; set; }
 
         /// <summary>
-        /// Gets or sets if the generated method should be Protected, instead of Private.
+        /// Gets or sets a value indicating whether the generated method should be Protected, instead of Private.
         /// </summary>
         public bool Protected { get; set; }
     }

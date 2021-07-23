@@ -9,6 +9,9 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 
+    /// <summary>
+    /// Defines an effect which starts a quest.
+    /// </summary>
     public partial class StartQuestDefinition : BaseEffectDefinition
     {
         /// <summary>
