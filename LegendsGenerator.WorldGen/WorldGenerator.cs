@@ -22,7 +22,7 @@ namespace LegendsGenerator.WorldGen
         /// <summary>
         /// The definitions collection to source definitions from.
         /// </summary>
-        private IThingFactory thingFactory;
+        private readonly IThingFactory thingFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldGenerator"/> class.
@@ -79,9 +79,7 @@ namespace LegendsGenerator.WorldGen
         {
             World world = new World()
             {
-#pragma warning disable SA1101 // Prefix local calls with this. New C#9 feature.
                 Grid = new WorldGrid(generated.Width, generated.Height),
-#pragma warning restore SA1101 // Prefix local calls with this
             };
 
             for (int x = 0; x < generated.Width; x++)

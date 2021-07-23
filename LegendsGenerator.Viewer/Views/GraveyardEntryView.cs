@@ -16,7 +16,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// The inner graveyard entry.
         /// </summary>
-        private GraveyardEntry inner;
+        private readonly GraveyardEntry inner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraveyardEntryView"/> class.

@@ -27,7 +27,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// The last created Context instance.
         /// </summary>
-        private static Context instance = new Context();
+        private static readonly Context instance = new Context();
 
         /// <summary>
         /// backing field for SelectedTabIndex.

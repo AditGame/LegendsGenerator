@@ -26,7 +26,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Mapping of definition to color.
         /// </summary>
-        private static IDictionary<string, Brush> colorMap = new Dictionary<string, Brush>()
+        private static readonly IReadOnlyDictionary<string, Brush> ColorMap = new Dictionary<string, Brush>()
         {
             { "Ocean", Brushes.DarkBlue },
             { "Lake", Brushes.Blue },
@@ -52,7 +52,7 @@ namespace LegendsGenerator.Viewer.Views
         /// <summary>
         /// Mapping of definition to image.
         /// </summary>
-        private static IDictionary<string, Brush> imageMap = new Dictionary<string, Brush>()
+        private static readonly IReadOnlyDictionary<string, Brush> ImageMap = new Dictionary<string, Brush>()
         {
             { "City", new ImageBrush(new BitmapImage(new Uri(@"resources\City.png", UriKind.Relative))) },
             { "Town", new ImageBrush(new BitmapImage(new Uri(@"resources\Town.png", UriKind.Relative))) },
@@ -158,7 +158,7 @@ namespace LegendsGenerator.Viewer.Views
             {
                 string? name = this.inner.SquareDefinition?.Definition.Name;
 
-                if (name == null || !colorMap.TryGetValue(name, out Brush? value))
+                if (name == null || !ColorMap.TryGetValue(name, out Brush? value))
                 {
                     value = Brushes.Green;
                 }
@@ -177,7 +177,7 @@ namespace LegendsGenerator.Viewer.Views
                 Brush? image = null;
                 foreach (BaseThing thing in this.inner.GetThings())
                 {
-                    if (imageMap.TryGetValue(thing.BaseDefinition.Name, out image))
+                    if (ImageMap.TryGetValue(thing.BaseDefinition.Name, out image))
                     {
                         break;
                     }

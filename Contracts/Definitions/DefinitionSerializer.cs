@@ -181,9 +181,7 @@ namespace LegendsGenerator.Contracts.Definitions
 
                     foreach (T entry in value)
                     {
-#pragma warning disable CA1508 // Avoid dead conditional code. The intent of this is to remove nulls in unexpected places.
                         if (entry == null)
-#pragma warning restore CA1508 // Avoid dead conditional code
                         {
                             // The whole point of this, skip null entries.
                             continue;
