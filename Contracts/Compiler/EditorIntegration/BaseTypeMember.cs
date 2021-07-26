@@ -50,7 +50,7 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The tostring.</returns>
-        private static string ToStringWithGenerics(Type type)
+        protected static string ToStringWithGenerics(Type type)
         {
             string name = type.Name.Split("`", 2).First();
 

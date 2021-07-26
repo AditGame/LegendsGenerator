@@ -48,7 +48,7 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
             {
                 name += "<";
 
-                name += string.Join(", ", method.GetGenericArguments().Select(x => x.Name));
+                name += string.Join(", ", method.GetGenericArguments().Select(x => ToStringWithGenerics(x)));
 
                 name += ">";
             }
