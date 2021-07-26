@@ -25,11 +25,6 @@ namespace LegendsGenerator.Viewer
     public class Context : INotifyPropertyChanged
     {
         /// <summary>
-        /// The last created Context instance.
-        /// </summary>
-        private static readonly Context instance = new Context();
-
-        /// <summary>
         /// backing field for SelectedTabIndex.
         /// </summary>
         private int selectedTabIndex;
@@ -87,7 +82,7 @@ namespace LegendsGenerator.Viewer
         /// <summary>
         /// Gets the last created instance of this class.
         /// </summary>
-        public static Context Instance => instance;
+        public static Context Instance { get; } = new Context();
 
         /// <summary>
         /// Gets the steps of the world.

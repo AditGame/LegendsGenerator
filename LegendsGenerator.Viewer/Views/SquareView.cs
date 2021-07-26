@@ -65,14 +65,14 @@ namespace LegendsGenerator.Viewer.Views
         };
 
         /// <summary>
+        /// The inner grid square.
+        /// </summary>
+        private readonly GridSquare inner;
+
+        /// <summary>
         /// Backing field for Selected property.
         /// </summary>
         private bool selected;
-
-        /// <summary>
-        /// The inner grid square.
-        /// </summary>
-        private GridSquare inner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SquareView"/> class.

@@ -115,7 +115,7 @@
                                                 <HierarchicalDataTemplate DataType="{x:Type editorIntegration:PropertyMember}">
                                                     <Label>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding ReturnType.Name}" Foreground="Blue" />
+                                                            <TextBlock Text="{Binding ReturnType}" Foreground="Blue" />
                                                             <TextBlock Text=" " />
                                                             <TextBlock Text="{Binding Name}" />
                                                         </StackPanel>
@@ -124,7 +124,7 @@
                                                 <HierarchicalDataTemplate DataType="{x:Type editorIntegration:MethodMember}">
                                                     <Label>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding ReturnType.Name}" Foreground="Blue" />
+                                                            <TextBlock Text="{Binding ReturnType}" Foreground="Blue" />
                                                             <TextBlock Text=" " />
                                                             <TextBlock Text="{Binding Name}" />
                                                             <TextBlock Text="(" />

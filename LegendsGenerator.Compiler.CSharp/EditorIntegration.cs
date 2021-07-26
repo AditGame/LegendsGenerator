@@ -9,7 +9,7 @@ namespace LegendsGenerator.Compiler.CSharp
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Reflection;
     using LegendsGenerator.Compiler.CSharp.Presentation;
     using LegendsGenerator.Contracts.Compiler.EditorIntegration;
 
@@ -21,7 +21,7 @@ namespace LegendsGenerator.Compiler.CSharp
         /// <summary>
         /// Methods to not display.
         /// </summary>
-        private IList<string> ignoredMethods = new List<string>()
+        private static readonly IList<string> IgnoredMethods = new List<string>()
         {
             "ToString",
             "GetHashCode",
@@ -41,14 +41,14 @@ namespace LegendsGenerator.Compiler.CSharp
 
             List<BaseTypeMember> options = new List<BaseTypeMember>();
 
-            foreach (var property in type.GetProperties().OrderBy(x => x.Name))
+            foreach (PropertyInfo property in type.GetProperties().OrderBy(x => x.Name))
             {
                 options.Add(new PropertyMember(property.Name, property.PropertyType));
             }
 
-            foreach (System.Reflection.MethodInfo method in type.GetMethods().OrderBy(x => x.Name).ThenBy(x => x.GetParameters().Length).Where(m => !m.IsSpecialName && !this.ignoredMethods.Contains(m.Name)))
+            foreach (MethodInfo method in type.GetMethods().OrderBy(x => x.Name).ThenBy(x => x.GetParameters().Length).Where(m => !m.IsSpecialName && !IgnoredMethods.Contains(m.Name)))
             {
-                options.Add(new MethodMember(method.Name, method.ReturnType, method.GetParameters().Select(p => new MethodParameter(p.Name!, p.ParameterType)).ToList()));
+                options.Add(new MethodMember(method));
             }
 
             return options;

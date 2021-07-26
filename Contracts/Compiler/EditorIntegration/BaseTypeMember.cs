@@ -7,16 +7,18 @@
 namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Members on a call.
     /// </summary>
     public abstract class BaseTypeMember
     {
+        /// <summary>
+        /// The return type.
+        /// </summary>
+        private Type returnType;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseTypeMember"/> class.
         /// </summary>
@@ -25,7 +27,7 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
         protected BaseTypeMember(string name, Type returnType)
         {
             this.Name = name;
-            this.ReturnType = returnType;
+            this.returnType = returnType;
         }
 
         /// <summary>
@@ -36,11 +38,32 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
         /// <summary>
         /// Gets the return type.
         /// </summary>
-        public Type ReturnType { get; }
+        public string ReturnType => ToStringWithGenerics(this.returnType);
 
         /// <summary>
         /// Gets a value indicating whether this member uses paremethis.
         /// </summary>
         public abstract bool RequiresParens { get; }
+
+        /// <summary>
+        /// Converts a type to a string with proper generic arguments.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The tostring.</returns>
+        private static string ToStringWithGenerics(Type type)
+        {
+            string name = type.Name.Split("`", 2).First();
+
+            if (type.IsGenericType)
+            {
+                name += "<";
+
+                name += string.Join(", ", type.GetGenericArguments().Select(x => ToStringWithGenerics(x)));
+
+                name += ">";
+            }
+
+            return name;
+        }
     }
 }

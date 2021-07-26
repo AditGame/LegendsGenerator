@@ -6,11 +6,9 @@
 
 namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using System.Reflection;
 
     /// <summary>
     /// A method member of a class.
@@ -20,13 +18,13 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodMember"/> class.
         /// </summary>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="returnType">The return type.</param>
-        /// <param name="parameters">The method parameters.</param>
-        public MethodMember(string name, Type returnType, IList<MethodParameter> parameters)
-            : base(name, returnType)
+        /// <param name="method">The method.</param>
+        public MethodMember(MethodInfo method)
+            : base(
+                  ToStringWithGenerics(method),
+                  method.ReturnType)
         {
-            this.Parameters = parameters;
+            this.Parameters = method.GetParameters().Select(p => new MethodParameter(p.Name!, p.ParameterType)).ToList();
         }
 
         /// <summary>
@@ -36,5 +34,26 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
 
         /// <inheritdoc/>
         public override bool RequiresParens => true;
+
+        /// <summary>
+        /// Converts a method into it's name with generics.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The string form.</returns>
+        private static string ToStringWithGenerics(MethodInfo method)
+        {
+            string name = method.Name.Split("`", 2).First();
+
+            if (method.ContainsGenericParameters)
+            {
+                name += "<";
+
+                name += string.Join(", ", method.GetGenericArguments().Select(x => x.Name));
+
+                name += ">";
+            }
+
+            return name;
+        }
     }
 }

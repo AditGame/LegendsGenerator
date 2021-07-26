@@ -20,14 +20,14 @@ namespace LegendsGenerator.Editor.ContractParsing
     public sealed class InfoIcon
     {
         /// <summary>
+        /// The lock around creating the map.
+        /// </summary>
+        private static readonly object MapInitLock = new object();
+
+        /// <summary>
         /// The mapping of editoricon enum to infoicon.
         /// </summary>
         private static IDictionary<EditorIcon, InfoIcon>? mapping;
-
-        /// <summary>
-        /// The lock around creating the map.
-        /// </summary>
-        private static object mapInitLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoIcon"/> class.
@@ -82,7 +82,7 @@ namespace LegendsGenerator.Editor.ContractParsing
         {
             if (mapping == null)
             {
-                lock (mapInitLock)
+                lock (MapInitLock)
                 {
 #pragma warning disable CA1508 // Avoid dead conditional code. False positive.
                     if (mapping == null)
