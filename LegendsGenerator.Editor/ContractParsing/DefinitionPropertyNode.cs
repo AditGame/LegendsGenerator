@@ -8,9 +8,7 @@ namespace LegendsGenerator.Editor.ContractParsing
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Windows;
 
     /// <summary>
     /// A node which is jsut the start of a new section.

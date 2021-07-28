@@ -6,7 +6,6 @@ namespace LegendsGenerator.Contracts.Definitions
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Compiler.EditorIntegration;

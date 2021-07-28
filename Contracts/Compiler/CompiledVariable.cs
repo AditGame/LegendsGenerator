@@ -5,10 +5,6 @@
 namespace LegendsGenerator.Contracts.Compiler
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A variable definition for the compiler.

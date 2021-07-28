@@ -12,8 +12,6 @@ namespace LegendsGenerator.Editor
 
     using LegendsGenerator.Editor.ContractParsing;
 
-    using Microsoft.Win32;
-
     /// <summary>
     /// Interaction logic for DefinitionEditor.
     /// </summary>

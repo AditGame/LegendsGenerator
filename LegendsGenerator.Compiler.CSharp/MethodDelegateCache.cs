@@ -6,7 +6,6 @@ namespace LegendsGenerator.Compiler.CSharp
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using CSScriptLib;
 
     /// <summary>

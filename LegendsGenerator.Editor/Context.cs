@@ -7,7 +7,6 @@
 namespace LegendsGenerator.Editor
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
@@ -16,7 +15,6 @@ namespace LegendsGenerator.Editor
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions;
-    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Editor.ContractParsing;
     using LegendsGenerator.Editor.DefinitionSelector;
 

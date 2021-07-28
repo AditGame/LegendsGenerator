@@ -12,7 +12,6 @@ namespace LegendsGenerator.Editor.ContractParsing
     using System.Linq;
     using System.Text;
     using CSScriptLib;
-    using LegendsGenerator.Compiler.CSharp;
     using LegendsGenerator.Contracts.Compiler;
 
     /// <summary>

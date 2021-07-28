@@ -14,7 +14,6 @@ namespace LegendsGenerator.Contracts.Definitions
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using LegendsGenerator.Contracts.Compiler;
-    using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>
     /// Serializes and deserializes the definitions.

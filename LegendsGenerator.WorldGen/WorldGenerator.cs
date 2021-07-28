@@ -12,7 +12,6 @@ namespace LegendsGenerator.WorldGen
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Things;
     using LegendsGenerator.WorldGen.Contracts;
-    using SimplexNoise;
 
     /// <summary>
     /// Generates a world.

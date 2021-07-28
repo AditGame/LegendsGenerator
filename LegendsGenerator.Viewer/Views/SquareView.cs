@@ -11,8 +11,6 @@ namespace LegendsGenerator.Viewer.Views
     using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using LegendsGenerator.Contracts;

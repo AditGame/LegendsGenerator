@@ -5,8 +5,6 @@
 namespace CompiledDefinitionSourceGenerator
 {
     using System;
-    using System.Diagnostics;
-    using System.IO;
     using System.Text;
 
     using Microsoft.CodeAnalysis;
@@ -43,7 +41,6 @@ namespace CompiledDefinitionSourceGenerator
                     ClassInfo classInfo = new ClassInfo(symbol);
                     string code = CompiledClassFactory.Generate(classInfo);
                     context.AddSource($"{type.Name}.Compiled.Generated.cs", SourceText.From(code, Encoding.UTF8));
-                    File.WriteAllText(Path.Combine(Path.GetTempPath(), $"{type.Name}.Compiled.Generated.cs"), code);
                 }
             }
         }

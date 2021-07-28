@@ -10,8 +10,6 @@ namespace LegendsGenerator.Editor
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
-    using LegendsGenerator.Contracts.Definitions;
-    using LegendsGenerator.Editor.ContractParsing;
 
     /// <summary>
     /// Interaction logic for DefinitionEditorItem.

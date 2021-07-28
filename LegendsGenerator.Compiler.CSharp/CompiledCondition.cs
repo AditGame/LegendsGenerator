@@ -10,7 +10,6 @@ namespace LegendsGenerator.Compiler.CSharp
 
     using CSScriptLib;
     using LegendsGenerator.Compiler.CSharp.Presentation;
-    using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Things;
 

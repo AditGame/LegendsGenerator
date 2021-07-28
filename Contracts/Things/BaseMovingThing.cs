@@ -5,7 +5,6 @@
 namespace LegendsGenerator.Contracts.Things
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Immutable;
     using LegendsGenerator.Contracts.Definitions;
 

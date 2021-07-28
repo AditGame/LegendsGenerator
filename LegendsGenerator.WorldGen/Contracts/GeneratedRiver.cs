@@ -6,11 +6,9 @@
 
 namespace LegendsGenerator.WorldGen.Contracts
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Information about a river generated on this tile.

@@ -6,11 +6,7 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events.Effects
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Validation;
     using LegendsGenerator.Contracts.Things;

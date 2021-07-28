@@ -11,7 +11,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
     using System.Collections.ObjectModel;
     using System.Linq;
     using LegendsGenerator.Contracts;
-    using LegendsGenerator.Contracts.Definitions.Events;
     using LegendsGenerator.Contracts.Things;
 
     /// <summary>

@@ -11,7 +11,6 @@
 namespace LegendsGenerator.PathFinding
 {
     using System;
-    using LegendsGenerator.Contracts.Things;
 
     /// <summary>
     /// The formula to use.

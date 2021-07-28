@@ -4,7 +4,6 @@
 
 namespace LegendsGenerator.Contracts.Definitions
 {
-    using System;
     using LegendsGenerator.Contracts.Definitions.Events;
 
     /// <summary>

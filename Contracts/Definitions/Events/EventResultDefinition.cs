@@ -4,7 +4,6 @@
 
 namespace LegendsGenerator.Contracts.Definitions.Events
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using LegendsGenerator.Contracts.Compiler;
     using LegendsGenerator.Contracts.Definitions.Events.Effects;
