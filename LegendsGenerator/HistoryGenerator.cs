@@ -6,6 +6,7 @@ namespace LegendsGenerator
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Diagnostics;
     using System.Linq;
 
@@ -151,7 +152,11 @@ namespace LegendsGenerator
                 }
                 else
                 {
-                    nextWorld.Grid.AddThing(stagedThing.Value.Thing);
+                    // Need a better way to handle this.
+                    if (stagedThing.Value.Thing is BasePhysicalThing physicalThing)
+                    {
+                        nextWorld.Grid.AddThing(physicalThing);
+                    }
                 }
             }
 
@@ -405,8 +410,11 @@ namespace LegendsGenerator
 
                 if (spawnDefinition.PositionType == PositionType.RelativeAbsolute)
                 {
-                    xPosition += oldThing.X;
-                    yPosition += oldThing.Y;
+                    BasePhysicalThing oldPhysicalThing = oldThing as BasePhysicalThing ??
+                        throw new InvalidOperationException("Spawn definition with relative position can only apply to physical things (as otherwise how would we know what it's relative to?).");
+
+                    xPosition += oldPhysicalThing.X;
+                    yPosition += oldPhysicalThing.Y;
                 }
 
                 BaseThing spawnedThing = this.thingFactory.CreateThing(
@@ -446,8 +454,8 @@ namespace LegendsGenerator
                         // We spawn a new thing for the transform. However, data is copied from this object and it will be ultimately discarded.
                         BaseThing newThing = this.thingFactory.CreateThing(
                             rdm,
-                            thingToTransform.X,
-                            thingToTransform.X,
+                            (thingToTransform as BasePhysicalThing)?.X ?? 0,
+                            (thingToTransform as BasePhysicalThing)?.Y ?? 0,
                             thingToTransform.ThingType,
                             transformDefinition.ChangeDefinitionName);
 
@@ -565,6 +573,67 @@ namespace LegendsGenerator
                         default:
                             Log.Error("Invalid move type");
                             break;
+                    }
+                }
+            }
+
+            foreach (StartQuestDefinition startQuestDefinition in result.StartQuests)
+            {
+                foreach (string affected in startQuestDefinition.AppliedTo)
+                {
+                    BaseThing? toAddQuestTo = GetThing(affected);
+                    if (toAddQuestTo == null)
+                    {
+                        continue;
+                    }
+
+                    if (toAddQuestTo is not BasePhysicalThing physicalThing)
+                    {
+                        Log.Error($"Tried to add quest to {affected} ({toAddQuestTo.ThingId}) but it can not have a quest added to it.");
+                        continue;
+                    }
+
+                    Quest createdQuest = this.thingFactory.CreateQuest(rdm, startQuestDefinition.QuestNameToStart);
+                    createdQuest.Name = startQuestDefinition.EvalTitle(rdm, toAddQuestTo, ev.Objects);
+
+                    foreach (var overrideAttr in startQuestDefinition.AttributeOverrides.Keys)
+                    {
+                        createdQuest.BaseAttributes[overrideAttr] = startQuestDefinition.EvalAttributeOverrides(overrideAttr, rdm, toAddQuestTo, ev.Objects);
+                    }
+
+                    foreach (var overrideAspect in startQuestDefinition.AspectOverrides.Keys)
+                    {
+                        createdQuest.BaseAspects[overrideAspect] = startQuestDefinition.EvalAspectOverrides(overrideAspect, rdm, toAddQuestTo, ev.Objects);
+                    }
+
+                    createdQuest.FinalizeConstruction(rdm);
+                    physicalThing.Quests = physicalThing.Quests.Add(createdQuest);
+                }
+            }
+
+            foreach (EndQuestDefinition endQuestDefinition in result.EndQuests)
+            {
+                foreach (string affected in endQuestDefinition.AppliedTo)
+                {
+                    BaseThing? toRemoveQuestsFrom = GetThing(affected);
+                    if (toRemoveQuestsFrom == null)
+                    {
+                        continue;
+                    }
+
+                    if (toRemoveQuestsFrom is not BasePhysicalThing physicalThing)
+                    {
+                        Log.Error($"Tried to remove quests from {affected} ({toRemoveQuestsFrom.ThingId}) but it can not have a quests on it.");
+                        continue;
+                    }
+
+                    if (endQuestDefinition.AllQuests)
+                    {
+                        physicalThing.Quests = physicalThing.Quests.Clear();
+                    }
+                    else
+                    {
+                        physicalThing.Quests = physicalThing.Quests.RemoveAll(q => endQuestDefinition.Quests.Contains(q.BaseDefinition.Name, StringComparer.OrdinalIgnoreCase));
                     }
                 }
             }

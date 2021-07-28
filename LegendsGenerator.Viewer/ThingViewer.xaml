@@ -95,5 +95,17 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <TextBlock  Text="Quests" FontWeight="Bold" FontSize="16" Visibility="{Binding CanHaveQuests, Converter={StaticResource VisibleIfTrueConverter}}"/>
+        <ListBox ItemsSource="{Binding Quests}" HorizontalContentAlignment="Stretch" Visibility="{Binding CanHaveQuests, Converter={StaticResource VisibleIfTrueConverter}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Expander Width="auto" Header="{Binding Name}" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="2px" Padding="2px">
+                        <StackPanel>
+                            <local:ThingViewer/>
+                        </StackPanel>
+                    </Expander>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </UserControl>

@@ -10,7 +10,7 @@ namespace LegendsGenerator.Contracts.Things
     /// <summary>
     /// Represents a Unit.
     /// </summary>
-    public record Unit : BaseThing
+    public record Unit : BaseMovingThing
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Unit"/> class.

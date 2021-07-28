@@ -12,7 +12,7 @@ namespace LegendsGenerator.Contracts.Things
     /// <summary>
     /// A square on the world stage.
     /// </summary>
-    public record WorldSquare : BaseThing
+    public record WorldSquare : BasePhysicalThing
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldSquare"/> class.

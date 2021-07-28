@@ -194,19 +194,23 @@ namespace LegendsGenerator.Viewer
             var item = ItemsControl.ContainerFromElement(sender as ItemsControl, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item?.Content is GraveyardEntryView entry)
             {
-                foreach (SquareView s in Context.Instance.Squares)
+                if (entry.Thing.HasLocation)
                 {
-                    if (s.X == entry.Thing.X && s.Y == entry.Thing.Y)
+                    foreach (SquareView s in Context.Instance.Squares)
                     {
-                        s.Selected = true;
+                        if (s.X == entry.Thing.X && s.Y == entry.Thing.Y)
+                        {
+                            s.Selected = true;
+                        }
+                        else
+                        {
+                            s.Selected = false;
+                        }
                     }
-                    else
-                    {
-                        s.Selected = false;
-                    }
+
+                    Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(entry.Thing.X, entry.Thing.Y);
                 }
 
-                Context.Instance.SelectedSquare = Context.Instance.CurrentWorld.Grid.GetSquare(entry.Thing.X, entry.Thing.Y);
                 Context.Instance.SelectedThing = entry.Thing;
                 Context.Instance.SelectedTabIndex = 0;
 

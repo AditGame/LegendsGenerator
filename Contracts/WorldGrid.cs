@@ -117,7 +117,7 @@ namespace LegendsGenerator.Contracts
         /// Adds a thing to the correct grid square.
         /// </summary>
         /// <param name="thing">The thing to add.</param>
-        public void AddThing(BaseThing thing)
+        public void AddThing(BasePhysicalThing thing)
         {
             if (thing is null)
             {

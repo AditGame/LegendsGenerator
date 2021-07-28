@@ -17,7 +17,7 @@ namespace LegendsGenerator.Contracts.Compiler.EditorIntegration
         /// <summary>
         /// The return type.
         /// </summary>
-        private Type returnType;
+        private readonly Type returnType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseTypeMember"/> class.

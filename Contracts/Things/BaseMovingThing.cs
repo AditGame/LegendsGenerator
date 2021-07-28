@@ -11,7 +11,7 @@ namespace LegendsGenerator.Contracts.Things
     /// <summary>
     /// A thing which can move on the world map.
     /// </summary>
-    public abstract record BaseMovingThing : BaseThing
+    public abstract record BaseMovingThing : BasePhysicalThing
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseMovingThing"/> class.
@@ -97,7 +97,9 @@ namespace LegendsGenerator.Contracts.Things
                     y = this.MoveToCoordY ?? throw new InvalidOperationException("MoveType is set to ToCoords but MoveToCoordY is null.");
                     break;
                 case MoveType.ToThing:
-                    BaseThing thing = world.FindThing(this.MoveToThing ?? throw new InvalidOperationException("MoveType is set to ToThing but MoveToThing is null."));
+                    BasePhysicalThing thing =
+                        world.FindThing(this.MoveToThing ?? throw new InvalidOperationException("MoveType is set to ToThing but MoveToThing is null.")) as BasePhysicalThing ??
+                        throw new InvalidOperationException($"Thing {this.MoveToThing} does not have a location.");
                     x = thing.X;
                     y = thing.Y;
                     break;

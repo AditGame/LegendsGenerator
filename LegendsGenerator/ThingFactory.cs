@@ -41,7 +41,7 @@ namespace LegendsGenerator
                 ThingType.NotablePerson => this.CreateNotablePerson(rdm, x, y, definitionName),
                 ThingType.WorldSquare => this.CreateWorldSquare(rdm, x, y, definitionName),
                 ThingType.World => this.CreateWorld(rdm, x, y, definitionName),
-                ThingType.Quest => this.CreateQuest(rdm, x, y, definitionName),
+                ThingType.Quest => this.CreateQuest(rdm, definitionName),
                 _ => throw new InvalidOperationException($"Can not handle {type}."),
             };
         }
@@ -103,12 +103,12 @@ namespace LegendsGenerator
         }
 
         /// <inheritdoc/>
-        public Quest CreateQuest(Random rdm, int x, int y, string questDefinitionName)
+        public Quest CreateQuest(Random rdm, string questDefinitionName)
         {
             Quest square = CreateThing<Quest, QuestDefinition>(
                 rdm,
-                x,
-                y,
+                0,
+                0,
                 d => new Quest(d),
                 this.Definitions.QuestDefinitions,
                 questDefinitionName);
@@ -163,8 +163,11 @@ namespace LegendsGenerator
 
             TThing thing = createFunc(definition);
 
-            thing.X = x;
-            thing.Y = y;
+            if (thing is BasePhysicalThing physicalThing)
+            {
+                physicalThing.X = x;
+                physicalThing.Y = y;
+            }
 
             foreach (var (attributeName, attributeDef) in definition.Attributes)
             {

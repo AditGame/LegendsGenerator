@@ -226,8 +226,13 @@ namespace LegendsGenerator.Viewer
                     // This has to occur after the above notifications, as those change around the squares.
                     if (this.FollowThing && selectedThingId.HasValue && this.CurrentWorld.TryFindThing(selectedThingId.Value, out BaseThing? result))
                     {
+                        if (result is not BasePhysicalThing physicalResult)
+                        {
+                            throw new InvalidOperationException("Can not follow a non-physical thing.");
+                        }
+
                         // If FollowThing is set, follow the thing as it moves.
-                        this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(result.X, result.Y);
+                        this.SelectedSquare = this.CurrentWorld.Grid.GetSquare(physicalResult.X, physicalResult.Y);
                         this.SelectedThing = new ThingView(result, this.CurrentWorld);
                     }
                     else if (this.SelectedSquare != null)

@@ -12,7 +12,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
     /// <summary>
     /// Base moving thing presentation.
     /// </summary>
-    public class BaseMovingThingPres : BaseThingPres
+    public class BaseMovingThingPres : BasePhysicalThingPres
     {
         /// <summary>
         /// The cached destination point.

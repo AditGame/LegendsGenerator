@@ -181,6 +181,7 @@ namespace LegendsGenerator.Compiler.CSharp
             }
 
             StringBuilder bldr = new StringBuilder();
+            bldr.AppendLine("using System.Linq;");
             bldr.AppendLine("using LegendsGenerator.Contracts;");
             bldr.AppendLine("using LegendsGenerator.Contracts.Things;");
             bldr.AppendLine("using LegendsGenerator.Compiler.CSharp.Presentation;");

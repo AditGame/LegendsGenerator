@@ -23,17 +23,17 @@ namespace LegendsGenerator
         /// <summary>
         /// The world.
         /// </summary>
-        private World world;
+        private readonly World world;
 
         /// <summary>
         /// The random number generator.
         /// </summary>
-        private Random random;
+        private readonly Random random;
 
         /// <summary>
         /// The pathfinder for A* calculations.
         /// </summary>
-        private PathFinder finder;
+        private readonly PathFinder finder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementHandler"/> class.
@@ -87,8 +87,9 @@ namespace LegendsGenerator
                     destinationY = newThing.MoveToCoordY ?? throw new InvalidOperationException("Object is moving towards a coord but MoveToCoordY is null.");
                     break;
                 case MoveType.ToThing:
-                    BaseThing thingToMoveTo =
-                        this.world.FindThing(newThing.MoveToThing ?? throw new InvalidOperationException("Object is moving towards a thing but MoveToThing is null."));
+                    BasePhysicalThing thingToMoveTo =
+                        this.world.FindThing(newThing.MoveToThing ?? throw new InvalidOperationException("Object is moving towards a thing but MoveToThing is null.")) as BasePhysicalThing ??
+                        throw new InvalidOperationException("Can not move to thing which is not physical.");
                     destinationX = thingToMoveTo.X;
                     destinationY = thingToMoveTo.Y;
                     thingMovingTowards = newThing.MoveToThing;

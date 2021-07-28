@@ -8,6 +8,7 @@
         "Condition": "Subject->Population > 50000",
         "Type": "Site",
         "Definitions": [],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -37,6 +38,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -64,6 +67,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -80,6 +85,7 @@
         "Condition": "true",
         "Type": "Site",
         "Definitions": [],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -109,6 +115,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -136,6 +144,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         },
@@ -163,6 +173,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -179,6 +191,7 @@
         "Condition": "Subject->Population > 50000",
         "Type": "Site",
         "Definitions": [],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {
@@ -188,6 +201,7 @@
           "Condition": "Object->Population < 50000",
           "Type": "Site",
           "Definitions": [],
+          "Quests": [],
           "Condition_IsComplex": false,
           "Maximize_IsComplex": false
         }
@@ -232,6 +246,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -248,6 +264,7 @@
         "Condition": "true",
         "Type": "Site",
         "Definitions": [],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {
@@ -257,6 +274,7 @@
           "Condition": "Subject->Population > Object->Population",
           "Type": "Site",
           "Definitions": [],
+          "Quests": [],
           "Condition_IsComplex": false,
           "Maximize_IsComplex": false
         }
@@ -297,6 +315,8 @@
             }
           ],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -307,5 +327,8 @@
   ],
   "Sites": [],
   "NotablePeople": [],
-  "WorldSquares": []
+  "WorldSquares": [],
+  "World": [],
+  "Quests": [],
+  "Units": []
 }

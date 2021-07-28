@@ -12,6 +12,7 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
     /// <summary>
     /// Defines an effect which starts a quest.
     /// </summary>
+    [UsesAdditionalParametersForHoldingClass]
     public partial class StartQuestDefinition : BaseEffectDefinition
     {
         /// <summary>
@@ -23,14 +24,14 @@ namespace LegendsGenerator.Contracts.Definitions.Events.Effects
         /// Gets the attribute overrides for this spawn.
         /// </summary>
         [CompiledDictionary(typeof(int))]
-        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BasePhysicalThing))]
         public Dictionary<string, string> AttributeOverrides { get; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets the aspect overrides for this spawn.
         /// </summary>
         [CompiledDictionary(typeof(string))]
-        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BaseThing))]
+        [CompiledVariable(EventDefinition.SubjectVarName, typeof(BasePhysicalThing))]
         public Dictionary<string, string> AspectOverrides { get; } = new Dictionary<string, string>();
     }
 }

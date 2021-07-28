@@ -10,6 +10,7 @@
         "Definitions": [
           "Population Center"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -45,6 +46,8 @@
           "Transforms": [],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -63,6 +66,7 @@
         "Definitions": [
           "Settler"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {
@@ -73,6 +77,7 @@
           "Maximize": "-Object->Evil + Object->Rainfall",
           "Type": "WorldSquare",
           "Definitions": [],
+          "Quests": [],
           "Condition_IsComplex": false,
           "Maximize_IsComplex": false
         }
@@ -104,6 +109,8 @@
               "Description_IsComplex": false
             }
           ],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -122,6 +129,7 @@
         "Definitions": [
           "Settler"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -167,6 +175,58 @@
             }
           ],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "DefinitionName": "Test Quest",
+      "Chance": "100",
+      "CanTriggerWhileMoving": true,
+      "AffectOnMovement": 1,
+      "Subject": {
+        "Condition": "Subject.Quests.Count() == 0",
+        "Type": "NotablePerson",
+        "Definitions": [],
+        "Quests": [
+          null
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {},
+      "Description": "UNSET",
+      "Results": [
+        {
+          "Default": true,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [],
+          "Destroys": [],
+          "Moves": [],
+          "StartQuests": [
+            {
+              "QuestNameToStart": "Woo",
+              "AttributeOverrides": {},
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Subject"
+              ],
+              "Title": "asdfasdf",
+              "Description": "asdfasdfasdf",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -194,5 +254,26 @@
       "MaxEvents_IsComplex": false
     }
   ],
-  "WorldSquares": []
+  "WorldSquares": [],
+  "World": [],
+  "Quests": [
+    {
+      "ThingType": "Quest",
+      "Name": "Woo",
+      "Name_IsComplex": false,
+      "Description": "A woo woo",
+      "MaxEvents": "1",
+      "Attributes": {
+        "Dddd": {
+          "BaseValue": "0",
+          "DynamicValue": "0",
+          "BaseValue_IsComplex": false,
+          "DynamicValue_IsComplex": false
+        }
+      },
+      "Aspects": {},
+      "MaxEvents_IsComplex": false
+    }
+  ],
+  "Units": []
 }

@@ -37,5 +37,8 @@
       "MaxEvents_IsComplex": false
     }
   ],
-  "WorldSquares": []
+  "WorldSquares": [],
+  "World": [],
+  "Quests": [],
+  "Units": []
 }

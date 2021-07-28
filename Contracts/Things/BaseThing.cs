@@ -54,16 +54,6 @@ namespace LegendsGenerator.Contracts.Things
         public Guid ThingId { get; set; } = Guid.NewGuid();
 
         /// <summary>
-        /// Gets or sets the X coordinate of this thing.
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Y coordinate of this thing.
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
         /// Gets the base Attribute on this object before Effects are applied.
         /// </summary>
         public Dictionary<string, int> BaseAttributes { get; init; } = new Dictionary<string, int>();

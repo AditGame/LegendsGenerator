@@ -10,6 +10,7 @@
         "Definitions": [
           "Hamlet"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -41,6 +42,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -58,6 +61,7 @@
         "Definitions": [
           "Town"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -89,6 +93,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -106,6 +112,7 @@
         "Definitions": [
           "City"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -137,6 +144,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -154,6 +163,7 @@
         "Definitions": [
           "Village"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -185,6 +195,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -202,6 +214,7 @@
         "Definitions": [
           "Metropolis"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -233,6 +246,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -250,6 +265,7 @@
         "Definitions": [
           "Hamlet"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -281,6 +297,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -298,6 +316,7 @@
         "Definitions": [
           "Village"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -329,6 +348,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -346,6 +367,7 @@
         "Definitions": [
           "Town"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -377,6 +399,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -394,6 +418,7 @@
         "Definitions": [
           "City"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -425,6 +450,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -442,6 +469,7 @@
         "Definitions": [
           "Metropolis"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -473,6 +501,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -490,6 +520,7 @@
         "Definitions": [
           "Megaopolis"
         ],
+        "Quests": [],
         "Condition_IsComplex": false
       },
       "Objects": {},
@@ -521,6 +552,8 @@
           ],
           "Destroys": [],
           "Moves": [],
+          "StartQuests": [],
+          "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
         }
@@ -869,5 +902,8 @@
     }
   ],
   "NotablePeople": [],
-  "WorldSquares": []
+  "WorldSquares": [],
+  "World": [],
+  "Quests": [],
+  "Units": []
 }

@@ -20,10 +20,12 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <summary>
         /// The mapping of normal types to their associated presentation types, with the wrappers.
         /// </summary>
-        private static IDictionary<Type, PresentationMapping> mapping = new Dictionary<Type, PresentationMapping>()
+        private static readonly IDictionary<Type, PresentationMapping> Mapping = new Dictionary<Type, PresentationMapping>()
         {
             { typeof(BaseThing), new PresentationMapping<BaseThing, BaseThingPres>((site, world) => throw new InvalidOperationException("Can not create an instance of BaseThing presentation")) },
-            { typeof(BaseMovingThing), new PresentationMapping<BaseMovingThing, BaseMovingThingPres>((site, world) => throw new InvalidOperationException("Can not create an instance of BaseThing presentation")) },
+            { typeof(BasePhysicalThing), new PresentationMapping<BasePhysicalThing, BasePhysicalThingPres>((site, world) => throw new InvalidOperationException("Can not create an instance of BasePhysicalThing presentation")) },
+            { typeof(BaseMovingThing), new PresentationMapping<BaseMovingThing, BaseMovingThingPres>((site, world) => throw new InvalidOperationException("Can not create an instance of BaseMovingThing presentation")) },
+            { typeof(Quest), new PresentationMapping<Quest, QuestPres>((quest, world) => new QuestPres(quest, world)) },
             { typeof(Site), new PresentationMapping<Site, SitePres>((site, world) => new SitePres(site, world)) },
             { typeof(WorldSquare), new PresentationMapping<WorldSquare, WorldSquarePres>((square, world) => new WorldSquarePres(world.Grid.GetSquare(square.X, square.Y), world)) },
             { typeof(NotablePerson), new PresentationMapping<NotablePerson, NotablePersonPres>((person, world) => new NotablePersonPres(person, world)) },
@@ -85,7 +87,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <returns>True if a matching mapping exists, false otherwise.</returns>
         private static bool TryGetMapping(Type type, [NotNullWhen(true)] out PresentationMapping? output)
         {
-            if (mapping.TryGetValue(type, out output))
+            if (Mapping.TryGetValue(type, out output))
             {
                 return true;
             }
@@ -101,7 +103,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <returns>The presentation mapping.</returns>
         private static PresentationMapping GetMapping(Type type)
         {
-            if (mapping.TryGetValue(type, out PresentationMapping? presMap))
+            if (Mapping.TryGetValue(type, out PresentationMapping? presMap))
             {
                 return presMap;
             }

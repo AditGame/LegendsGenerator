@@ -25,6 +25,11 @@ namespace LegendsGenerator.Viewer.Views
         private readonly BaseThing thing;
 
         /// <summary>
+        /// The world.
+        /// </summary>
+        private readonly World world;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ThingView"/> class.
         /// </summary>
         /// <param name="thing">The thing to view.</param>
@@ -32,6 +37,7 @@ namespace LegendsGenerator.Viewer.Views
         public ThingView(BaseThing thing, World world)
         {
             this.thing = thing;
+            this.world = world;
 
             if (this.thing is BaseMovingThing moving && moving.IsMoving)
             {
@@ -125,14 +131,29 @@ namespace LegendsGenerator.Viewer.Views
         }
 
         /// <summary>
+        /// Gets a value indicating whether this thing has a location.
+        /// </summary>
+        public bool HasLocation => this.thing is BasePhysicalThing;
+
+        /// <summary>
         /// Gets the X coord of this thing.
         /// </summary>
-        public int X => this.thing.X;
+        public int X => (this.thing as BasePhysicalThing)?.X ?? 0;
 
         /// <summary>
         /// Gets the Y coords of this thing.
         /// </summary>
-        public int Y => this.thing.Y;
+        public int Y => (this.thing as BasePhysicalThing)?.Y ?? 0;
+
+        /// <summary>
+        /// Gets a value indicating whether this thing can have quests.
+        /// </summary>
+        public bool CanHaveQuests => this.thing is BasePhysicalThing;
+
+        /// <summary>
+        /// Gets the quests on this thing.
+        /// </summary>
+        public IReadOnlyCollection<ThingView> Quests => (this.thing as BasePhysicalThing)?.Quests.Select(q => new ThingView(q, this.world)).ToArray() ?? Array.Empty<ThingView>();
 
         /// <summary>
         /// Gets the X coord of the square this is moving towards.
@@ -152,9 +173,9 @@ namespace LegendsGenerator.Viewer.Views
             get
             {
                 List<LineView> lines = new List<LineView>();
-                if (this.MovingTowardsX != null && this.MovingTowardsY != null)
+                if (this.MovingTowardsX != null && this.MovingTowardsY != null && this.thing is BasePhysicalThing physicalThing)
                 {
-                    lines.Add(new LineView(this.thing.X, this.thing.Y, this.MovingTowardsX.Value, this.MovingTowardsY.Value));
+                    lines.Add(new LineView(physicalThing.X, physicalThing.Y, this.MovingTowardsX.Value, this.MovingTowardsY.Value));
                 }
 
                 return lines;

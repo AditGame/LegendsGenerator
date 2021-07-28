@@ -46,11 +46,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         public Guid ThingId => this.Inner.ThingId;
 
         /// <summary>
-        /// Gets the position of this thing.
-        /// </summary>
-        public PointPres Position => new PointPres(this.Inner.X, this.Inner.Y);
-
-        /// <summary>
         /// Gets the base attribtues.
         /// </summary>
         public IReadOnlyDictionary<string, int> BaseAttributes => new ReadOnlyDictionary<string, int>(this.Inner.BaseAttributes);
@@ -59,11 +54,6 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// Gets the effects on this object.
         /// </summary>
         public IReadOnlyList<BaseEffect> Effects => this.Inner.Effects;
-
-        /// <summary>
-        /// Gets the square this thing is on.
-        /// </summary>
-        public WorldSquarePres WorldSquare => new WorldSquarePres(this.World.Grid.GetSquare(this.Position.X, this.Position.Y), this.World);
 
         /// <summary>
         /// Gets the inner object.

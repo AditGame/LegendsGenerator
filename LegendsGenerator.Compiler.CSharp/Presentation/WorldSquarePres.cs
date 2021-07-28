@@ -16,7 +16,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
     /// <summary>
     /// The world square.
     /// </summary>
-    public class WorldSquarePres : BaseThingPres
+    public class WorldSquarePres : BasePhysicalThingPres
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldSquarePres"/> class.
@@ -32,7 +32,7 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
         /// <summary>
         /// Gets the things in the square.
         /// </summary>
-        public IReadOnlyCollection<BaseThingPres> ThingsInSquare => this.ThingsInSqaureOfType<BaseThingPres>();
+        public IReadOnlyCollection<BasePhysicalThingPres> ThingsInSquare => this.ThingsInSqaureOfType<BasePhysicalThingPres>();
 
         /// <summary>
         /// Gets the sites in the square.

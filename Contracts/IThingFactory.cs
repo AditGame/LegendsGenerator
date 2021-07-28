@@ -76,11 +76,9 @@ namespace LegendsGenerator
         /// Creates a quest.
         /// </summary>
         /// <param name="rdm">The random number generator.</param>
-        /// <param name="x">The X coordinate of the person.</param>
-        /// <param name="y">The Y coordinate of the person.</param>
         /// <param name="questDefinitionName">The name of the quest definition.</param>
         /// <returns>The quest.</returns>
-        Quest CreateQuest(Random rdm, int x, int y, string questDefinitionName);
+        Quest CreateQuest(Random rdm, string questDefinitionName);
 
         /// <summary>
         /// Creates a unit.

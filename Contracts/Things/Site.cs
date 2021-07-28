@@ -12,7 +12,7 @@ namespace LegendsGenerator.Contracts.Things
     /// <summary>
     /// An instance of a Site in the world.
     /// </summary>
-    public record Site : BaseThing
+    public record Site : BasePhysicalThing
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Site"/> class.
