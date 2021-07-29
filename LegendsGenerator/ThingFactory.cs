@@ -53,7 +53,7 @@ namespace LegendsGenerator
                 rdm,
                 x,
                 y,
-                d => new Site(d),
+                d => new Site(d, rdm),
                 this.Definitions.SiteDefinitions,
                 siteDefinitionName);
             site.Name = new RandomNameGeneratorLibrary.PlaceNameGenerator(rdm).GenerateRandomPlaceName();
@@ -67,7 +67,7 @@ namespace LegendsGenerator
                 rdm,
                 x,
                 y,
-                d => new NotablePerson(d),
+                d => new NotablePerson(d, rdm),
                 this.Definitions.NotablePersonDefinitions,
                 personDefinitionName);
             person.Name = new RandomNameGeneratorLibrary.PersonNameGenerator(rdm).GenerateRandomFirstAndLastName();
@@ -81,7 +81,7 @@ namespace LegendsGenerator
                 rdm,
                 x,
                 y,
-                d => new WorldSquare(d),
+                d => new WorldSquare(d, rdm),
                 this.Definitions.WorldSquareDefinitions,
                 worldSquareDefinitionName);
             square.Name = $"{x},{y}";
@@ -95,7 +95,7 @@ namespace LegendsGenerator
                 rdm,
                 x,
                 y,
-                d => new WorldThing(d),
+                d => new WorldThing(d, rdm),
                 this.Definitions.WorldDefinitions,
                 worldDefinitionName);
             square.Name = $"The World";
@@ -109,7 +109,7 @@ namespace LegendsGenerator
                 rdm,
                 0,
                 0,
-                d => new Quest(d),
+                d => new Quest(d, rdm),
                 this.Definitions.QuestDefinitions,
                 questDefinitionName);
             square.Name = $"The World";
@@ -123,7 +123,7 @@ namespace LegendsGenerator
                 rdm,
                 x,
                 y,
-                d => new Unit(d),
+                d => new Unit(d, rdm),
                 this.Definitions.UnitDefinitions,
                 unitDefinitionName);
             square.Name = $"lol my unit";

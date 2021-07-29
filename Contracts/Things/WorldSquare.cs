@@ -18,8 +18,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="WorldSquare"/> class.
         /// </summary>
         /// <param name="definition">The world square definition.</param>
-        public WorldSquare(WorldSquareDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public WorldSquare(WorldSquareDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

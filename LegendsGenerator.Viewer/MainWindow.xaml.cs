@@ -45,10 +45,10 @@ namespace LegendsGenerator.Viewer
         /// <returns>THe context object.</returns>
         public static Context InitContext()
         {
-            int worldSeed = 915434125;
+            int worldSeed = new Random().Next();
 
             ConditionCompiler<BaseGlobalVariables> processor =
-                new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables() { World = new World(), });
+                new ConditionCompiler<BaseGlobalVariables>(new BaseGlobalVariables() { World = new World() { WorldSeed = worldSeed }, });
             DefinitionsCollection definitions = DefinitionSerializer.DeserializeFromDirectory(processor, "Definitions");
             ThingFactory factory = new ThingFactory(definitions);
 
@@ -71,7 +71,7 @@ namespace LegendsGenerator.Viewer
 
             foreach (var thing in world.Grid.AllGridEntries.SelectMany(x => x.Square.GetThings()))
             {
-                thing.FinalizeConstruction(new Random());
+                thing.FinalizeConstruction(rdm);
             }
 
             Context.Instance.Attach(history, world, processor);

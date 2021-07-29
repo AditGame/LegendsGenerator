@@ -18,8 +18,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="Site"/> class.
         /// </summary>
         /// <param name="definition">The definition.</param>
-        public Site(SiteDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public Site(SiteDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

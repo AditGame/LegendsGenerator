@@ -17,8 +17,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="NotablePerson"/> class.
         /// </summary>
         /// <param name="definition">The definition.</param>
-        public NotablePerson(NotablePersonDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public NotablePerson(NotablePersonDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

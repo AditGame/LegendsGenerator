@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
+    using System;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
@@ -16,8 +17,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="Unit"/> class.
         /// </summary>
         /// <param name="definition">The thing definition.</param>
-        public Unit(BaseThingDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public Unit(BaseThingDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

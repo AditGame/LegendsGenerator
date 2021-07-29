@@ -17,8 +17,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="Quest"/> class.
         /// </summary>
         /// <param name="definition">The definition.</param>
-        public Quest(QuestDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public Quest(QuestDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

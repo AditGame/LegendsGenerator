@@ -18,17 +18,6 @@ namespace LegendsGenerator
         /// </summary>
         /// <typeparam name="T">THe enumerable type.</typeparam>
         /// <param name="source">The enumerable to shuffle.</param>
-        /// <returns>A shuffled enumerable of the source elements.</returns>
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
-        {
-            return source.Shuffle(new Random());
-        }
-
-        /// <summary>
-        /// Shuffles the enumerable's members.
-        /// </summary>
-        /// <typeparam name="T">THe enumerable type.</typeparam>
-        /// <param name="source">The enumerable to shuffle.</param>
         /// <param name="rng">The random number generator.</param>
         /// <returns>A shuffled enumerable of the source elements.</returns>
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)

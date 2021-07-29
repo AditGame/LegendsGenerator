@@ -17,8 +17,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="BaseMovingThing"/> class.
         /// </summary>
         /// <param name="definition">The thing definition.</param>
-        protected BaseMovingThing(BaseThingDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        protected BaseMovingThing(BaseThingDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

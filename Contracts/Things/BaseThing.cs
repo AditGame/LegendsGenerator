@@ -23,9 +23,13 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="BaseThing"/> class.
         /// </summary>
         /// <param name="definition">Thing definition.</param>
-        protected BaseThing(BaseThingDefinition definition)
+        /// <param name="rdm">Random number generator.</param>
+        protected BaseThing(BaseThingDefinition definition, Random rdm)
         {
             this.BaseDefinition = definition;
+            byte[] guidBytes = new byte[16];
+            rdm.NextBytes(guidBytes);
+            this.ThingId = new Guid(guidBytes);
         }
 
         /// <summary>
@@ -51,7 +55,7 @@ namespace LegendsGenerator.Contracts.Things
         /// <summary>
         /// Gets or sets the ID of this Thing.
         /// </summary>
-        public Guid ThingId { get; set; } = Guid.NewGuid();
+        public Guid ThingId { get; set; }
 
         /// <summary>
         /// Gets the base Attribute on this object before Effects are applied.

@@ -20,8 +20,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="BasePhysicalThing"/> class.
         /// </summary>
         /// <param name="definition">The definition.</param>
-        protected BasePhysicalThing(BaseThingDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        protected BasePhysicalThing(BaseThingDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 

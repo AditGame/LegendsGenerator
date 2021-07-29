@@ -36,7 +36,7 @@ namespace LegendsGenerator.Tests
 
             ConditionCompiler<BaseGlobalVariables> processor = new ConditionCompiler<BaseGlobalVariables>(globals);
 
-            Site site = new Site(new SiteDefinition());
+            Site site = new Site(new SiteDefinition(), rdm);
             site.BaseAttributes["Health"] = 5;
             site.BaseAttributes["Fear"] = 23;
             site.BaseAttributes["Strength"] = 1;

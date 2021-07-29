@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
+    using System;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
@@ -16,8 +17,9 @@ namespace LegendsGenerator.Contracts.Things
         /// Initializes a new instance of the <see cref="WorldThing"/> class.
         /// </summary>
         /// <param name="definition">The world definition.</param>
-        public WorldThing(WorldDefinition definition)
-            : base(definition)
+        /// <param name="rdm">Random number generator.</param>
+        public WorldThing(WorldDefinition definition, Random rdm)
+            : base(definition, rdm)
         {
         }
 
