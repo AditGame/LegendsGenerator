@@ -329,7 +329,7 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef(v.Type, v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {
@@ -402,7 +402,7 @@ namespace CompiledDefinitionSourceGenerator
             };
 
             allParameters.AddRange(info.Variables.Select(v =>
-                new ParamDef($"LegendsGenerator.Contracts.Things.BaseThing", v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
+                new ParamDef(v.Type, v.Name, "One of the variables which will be passed to the compiled condition.")).ToList());
 
             if (matchingAdditionalParamtersMethod != null || classAddParams)
             {

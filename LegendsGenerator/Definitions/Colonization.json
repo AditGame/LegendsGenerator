@@ -185,13 +185,12 @@
       "Description_IsComplex": false
     },
     {
-      "DefinitionName": "Test Quest",
       "Chance": "100",
-      "CanTriggerWhileMoving": true,
-      "AffectOnMovement": 1,
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
       "Subject": {
-        "Condition": "Subject.Quests.Count() == 0",
-        "Type": "NotablePerson",
+        "Condition": "Subject->Population > 2000",
+        "Type": "Site",
         "Definitions": [],
         "Quests": [
           null
@@ -199,10 +198,10 @@
         "Condition_IsComplex": false
       },
       "Objects": {},
-      "Description": "UNSET",
+      "Description": "The city {Subject.Name} wants to settle a new land",
       "Results": [
         {
-          "Default": true,
+          "Default": false,
           "Chance": "100",
           "Condition": "true",
           "Effects": [],
@@ -212,7 +211,7 @@
           "Moves": [],
           "StartQuests": [
             {
-              "QuestNameToStart": "Woo",
+              "QuestNameToStart": "InspireSettlers",
               "AttributeOverrides": {},
               "AspectOverrides": {},
               "AttributeOverrides_IsComplex": false,
@@ -220,12 +219,77 @@
               "AppliedTo": [
                 "Subject"
               ],
-              "Title": "asdfasdf",
-              "Description": "asdfasdfasdf",
+              "Title": "UNSET",
+              "Description": "UNSET",
               "Title_IsComplex": false,
               "Description_IsComplex": false
             }
           ],
+          "EndQuests": [],
+          "Chance_IsComplex": false,
+          "Condition_IsComplex": false
+        }
+      ],
+      "Chance_IsComplex": false,
+      "Description_IsComplex": false
+    },
+    {
+      "Chance": "100",
+      "CanTriggerWhileMoving": false,
+      "AffectOnMovement": 0,
+      "Subject": {
+        "Condition": "true",
+        "Type": "Site",
+        "Definitions": [],
+        "Quests": [
+          "InspireSettlers"
+        ],
+        "Condition_IsComplex": false
+      },
+      "Objects": {
+        "Quest": {
+          "Optional": false,
+          "Distance": 0,
+          "Condition": "Object.InThing == Subject.ThingId",
+          "Type": "Quest",
+          "Definitions": [
+            "InspireSettlers"
+          ],
+          "Quests": [],
+          "Condition_IsComplex": false,
+          "Maximize_IsComplex": false
+        }
+      },
+      "Description": "Increase Desire",
+      "Results": [
+        {
+          "Default": false,
+          "Chance": "100",
+          "Condition": "true",
+          "Effects": [],
+          "Spawns": [],
+          "Transforms": [
+            {
+              "ResetAttributesAndAspects": false,
+              "ResetEffects": false,
+              "AttributeOverrides": {
+                "Desire": "Quest->Desire + 1"
+              },
+              "AspectOverrides": {},
+              "AttributeOverrides_IsComplex": false,
+              "AspectOverrides_IsComplex": false,
+              "AppliedTo": [
+                "Quest"
+              ],
+              "Title": "UNSET",
+              "Description": "UNSET",
+              "Title_IsComplex": false,
+              "Description_IsComplex": false
+            }
+          ],
+          "Destroys": [],
+          "Moves": [],
+          "StartQuests": [],
           "EndQuests": [],
           "Chance_IsComplex": false,
           "Condition_IsComplex": false
@@ -259,12 +323,12 @@
   "Quests": [
     {
       "ThingType": "Quest",
-      "Name": "Woo",
+      "Name": "InspireSettlers",
       "Name_IsComplex": false,
-      "Description": "A woo woo",
+      "Description": "The city wants to make a settler",
       "MaxEvents": "1",
       "Attributes": {
-        "Dddd": {
+        "Desire": {
           "BaseValue": "0",
           "DynamicValue": "0",
           "BaseValue_IsComplex": false,

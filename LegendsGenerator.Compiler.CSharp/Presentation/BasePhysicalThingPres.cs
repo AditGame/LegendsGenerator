@@ -6,6 +6,7 @@
 
 namespace LegendsGenerator.Compiler.CSharp.Presentation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -44,5 +45,13 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
 
         /// <inheritdoc/>
         protected override BasePhysicalThing Inner => (BasePhysicalThing)base.Inner;
+
+        /// <summary>
+        /// Gets a value indicating if the thing is in the specified quest.
+        /// </summary>
+        /// <param name="questDefinitionName">The quest definition name.</param>
+        /// <returns>True if has the quest.</returns>
+        public bool HasQuest(string questDefinitionName) =>
+            this.Inner.Quests.Any(x => x.BaseDefinition.DefinitionName.Equals(questDefinitionName, StringComparison.OrdinalIgnoreCase));
     }
 }

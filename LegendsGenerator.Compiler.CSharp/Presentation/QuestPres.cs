@@ -6,6 +6,7 @@
 
 namespace LegendsGenerator.Compiler.CSharp.Presentation
 {
+    using System;
     using LegendsGenerator.Contracts;
     using LegendsGenerator.Contracts.Things;
 
@@ -23,6 +24,11 @@ namespace LegendsGenerator.Compiler.CSharp.Presentation
             : base(inner, world)
         {
         }
+
+        /// <summary>
+        /// Gets the thing this is in.
+        /// </summary>
+        public Guid InThing => this.Inner.InThing;
 
         /// <inheritdoc/>
         protected override Quest Inner => (Quest)base.Inner;
