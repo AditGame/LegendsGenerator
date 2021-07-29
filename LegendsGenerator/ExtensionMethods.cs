@@ -74,6 +74,26 @@ namespace LegendsGenerator
         }
 
         /// <summary>
+        /// Turns a single element into itself and additional elements.
+        /// </summary>
+        /// <typeparam name="T">The source type.</typeparam>
+        /// <param name="source">The source list.</param>
+        /// <param name="moreElements">Function to select.</param>
+        /// <returns>The list.</returns>
+        public static IEnumerable<T> SelectWithSelf<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> moreElements)
+        {
+            foreach (T obj in source)
+            {
+                yield return obj;
+
+                foreach (T add in moreElements(obj))
+                {
+                    yield return add;
+                }
+            }
+        }
+
+        /// <summary>
         /// Shuffles the enumerable's members.
         /// </summary>
         /// <typeparam name="T">THe enumerable type.</typeparam>

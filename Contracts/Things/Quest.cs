@@ -4,6 +4,7 @@
 
 namespace LegendsGenerator.Contracts.Things
 {
+    using System;
     using LegendsGenerator.Contracts.Definitions;
     using LegendsGenerator.Contracts.Definitions.Events;
 
@@ -23,5 +24,10 @@ namespace LegendsGenerator.Contracts.Things
 
         /// <inheritdoc/>
         public override ThingType ThingType => ThingType.Quest;
+
+        /// <summary>
+        /// Gets or sets the thing this is in.
+        /// </summary>
+        public Guid InThing { get; set; }
     }
 }

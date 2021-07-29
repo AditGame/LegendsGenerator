@@ -141,24 +141,46 @@ namespace LegendsGenerator
                 }
             }
 
-            foreach (var stagedThing in stagedThings)
+            IList<StagedThing> AddStagedThings(IList<StagedThing> stagedThingsToAdd)
             {
-                Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, stagedThing.Value.Thing.ThingId, RandomStage.Finalization);
-                stagedThing.Value.Thing.FinalizeConstruction(rdm);
+                IList<StagedThing> thingsThatWerentAdded = new List<StagedThing>();
+                foreach (var stagedThing in stagedThingsToAdd)
+                {
+                    Random rdm = RandomFactory.GetRandom(currWorld.WorldSeed, currWorld.StepCount, stagedThing.Thing.ThingId, RandomStage.Finalization);
+                    stagedThing.Thing.FinalizeConstruction(rdm);
 
-                if (stagedThing.Value.Destroyed)
-                {
-                    nextWorld.Graveyard.Add(new GraveyardEntry(stagedThing.Value.Thing, nextWorld.StepCount));
-                }
-                else
-                {
-                    // Need a better way to handle this.
-                    if (stagedThing.Value.Thing is BasePhysicalThing physicalThing)
+                    if (stagedThing.Destroyed)
                     {
-                        nextWorld.Grid.AddThing(physicalThing);
+                        nextWorld.Graveyard.Add(new GraveyardEntry(stagedThing.Thing, nextWorld.StepCount));
+                    }
+                    else
+                    {
+                        // Need a better way to handle this.
+                        if (stagedThing.Thing is BasePhysicalThing physicalThing)
+                        {
+                            nextWorld.Grid.AddThing(physicalThing);
+                        }
+                        else if (stagedThing.Thing is Quest quest)
+                        {
+                            if (nextWorld.TryFindThing(quest.InThing, out BaseThing? thingToAddQuestTo))
+                            {
+                                if (thingToAddQuestTo is BasePhysicalThing physicalThingToAddTo)
+                                {
+                                    physicalThingToAddTo.Quests = physicalThingToAddTo.Quests.Add(quest);
+                                }
+                            }
+                            else
+                            {
+                                thingsThatWerentAdded.Add(stagedThing);
+                            }
+                        }
                     }
                 }
+
+                return thingsThatWerentAdded;
             }
+
+            AddStagedThings(AddStagedThings(stagedThings.Select(x => x.Value).ToList()));
 
             return nextWorld;
         }
@@ -273,6 +295,7 @@ namespace LegendsGenerator
                     {
                         matchingThings.AddRange(
                             square.GetThings(@object.Value.Type)
+                            .SelectWithSelf(t => (t as BasePhysicalThing)?.Quests.OfType<BaseThing>() ?? Array.Empty<BaseThing>())
                             .Where(x => !@object.Value.Definitions.Any() || @object.Value.Definitions.Any(d => x.BaseDefinition.InheritedDefinitionNames.Any(x => x == d)))
                             .Where(t => @object.Value.EvalCondition(rdm, subject, t))
                             .Select(t => (@object.Value.EvalMaximize(rdm, subject, t), t)));
@@ -595,6 +618,7 @@ namespace LegendsGenerator
 
                     Quest createdQuest = this.thingFactory.CreateQuest(rdm, startQuestDefinition.QuestNameToStart);
                     createdQuest.Name = startQuestDefinition.EvalTitle(rdm, toAddQuestTo, ev.Objects);
+                    createdQuest.InThing = physicalThing.ThingId;
 
                     foreach (var overrideAttr in startQuestDefinition.AttributeOverrides.Keys)
                     {
@@ -606,8 +630,7 @@ namespace LegendsGenerator
                         createdQuest.BaseAspects[overrideAspect] = startQuestDefinition.EvalAspectOverrides(overrideAspect, rdm, toAddQuestTo, ev.Objects);
                     }
 
-                    createdQuest.FinalizeConstruction(rdm);
-                    physicalThing.Quests = physicalThing.Quests.Add(createdQuest);
+                    GetOrCreate(stagedThings, createdQuest);
                 }
             }
 

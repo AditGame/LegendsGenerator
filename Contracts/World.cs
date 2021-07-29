@@ -78,8 +78,24 @@ namespace LegendsGenerator.Contracts
             // Re-search the grid for things. This is good in case things got added to the grid in the meantime somehow.
             this.searchByGuidHash.Clear();
 
-            var allThings = this.Grid.AllGridEntries.SelectMany(x => x.Square.GetThings());
+            var allThings = this.Grid.AllGridEntries.SelectMany(x => x.Square.GetThings()).SelectMany(
+                x =>
+                {
+                    List<BaseThing> things = new List<BaseThing>
+                    {
+                        x,
+                    };
+
+                    if (x is BasePhysicalThing physicalThing)
+                    {
+                        things.AddRange(physicalThing.Quests);
+                    }
+
+                    return things;
+                });
+
             allThings = allThings.Concat(this.Graveyard.Select(x => x.Thing));
+
             foreach (BaseThing thing in allThings)
             {
                 this.searchByGuidHash[thing.ThingId] = thing;
